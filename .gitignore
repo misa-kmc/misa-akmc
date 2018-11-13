@@ -1,3 +1,6 @@
+vendor
+pkg.dep.cmake
+
 # General for mac
 .DS_Store
 .AppleDouble

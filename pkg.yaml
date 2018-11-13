@@ -1,0 +1,28 @@
+# an example program, version: 1.0.0
+# authors: genshen <genshenchu@gmail.com>, USTB; zhaorunchu, USTB
+
+version: 1
+
+args:
+
+
+packages:
+  git:
+    googletest:
+      path: https://github.com/google/googletest.git
+      tag: release-1.8.0
+      build:
+      - RUN {{.CACHE}} cmake {{.SRC_DIR}}/googletest -DCMAKE_INSTALL_PREFIX={{.PKG_DIR}}; make -j {{.CORES}}; make install
+      cmake_lib: |
+        include_directories({{.CMAKE_VENDOR_PATH_PKG}}/include)
+        link_directories({{.CMAKE_VENDOR_PATH_PKG}}/lib)
+
+build:
+  linux:
+  - RUN {{.CACHE}} cmake {{.SRC_DIR}} -DCMAKE_INSTALL_PREFIX={{.PKG_DIR}}; make -j {{.CORES}}; make install
+  darwin:
+  - RUN {{.CACHE}} cmake {{.SRC_DIR}} -DCMAKE_INSTALL_PREFIX={{.PKG_DIR}}; make -j {{.CORES}}; make install
+
+cmake_build: |
+  include_directories({{C.MAKE_VENDOR_PATH_PKG}}/include)
+  link_directories({{.CMAKE_VENDOR_PATH_PKG}}/lib)
