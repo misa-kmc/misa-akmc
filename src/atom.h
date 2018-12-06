@@ -7,6 +7,8 @@
 
 #include <map>
 #include <vector>
+#include "type_define.h"
+
 
 using namespace std;
 
@@ -23,13 +25,12 @@ public:
         id = getId(x, y, z);
         atom_type = type;
         rate = 0;
-        ix = iy = iz = 0;
     }
 
-    int x, y, z, id, atom_type;
+    _type_atom_cord x, y, z;
+    _type_atom_pos id, atom_type;
 
-    int ix, iy, iz;
-
+    //单原子概率
     double rate;
 
     //跃迁事件列表
