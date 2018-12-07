@@ -8,6 +8,7 @@ set(HEADER_FILES
 
 set(SOURCE_FILES
         atom.cpp
+        atom_list.cpp
         )
 
 

@@ -18,17 +18,16 @@ public:
     Atoms(){}
 
     ~Atoms();
-    Atoms(int i, int j, int k, int type = 0) {
+    Atoms(_type_atom_cord i, _type_atom_cord j, _type_atom_cord k, int type = 0) {
         x = i;
         y = j;
         z = k;
-        id = getId(x, y, z);
         atom_type = type;
         rate = 0;
     }
 
     _type_atom_cord x, y, z;
-    _type_atom_pos id, atom_type;
+    int id, atom_type;
 
     //单原子概率
     double rate;
@@ -38,8 +37,6 @@ public:
     //跃迁近邻号
     static vector<int> inbr;
 
-    //find Itl id in Atom.
-    map<int, int> mp;
 
     static double sum_rate;
 
@@ -74,13 +71,6 @@ public:
     double FeXcomp(int x, int y, int z);
 
     double Edumb();
-private:
-    //through x,y,z to get ID
-    int getId(int x, int y, int z);
-
-    int Random();
-
-    int getItlid(int x, int y, int z);
 
 };
 

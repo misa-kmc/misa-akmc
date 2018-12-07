@@ -11,6 +11,8 @@
 typedef unsigned long _type_atom_pos;
 typedef unsigned long _type_atom_cord;
 
+typedef std::pair<_type_atom_cord, std::pair<_type_atom_cord, _type_atom_cord> > _type_atom_pair;
+
 
 /*!
  * the number of all the lattices
