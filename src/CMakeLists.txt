@@ -2,11 +2,13 @@ include(configure.cmake)
 set(HEADER_FILES
         atom.h
         type_define.h
+        atom_list.h
         )
 
 
 set(SOURCE_FILES
         atom.cpp
+        atom_list.cpp
         )
 
 
@@ -23,7 +25,7 @@ target_include_directories(
 )
 
 # make binary
-add_executable(${KMC_EXECUTE_BIN_NAME} main.cpp )
+add_executable(${KMC_EXECUTE_BIN_NAME} main.cpp)
 
 target_link_libraries(${KMC_EXECUTE_BIN_NAME} PRIVATE ${KMC_LIB_NAME} ${EXTRA_LIBS})
 
