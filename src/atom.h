@@ -15,9 +15,10 @@ using namespace std;
 class Atoms {
 public:
 
-    Atoms(){}
+    Atoms() {}
 
     ~Atoms();
+
     Atoms(_type_atom_cord i, _type_atom_cord j, _type_atom_cord k, int type = 0) {
         x = i;
         y = j;
@@ -79,6 +80,7 @@ public:
 
     Itl() {
     }
+
     ~Itl();
 
     int first, second;

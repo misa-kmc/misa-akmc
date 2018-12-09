@@ -12,10 +12,10 @@
 
 using namespace std;
 
-class AtomList{
+class AtomList {
 public:
-    AtomList(){
-       init();
+    AtomList() {
+        init();
     }
 
     //the whole array of all Atoms.
@@ -36,7 +36,7 @@ public:
     int Twonn_z[6] = {0, 0, 0, 0, 1, -1};
 
     //find Itl id in Atom.
-    static map<_type_atom_cord , int> mp;
+    static map<_type_atom_cord, int> mp;
 
     /*!
      * @brief get some random Atoms.
@@ -65,10 +65,11 @@ public:
 
 };
 
-class ItlList{
+class ItlList {
 public:
     //a map to correspond the id and the Itl sequence number.
-    map <int, int > mp;
+    map<int, int> mp;
+
     /*!
      * @brief to find the sequence number in class Ilt
      *        which include the extra information about Itl type atoms
@@ -77,5 +78,5 @@ public:
      */
     int getItlnum(_type_atom_cord id);
 };
-#endif //MISA_KMC_ATOM_LIST_H
 
+#endif //MISA_KMC_ATOM_LIST_H
