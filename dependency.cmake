@@ -30,10 +30,4 @@ if (KMC_MPI_ENABLE_FLAG)
 endif ()
 ##### mpi and openmp end
 
-
 include(pkg.dep.cmake)
-set(KMC_VENDOR_PATH ${VENDOR_PATH})
-set(KMC_VENDOR_SRC_PATH ${KMC_VENDOR_PATH}/src)
-set(KMC_VENDOR_INCLUDE_PATH ${KMC_VENDOR_PATH}/include)
-set(KMC_VENDOR_PKG_PATH ${KMC_VENDOR_PATH}/pkg)
-

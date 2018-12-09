@@ -10,18 +10,17 @@ packages:
   git:
     googletest:
       path: https://github.com/google/googletest.git
-      tag: release-1.8.0
+      tag: release-1.8.1
       build:
-      - RUN {{.CACHE}} cmake {{.SRC_DIR}}/googletest -DCMAKE_INSTALL_PREFIX={{.PKG_DIR}}; make -j {{.CORES}}; make install
+        - RUN {{.CACHE}} cmake {{.SRC_DIR}} -DCMAKE_INSTALL_PREFIX={{.PKG_DIR}}; make -j {{.CORES}}; make install
       cmake_lib: |
-        include_directories({{.CMAKE_VENDOR_PATH_PKG}}/include)
-        link_directories({{.CMAKE_VENDOR_PATH_PKG}}/lib)
+        find_package(GTest PATHS {{.CMAKE_VENDOR_PATH_PKG}})
 
 build:
   linux:
-  - RUN {{.CACHE}} cmake {{.SRC_DIR}} -DCMAKE_INSTALL_PREFIX={{.PKG_DIR}}; make -j {{.CORES}}; make install
+    - RUN {{.CACHE}} cmake {{.SRC_DIR}} -DCMAKE_INSTALL_PREFIX={{.PKG_DIR}}; make -j {{.CORES}}; make install
   darwin:
-  - RUN {{.CACHE}} cmake {{.SRC_DIR}} -DCMAKE_INSTALL_PREFIX={{.PKG_DIR}}; make -j {{.CORES}}; make install
+    - RUN {{.CACHE}} cmake {{.SRC_DIR}} -DCMAKE_INSTALL_PREFIX={{.PKG_DIR}}; make -j {{.CORES}}; make install
 
 cmake_build: |
   include_directories({{C.MAKE_VENDOR_PATH_PKG}}/include)
