@@ -15,6 +15,10 @@ typedef unsigned long _type_atom_id;
 
 typedef std::pair<_type_atom_cord, std::pair<_type_atom_cord, _type_atom_cord> > _type_atom_pair;
 
+/*!
+ * \brief the type of transition rate
+ */
+typedef double _type_rate;
 
 /*!
  * the number of all the lattices

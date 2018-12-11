@@ -13,33 +13,38 @@
 using namespace std;
 
 class Atoms {
+    friend class AtomList;  // so atom list can set private member:id directly.
+
 public:
+    /**
+     * \brief initial an atom object on the lattice point specified by (i,j,k).
+     */
+    explicit Atoms();
 
-    Atoms() {}
+    /*!
+     * \brief grid point type,e.g. Fe, or Cu, or Vacancy, or Dumbbell.
+     */
+    int atom_type;
 
-    ~Atoms();
-
-    Atoms(_type_atom_cord i, _type_atom_cord j, _type_atom_cord k, int type = 0) {
-        x = i;
-        y = j;
-        z = k;
-        atom_type = type;
-        rate = 0;
-    }
-
-    _type_atom_cord x, y, z;
-    int id, atom_type;
-
-    //单原子概率
-    double rate;
+    /*!
+     * \brief the transition rate of this lattice
+     */
+    _type_rate rate;
 
     //跃迁事件列表
     static vector<int> ilist;
     //跃迁近邻号
     static vector<int> inbr;
 
+    static _type_rate sum_rate;
 
-    static double sum_rate;
+    /**
+     * \brief get unique id of current lattice
+     * \return lattice id
+     */
+    inline _type_atom_id getId() {
+        return id;
+    }
 
     //states[xi][yi][zi] = a[getId(xi, yi, zi)].type
     /*!
@@ -72,6 +77,9 @@ public:
     double FeXcomp(int x, int y, int z);
 
     double Edumb();
+
+private:
+    _type_atom_id id;
 
 };
 

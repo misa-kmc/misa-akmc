@@ -19,6 +19,15 @@ AtomList::AtomList(_type_box_size box_x, _type_box_size box_y, _type_box_size bo
             _atoms[z][y] = new Atoms[size_x];
         }
     }
+    // set id
+    _type_atom_id id = 0;
+    for (_type_atom_size z = 0; z < size_z; z++) {
+        for (_type_atom_size y = 0; y < size_y; y++) {
+            for (_type_atom_size x = 0; x < size_x; x++) {
+                _atoms[z][y][x].id = id++;
+            }
+        }
+    }
 }
 
 AtomList::~AtomList() {
