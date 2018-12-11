@@ -44,12 +44,12 @@ void AtomList::init() {
 }
 
 int
-AtomList::get1nn(_type_atom_cord x, _type_atom_cord y, _type_atom_cord z, std::vector<_type_atom_pair> &_1nn_list) {
+AtomList::get1nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z, std::vector<_type_atom_pair> &_1nn_list) {
     _1nn_list.clear(); // todo use array.
     // In our implementation, if x is even,then its 1nn will be ([x-1,x+1], [y-1, y], [z-1,z]),
     // if x is odd, then its 1nn will be ([x-1,x+1], [y, y+1], [z,z+1]).
     // todo periodic boundary?
-    _type_atom_cord _1nn_index_x[8], _1nn_index_y[8], _1nn_index_z[8];
+    _type_atom_coord _1nn_index_x[8], _1nn_index_y[8], _1nn_index_z[8];
 
     // compute 1nn index in array in x direction.
     // it can be overflow if x == 0.
@@ -98,7 +98,7 @@ AtomList::get1nn(_type_atom_cord x, _type_atom_cord y, _type_atom_cord z, std::v
 }
 
 int
-AtomList::get2nn(_type_atom_cord x, _type_atom_cord y, _type_atom_cord z, std::vector<_type_atom_pair> &_2nn_list) {
+AtomList::get2nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z, std::vector<_type_atom_pair> &_2nn_list) {
     _2nn_list.clear();
     static const int _2nn_offset_x[] = {-2, 0, 0, 0, 0, 2};
     static const int _2nn_offset_y[] = {0, -1, 0, 0, 1, 0};
@@ -138,10 +138,10 @@ AtomList::get2nn(_type_atom_cord x, _type_atom_cord y, _type_atom_cord z, std::v
     return _count;
 }
 
-_type_atom_id AtomList::getId(_type_atom_cord x, _type_atom_cord y, _type_atom_cord z) {
+_type_atom_id AtomList::getId(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z) {
     return x + y * size_x + z * size_x * size_y; // todo return from atom object.
 }
 
-int ItlList::getItlnum(_type_atom_cord id) {
+int ItlList::getItlnum(_type_atom_coord id) {
     return AtomList::mp[id];
 }

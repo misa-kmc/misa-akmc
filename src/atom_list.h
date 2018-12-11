@@ -24,8 +24,7 @@ public:
 //    vector<int> Onenn_list, Twonn_list;
 
     //find Itl id in Atom.
-    static std::map<_type_atom_cord, int> mp;
-
+    static std::map<_type_atom_coord, int> mp;
 
     /*!
      * \brief 随机一些原子，包括坐标，类型，如果是间隙，需要取向信息。
@@ -37,20 +36,20 @@ public:
      * \param _1nn_list a vector to store all atoms in the distance of 1nn
      * \return the count of 1nn list.
      */
-    int get1nn(_type_atom_cord x, _type_atom_cord y, _type_atom_cord z, std::vector<_type_atom_pair> &_1nn_list);
+    int get1nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z, std::vector<_type_atom_pair> &_1nn_list);
 
     /*!
      * \brief get all lattice near 1nn
      * \param _2nn_list a vector to store all atoms in the distance of 1nn
      * \return the count of 2nn list.
      */
-    int get2nn(_type_atom_cord x, _type_atom_cord y, _type_atom_cord z, std::vector<_type_atom_pair> &_2nn_list);
+    int get2nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z, std::vector<_type_atom_pair> &_2nn_list);
 
     /*!
      * \brief calculate the corresponding number of coordinate
      * \return Id
      */
-    _type_atom_id getId(_type_atom_cord x, _type_atom_cord y, _type_atom_cord z);
+    _type_atom_id getId(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z);
 
 private:
     /*!
@@ -58,7 +57,7 @@ private:
      * \note the size_x is two times then real box size due to BCC structure.
      * size_y and size_y is the same as the simulation real box size.
      */
-    const _type_atom_cord size_x, size_y, size_z;
+    const _type_atom_coord size_x, size_y, size_z;
 
     /*!
      * \brief the 3d array of all Atoms.
@@ -82,7 +81,7 @@ public:
      * \param id use the AtomList getId
      * \return the sequence number in in Itl
      */
-    int getItlnum(_type_atom_cord id);
+    int getItlnum(_type_atom_coord id);
 };
 
 #endif //MISA_KMC_ATOM_LIST_H

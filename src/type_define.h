@@ -9,11 +9,11 @@
  * the type of atom lattice position in cartesian coordinate system
  */
 typedef unsigned long _type_box_size;
-typedef unsigned long _type_atom_cord;
-typedef _type_atom_cord _type_atom_size;
+typedef unsigned long _type_atom_coord;
+typedef _type_atom_coord _type_atom_size;
 typedef unsigned long _type_atom_id;
 
-typedef std::pair<_type_atom_cord, std::pair<_type_atom_cord, _type_atom_cord> > _type_atom_pair;
+typedef std::pair<_type_atom_coord, std::pair<_type_atom_coord, _type_atom_coord> > _type_atom_pair;
 
 /*!
  * \brief the type of transition rate
