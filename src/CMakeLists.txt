@@ -3,6 +3,7 @@ set(HEADER_FILES
         atom.h
         type_define.h
         atom_list.h
+        macros.h
         )
 
 
