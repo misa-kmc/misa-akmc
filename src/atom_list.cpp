@@ -120,7 +120,7 @@ int AtomList::get2nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z,
         _2nn_list[_count] = &_atoms[z + _2nn_offset_z[4]][y + _2nn_offset_y[4]][x + _2nn_offset_x[4]];
         _count++;
     }
-    if (x + 2 >= size_x) {
+    if (x + 2 < size_x) {
         _2nn_list[_count] = &_atoms[z + _2nn_offset_z[5]][y + _2nn_offset_y[5]][x + _2nn_offset_x[5]];
         _count++;
     }
