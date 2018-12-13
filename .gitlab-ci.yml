@@ -1,18 +1,26 @@
 # image:
 image: genshen/mpich-pkg:0.2.0-beta
 
-before_script:
-  - pkg fetch
-  - pkg install
-
 cache:
   key: "$CI_COMMIT_REF_SLUG"
   paths:
     - vendor/
 
 stages:
+  - fetch
   - build
   - test
+
+fetch:
+  stage: fetch
+  tags:
+    - cpp
+    - pkg
+  script:
+    - pkg fetch
+    - pkg install
+  artifacts:
+    untracked: true
 
 build:
   stage: build
@@ -20,7 +28,20 @@ build:
     - cpp
     - pkg
   script:
-    - mkdir cmake-build
+    - cmake -Bcmake-build -H.
+    - make -Ccmake-build
+  artifacts:
+    untracked: true
+  dependencies:
+    - fetch
+
+test:
+  stage: test
+  tags:
+    - cpp
+    - pkg
+  script:
     - cd cmake-build
-    - cmake ../
-    - make
+    - make test ARGS=-V
+  dependencies:
+    - build
