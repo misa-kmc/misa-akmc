@@ -24,6 +24,10 @@ public:
     _type_rate rate(const Lattice &source_lattice, const Lattice &target_lattice,
                     const LatticeTypes::lat_type trans_atom,
                     const _type_dir_id _1nn_offset) override;
+
+    double FeXcomp(const _type_lattice_coord x, const _type_lattice_coord y, const _type_lattice_coord z);
+
+    double Edumb();
 };
 
 

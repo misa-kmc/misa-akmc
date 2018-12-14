@@ -16,4 +16,19 @@
    arr[7] = i7; \
 }
 
+#define Edumb_for(){\
+   for (it = _1nn_list.begin(); it != _1nn_list.end(); it++) {\
+      StateDB = _atoms[it->first][it->second.first][it->second.second].atom_type;\
+      if (StateDB != 3 && StateDB != 7 && StateDB != 12\
+          && StateDB != 1 && StateDB != 0)\
+            eb += 0.70;\
+   }\
+   for (it = _2nn_list.begin(); it != _2nn_list.end(); it++) {\
+      StateDB = _atoms[it->first][it->second.first][it->second.second].atom_type;\
+      if (StateDB != 3 && StateDB != 7 && StateDB != 12\
+         && StateDB != 1 && StateDB != 0)\
+            eb += 0.48;\
+   }\
+}
+
 #endif //MISA_KMC_MACROS_H
