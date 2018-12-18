@@ -12,6 +12,7 @@ set(TEST_HEADER_FILES
 
 set(TEST_SOURCE_FILES
         atom_type_test.cpp
+        atom_list_test.cpp
         )
 
 
@@ -26,7 +27,7 @@ add_executable(${KMC_UINT_TEST_NAME} ${TEST_SOURCE_FILES} ${TEST_HEADER_FILES})
 
 # Extra linking for the project.
 target_link_libraries(${KMC_UINT_TEST_NAME}
-        PRIVATE ${KMC_EXTRA_LIBS} GTest::gtest GTest::gtest_main #${KMC_LIB_NAME}
+        PRIVATE GTest::gtest GTest::gtest_main ${KMC_LIB_NAME} ${KMC_EXTRA_LIBS}
         )
 
 # This is so you can do 'make test' to see all your tests run, instead of

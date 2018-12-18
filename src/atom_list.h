@@ -24,9 +24,6 @@ public:
     ~AtomList();
 //    vector<int> Onenn_list, Twonn_list;
 
-    //find Itl id in Atom.
-    static std::map<_type_atom_coord, int> mp;
-
     /*!
      * \brief 随机一些原子，包括坐标，类型，如果是间隙，需要取向信息。
      */
@@ -34,17 +31,21 @@ public:
 
     /*!
      * \brief get all lattice near 1nn
-     * \param _1nn_list a vector to store all atoms in the distance of 1nn
+     * \param x,y,z the coordinate of the lattice point.
+     * \param _1nn_list a array to store all pointers of atoms in the distance of 1nn.
+     * \note note that the coordinate specified by [x,y,z] must be in the AtomList box, or "index out of bounds" may happen.
      * \return the count of 1nn list.
      */
-    int get1nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z, std::vector<_type_atom_pair> &_1nn_list);
+    int get1nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z, Atoms *_1nn_list[8]);
 
     /*!
-     * \brief get all lattice near 1nn
-     * \param _2nn_list a vector to store all atoms in the distance of 1nn
-     * \return the count of 2nn list.
+     * \brief get all lattice near 2nn
+     * \param x,y,z the coordinate of the lattice point.
+     * \param _2nn_list a array to store all pointers of atoms in the distance of 2nn.
+     * \note note that the coordinate specified by [x,y,z] must be in the AtomList box, or "index out of bounds" may happen.
+     * \return the count in 2nn list.
      */
-    int get2nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z, std::vector<_type_atom_pair> &_2nn_list);
+    int get2nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z, Atoms *_2nn_list[6]);
 
     /*!
      * \brief calculate the corresponding number of coordinate

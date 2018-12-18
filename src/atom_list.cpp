@@ -43,9 +43,7 @@ AtomList::~AtomList() {
 void AtomList::init() {
 }
 
-int
-AtomList::get1nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z, std::vector<_type_atom_pair> &_1nn_list) {
-    _1nn_list.clear(); // todo use array.
+int AtomList::get1nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z, Atoms *_1nn_list[8]) {
     // In our implementation, if x is even,then its 1nn will be ([x-1,x+1], [y-1, y], [z-1,z]),
     // if x is odd, then its 1nn will be ([x-1,x+1], [y, y+1], [z,z+1]).
     // todo periodic boundary?
@@ -89,51 +87,42 @@ AtomList::get1nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z, std
     int _count = 0;
     for (int i = 0; i < 8; i++) {
         if ((flag >> i) & 0x01) {
+            _1nn_list[_count] = &_atoms[_1nn_index_z[i]][_1nn_index_y[i]][_1nn_index_x[i]];
             _count++;
-            _1nn_list.emplace_back(std::make_pair(_1nn_index_x[i], std::make_pair(_1nn_index_y[i], _1nn_index_z[i])));
         }
     }
     // calculate the size of 1nn_list.
     return _count;
 }
 
-int
-AtomList::get2nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z, std::vector<_type_atom_pair> &_2nn_list) {
-    _2nn_list.clear();
+int AtomList::get2nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z, Atoms *_2nn_list[6]) {
     static const int _2nn_offset_x[] = {-2, 0, 0, 0, 0, 2};
     static const int _2nn_offset_y[] = {0, -1, 0, 0, 1, 0};
     static const int _2nn_offset_z[] = {0, 0, -1, 1, 0, 0};
     int _count = 0;
     if (x >= 2) {
-        // todo make it an inline func.
+        _2nn_list[_count] = &_atoms[z + _2nn_offset_z[0]][y + _2nn_offset_y[0]][x + _2nn_offset_x[0]];
         _count++;
-        _2nn_list.emplace_back(make_pair(x + _2nn_offset_x[0],
-                                         std::make_pair(y + _2nn_offset_y[0], z + _2nn_offset_z[0])));
     }
     if (y != 0) {
+        _2nn_list[_count] = &_atoms[z + _2nn_offset_z[1]][y + _2nn_offset_y[1]][x + _2nn_offset_x[1]];
         _count++;
-        _2nn_list.emplace_back(make_pair(x + _2nn_offset_x[1],
-                                         std::make_pair(y + _2nn_offset_y[1], z + _2nn_offset_z[1])));
     }
     if (z != 0) {
+        _2nn_list[_count] = &_atoms[z + _2nn_offset_z[2]][y + _2nn_offset_y[2]][x + _2nn_offset_x[2]];
         _count++;
-        _2nn_list.emplace_back(make_pair(x + _2nn_offset_x[2],
-                                         std::make_pair(y + _2nn_offset_y[2], z + _2nn_offset_z[2])));
     }
     if (z + 1 != size_z) {
+        _2nn_list[_count] = &_atoms[z + _2nn_offset_z[3]][y + _2nn_offset_y[3]][x + _2nn_offset_x[3]];
         _count++;
-        _2nn_list.emplace_back(make_pair(x + _2nn_offset_x[3],
-                                         std::make_pair(y + _2nn_offset_y[3], z + _2nn_offset_z[3])));
     }
     if (y + 1 != size_y) {
+        _2nn_list[_count] = &_atoms[z + _2nn_offset_z[4]][y + _2nn_offset_y[4]][x + _2nn_offset_x[4]];
         _count++;
-        _2nn_list.emplace_back(make_pair(x + _2nn_offset_x[4],
-                                         std::make_pair(y + _2nn_offset_y[4], z + _2nn_offset_z[4])));
     }
-    if (x + 2 >= size_x) {
+    if (x + 2 < size_x) {
+        _2nn_list[_count] = &_atoms[z + _2nn_offset_z[5]][y + _2nn_offset_y[5]][x + _2nn_offset_x[5]];
         _count++;
-        _2nn_list.emplace_back(make_pair(x + _2nn_offset_x[5],
-                                         std::make_pair(y + _2nn_offset_y[5], z + _2nn_offset_z[5])));
     }
     return _count;
 }
