@@ -141,7 +141,3 @@ AtomList::get2nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z, std
 _type_atom_id AtomList::getId(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z) {
     return x + y * size_x + z * size_x * size_y; // todo return from atom object.
 }
-
-int ItlList::getItlnum(_type_atom_coord id) {
-    return AtomList::mp[id];
-}
