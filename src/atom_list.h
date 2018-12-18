@@ -14,6 +14,7 @@ class AtomList {
 public:
     /*!
      * \brief initialize the atoms array(allocate memory) with box size in x,y,z direction.
+     * besides, the lattice id will be set in this constructor.
      * \param box_x box size in x direction.
      * \param box_y box size in y direction.
      * \param box_z box size in z direction.
@@ -70,18 +71,5 @@ private:
     Atoms ***_atoms = nullptr;
 };
 
-class ItlList {
-public:
-    //a map to correspond the id and the Itl sequence number.
-    std::map<int, int> mp;
-
-    /*!
-     * \brief to find the sequence number in class Ilt
-     *        which include the extra information about Itl type atoms
-     * \param id use the AtomList getId
-     * \return the sequence number in in Itl
-     */
-    int getItlnum(_type_atom_coord id);
-};
 
 #endif //MISA_KMC_ATOM_LIST_H

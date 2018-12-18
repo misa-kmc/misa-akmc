@@ -1,16 +1,18 @@
 include(configure.cmake)
 set(HEADER_FILES
         atom.h
-        type_define.h
         atom_list.h
+        box.h
         macros.h
-        )
+        type_define.h
+        vacancy_list.cpp vacancy_list.h)
 
 
 set(SOURCE_FILES
         atom.cpp
         atom_list.cpp
-        )
+        box.cpp
+        vacancy_list.cpp vacancy_list.h)
 
 
 # set binary path and lib storage path for compiling process.
