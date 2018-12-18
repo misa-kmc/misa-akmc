@@ -41,7 +41,13 @@ test:
     - cpp
     - pkg
   script:
-    - cd cmake-build
-    - make test ARGS=-V
+    - GTEST_OUTPUT=xml:report.xml GTEST_COLOR=yes ./cmake-build/bin/misa-kmc-unit-tests
+#    - cd cmake-build
+#    - GTEST_COLOR=yes make test ARGS=-V
   dependencies:
     - build
+  artifacts:
+    reports:
+      junit: report.xml
+
+# code_quality: https://docs.gitlab.com/ee/ci/examples/code_quality.html#previous-job-definitions
