@@ -32,7 +32,7 @@ target_link_libraries(${KMC_UINT_TEST_NAME}
 
 # This is so you can do 'make test' to see all your tests run, instead of
 # manually running the executable runUnitTests to see those specific tests.
-add_test(NAME kmc-test COMMAND ${KMC_UINT_TEST_NAME})
+add_test(NAME kmc-test COMMAND ${KMC_UINT_TEST_NAME}) # set  environment variable GTEST_COLOR to yes or --gtest_color=no.
 
 
 ##########################

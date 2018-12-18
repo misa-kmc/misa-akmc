@@ -1,0 +1,53 @@
+# image:
+image: genshen/mpich-pkg:0.2.0-beta
+
+cache:
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+    - vendor/
+
+stages:
+  - fetch
+  - build
+  - test
+
+fetch:
+  stage: fetch
+  tags:
+    - cpp
+    - pkg
+  script:
+    - pkg fetch
+    - pkg install
+  artifacts:
+    untracked: true
+
+build:
+  stage: build
+  tags:
+    - cpp
+    - pkg
+  script:
+    - cmake -Bcmake-build -H.
+    - make -Ccmake-build
+  artifacts:
+    untracked: true
+  dependencies:
+    - fetch
+
+test:
+  stage: test
+  tags:
+    - cpp
+    - pkg
+  script:
+    - GTEST_OUTPUT=xml:report.xml GTEST_COLOR=yes ./cmake-build/bin/misa-kmc-unit-tests
+#    - cd cmake-build
+#    - GTEST_COLOR=yes make test ARGS=-V
+  dependencies:
+    - build
+  artifacts:
+    reports:
+      junit: report.xml
+
+# code_quality: https://docs.gitlab.com/ee/ci/examples/code_quality.html#previous-job-definitions
