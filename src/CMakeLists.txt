@@ -1,16 +1,17 @@
 include(configure.cmake)
 set(HEADER_FILES
-        atom.h
-        atom_list.h
+        lattice.h
+        lattices_list.h
         box.h
         macros.h
         type_define.h
-        vacancy_list.cpp vacancy_list.h)
+        vacancy_list.cpp vacancy_list.h
+        )
 
 
 set(SOURCE_FILES
-        atom.cpp
-        atom_list.cpp
+        lattice.cpp
+        lattices_list.cpp
         box.cpp
         vacancy_list.cpp vacancy_list.h)
 

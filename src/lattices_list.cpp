@@ -6,48 +6,48 @@
 #include <vector>
 #include <algorithm>
 #include <map>
-#include "atom_list.h"
+#include "lattices_list.h"
 #include "type_define.h"
 #include "macros.h"
 
-AtomList::AtomList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z)
+LatticesList::LatticesList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z)
         : size_x(2 * box_x), size_y(box_y), size_z(box_z) {
-    _atoms = new Atoms **[size_z];
-    for (_type_atom_size z = 0; z < size_z; z++) {
-        _atoms[z] = new Atoms *[size_y];
-        for (_type_atom_size y = 0; y < size_y; y++) {
-            _atoms[z][y] = new Atoms[size_x];
+    _lattice_lists = new Lattice **[size_z];
+    for (_type_lattice_size z = 0; z < size_z; z++) {
+        _lattice_lists[z] = new Lattice *[size_y];
+        for (_type_lattice_size y = 0; y < size_y; y++) {
+            _lattice_lists[z][y] = new Lattice[size_x];
         }
     }
     // set id
-    _type_atom_id id = 0;
-    for (_type_atom_size z = 0; z < size_z; z++) {
-        for (_type_atom_size y = 0; y < size_y; y++) {
-            for (_type_atom_size x = 0; x < size_x; x++) {
-                _atoms[z][y][x].id = id++;
+    _type_lattice_id id = 0;
+    for (_type_lattice_size z = 0; z < size_z; z++) {
+        for (_type_lattice_size y = 0; y < size_y; y++) {
+            for (_type_lattice_size x = 0; x < size_x; x++) {
+                _lattice_lists[z][y][x].id = id++;
             }
         }
     }
 }
 
-AtomList::~AtomList() {
-    for (_type_atom_size z = 0; z < size_z; z++) {
-        for (_type_atom_size y = 0; y < size_y; y++) {
-            delete[] _atoms[z][y];
+LatticesList::~LatticesList() {
+    for (_type_lattice_size z = 0; z < size_z; z++) {
+        for (_type_lattice_size y = 0; y < size_y; y++) {
+            delete[] _lattice_lists[z][y];
         }
-        delete[] _atoms[z];
+        delete[] _lattice_lists[z];
     }
-    delete[] _atoms;
+    delete[] _lattice_lists;
 }
 
-void AtomList::init() {
+void LatticesList::init() {
 }
 
-int AtomList::get1nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z, Atoms *_1nn_list[8]) {
+int LatticesList::get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_1nn_list[8]) {
     // In our implementation, if x is even,then its 1nn will be ([x-1,x+1], [y-1, y], [z-1,z]),
     // if x is odd, then its 1nn will be ([x-1,x+1], [y, y+1], [z,z+1]).
     // todo periodic boundary?
-    _type_atom_coord _1nn_index_x[8], _1nn_index_y[8], _1nn_index_z[8];
+    _type_lattice_coord _1nn_index_x[8], _1nn_index_y[8], _1nn_index_z[8];
 
     // compute 1nn index in array in x direction.
     // it can be overflow if x == 0.
@@ -87,7 +87,7 @@ int AtomList::get1nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z,
     int _count = 0;
     for (int i = 0; i < 8; i++) {
         if ((flag >> i) & 0x01) {
-            _1nn_list[_count] = &_atoms[_1nn_index_z[i]][_1nn_index_y[i]][_1nn_index_x[i]];
+            _1nn_list[_count] = &_lattice_lists[_1nn_index_z[i]][_1nn_index_y[i]][_1nn_index_x[i]];
             _count++;
         }
     }
@@ -95,38 +95,38 @@ int AtomList::get1nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z,
     return _count;
 }
 
-int AtomList::get2nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z, Atoms *_2nn_list[6]) {
+int LatticesList::get2nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_2nn_list[6]) {
     static const int _2nn_offset_x[] = {-2, 0, 0, 0, 0, 2};
     static const int _2nn_offset_y[] = {0, -1, 0, 0, 1, 0};
     static const int _2nn_offset_z[] = {0, 0, -1, 1, 0, 0};
     int _count = 0;
     if (x >= 2) {
-        _2nn_list[_count] = &_atoms[z + _2nn_offset_z[0]][y + _2nn_offset_y[0]][x + _2nn_offset_x[0]];
+        _2nn_list[_count] = &_lattice_lists[z + _2nn_offset_z[0]][y + _2nn_offset_y[0]][x + _2nn_offset_x[0]];
         _count++;
     }
     if (y != 0) {
-        _2nn_list[_count] = &_atoms[z + _2nn_offset_z[1]][y + _2nn_offset_y[1]][x + _2nn_offset_x[1]];
+        _2nn_list[_count] = &_lattice_lists[z + _2nn_offset_z[1]][y + _2nn_offset_y[1]][x + _2nn_offset_x[1]];
         _count++;
     }
     if (z != 0) {
-        _2nn_list[_count] = &_atoms[z + _2nn_offset_z[2]][y + _2nn_offset_y[2]][x + _2nn_offset_x[2]];
+        _2nn_list[_count] = &_lattice_lists[z + _2nn_offset_z[2]][y + _2nn_offset_y[2]][x + _2nn_offset_x[2]];
         _count++;
     }
     if (z + 1 != size_z) {
-        _2nn_list[_count] = &_atoms[z + _2nn_offset_z[3]][y + _2nn_offset_y[3]][x + _2nn_offset_x[3]];
+        _2nn_list[_count] = &_lattice_lists[z + _2nn_offset_z[3]][y + _2nn_offset_y[3]][x + _2nn_offset_x[3]];
         _count++;
     }
     if (y + 1 != size_y) {
-        _2nn_list[_count] = &_atoms[z + _2nn_offset_z[4]][y + _2nn_offset_y[4]][x + _2nn_offset_x[4]];
+        _2nn_list[_count] = &_lattice_lists[z + _2nn_offset_z[4]][y + _2nn_offset_y[4]][x + _2nn_offset_x[4]];
         _count++;
     }
     if (x + 2 < size_x) {
-        _2nn_list[_count] = &_atoms[z + _2nn_offset_z[5]][y + _2nn_offset_y[5]][x + _2nn_offset_x[5]];
+        _2nn_list[_count] = &_lattice_lists[z + _2nn_offset_z[5]][y + _2nn_offset_y[5]][x + _2nn_offset_x[5]];
         _count++;
     }
     return _count;
 }
 
-_type_atom_id AtomList::getId(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z) {
-    return x + y * size_x + z * size_x * size_y; // todo return from atom object.
+_type_lattice_id LatticesList::getId(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
+    return x + y * size_x + z * size_x * size_y; // todo return from Lattice object.
 }

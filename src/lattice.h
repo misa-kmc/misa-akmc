@@ -2,44 +2,34 @@
 // Created by genshen on 2018/11/7.
 //
 
-#ifndef MISA_KMC_ATOM_H
-#define MISA_KMC_ATOM_H
+#ifndef MISA_KMC_LATTICE_H
+#define MISA_KMC_LATTICE_H
 
 #include <map>
 #include <vector>
 #include "type_define.h"
 
-class Atoms {
-    friend class AtomList;  // so atom list can set private member:id directly.
+class Lattice {
+    friend class LatticesList;  // so lattice list can set private member:id directly.
 
 public:
     /**
-     * \brief initial an atom object on the lattice point specified by (i,j,k).
+     * \brief initial an lattice object on the lattice point specified by (i,j,k).
      */
-    explicit Atoms();
+    explicit Lattice();
 
     /*!
      * \brief grid point type,e.g. Fe, or Cu, or Vacancy, or Dumbbell.
      */
-    int atom_type;
+    int lattice_type;
 
-    /*!
-     * \brief the transition rate of this lattice
-     */
     _type_rate rate;
-
-    //跃迁事件列表
-    static std::vector<int> ilist;
-    //跃迁近邻号
-    static std::vector<int> inbr;
-
-    static _type_rate sum_rate;
 
     /**
      * \brief get unique id of current lattice
      * \return lattice id
      */
-    inline _type_atom_id getId() {
+    inline _type_lattice_id getId() {
         return id;
     }
 
@@ -77,22 +67,8 @@ public:
     double Edumb();
 
 private:
-    _type_atom_id id;
+    _type_lattice_id id;
 
 };
 
-class Itl {
-public:
-
-    Itl() {
-    }
-
-    ~Itl();
-
-    int first, second;
-
-    /*direction*/
-    int dir1, dir2, dir3, dir4;
-};
-
-#endif //MISA_KMC_ATOM_H
+#endif //MISA_KMC_LATTICE_H

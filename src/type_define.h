@@ -6,14 +6,14 @@
 #define MISA_KMC_TYPE_DEFINE_H
 
 /**
- * the type of atom lattice position in cartesian coordinate system
+ * the type of lattice position in cartesian coordinate system
  */
 typedef unsigned long _type_box_size;
-typedef unsigned long _type_atom_coord;
-typedef _type_atom_coord _type_atom_size;
-typedef unsigned long _type_atom_id;
+typedef unsigned long _type_lattice_coord;
+typedef _type_lattice_coord _type_lattice_size;
+typedef unsigned long _type_lattice_id;
 
-typedef std::pair<_type_atom_coord, std::pair<_type_atom_coord, _type_atom_coord> > _type_atom_pair;
+typedef std::pair<_type_lattice_coord, std::pair<_type_lattice_coord, _type_lattice_coord> > _type_atom_pair;
 
 /*!
  * \brief the type of transition rate

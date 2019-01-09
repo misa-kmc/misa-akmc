@@ -3,17 +3,17 @@
 //
 
 #include <gtest/gtest.h>
-#include <atom_list.h>
-#include "atom.h"
+#include <lattices_list.h>
+#include "lattice.h"
 
 #define ID_BOX_4_4_4(x, y, z) (x + y*8+z*4*8)
 
 // tests of get1nn
-TEST(atom_list_get1nn_1, atom_list_test) {
-    Atoms *_1nn[8]; // a lattice has at most 8 1nn(s).
-    AtomList atom_list(4, 4, 4);
+TEST(lattice_list_get1nn_1, lattice_list_test) {
+    Lattice *_1nn[8]; // a lattice has at most 8 1nn(s).
+    LatticesList lattice_list(4, 4, 4);
     // test when x is even: ([x-1,x+1], [y-1, y], [z-1,z])
-    auto count = atom_list.get1nn(2, 1, 1, _1nn);
+    auto count = lattice_list.get1nn(2, 1, 1, _1nn);
     EXPECT_EQ(count, 8);
 
     EXPECT_EQ(_1nn[0]->getId(), ID_BOX_4_4_4(1, 0, 0));
@@ -26,7 +26,7 @@ TEST(atom_list_get1nn_1, atom_list_test) {
     EXPECT_EQ(_1nn[7]->getId(), ID_BOX_4_4_4(3, 1, 1));
 
     // test when x is odd: ([x-1,x+1], [y, y+1], [z,z+1])
-    auto count2 = atom_list.get1nn(3, 1, 1, _1nn);
+    auto count2 = lattice_list.get1nn(3, 1, 1, _1nn);
     EXPECT_EQ(count2, 8);
     EXPECT_EQ(_1nn[0]->getId(), ID_BOX_4_4_4(2, 1, 1));
     EXPECT_EQ(_1nn[1]->getId(), ID_BOX_4_4_4(2, 1, 2));
@@ -38,21 +38,21 @@ TEST(atom_list_get1nn_1, atom_list_test) {
     EXPECT_EQ(_1nn[7]->getId(), ID_BOX_4_4_4(4, 2, 2));
 }
 
-TEST(atom_list_get1nn_2, atom_list_test) {
-    Atoms *_1nn[8]; // a lattice has at most 6 2nn(s).
-    AtomList atom_list(4, 4, 4);
+TEST(lattice_list_get1nn_2, lattice_list_test) {
+    Lattice *_1nn[8]; // a lattice has at most 6 2nn(s).
+    LatticesList lattice_list(4, 4, 4);
     // test low boundary
-    auto count = atom_list.get1nn(0, 0, 0, _1nn);
+    auto count = lattice_list.get1nn(0, 0, 0, _1nn);
 
     EXPECT_EQ(count, 1);
     EXPECT_EQ(_1nn[0]->getId(), ID_BOX_4_4_4(1, 0, 0));
 }
 
-TEST(atom_list_get1nn_3, atom_list_test) {
-    Atoms *_1nn[8]; // a lattice has at most 6 2nn(s).
-    AtomList atom_list(4, 4, 4);
+TEST(lattice_list_get1nn_3, lattice_list_test) {
+    Lattice *_1nn[8]; // a lattice has at most 6 2nn(s).
+    LatticesList lattice_list(4, 4, 4);
     // test low boundary
-    auto count = atom_list.get1nn(2, 0, 1, _1nn);
+    auto count = lattice_list.get1nn(2, 0, 1, _1nn);
 
     EXPECT_EQ(count, 4);
     EXPECT_EQ(_1nn[0]->getId(), ID_BOX_4_4_4(1, 0, 0));
@@ -61,21 +61,21 @@ TEST(atom_list_get1nn_3, atom_list_test) {
     EXPECT_EQ(_1nn[3]->getId(), ID_BOX_4_4_4(3, 0, 1));
 }
 
-TEST(atom_list_get1nn_4, atom_list_test) {
-    Atoms *_1nn[8]; // a lattice has at most 6 2nn(s).
-    AtomList atom_list(4, 4, 4);
+TEST(lattice_list_get1nn_4, lattice_list_test) {
+    Lattice *_1nn[8]; // a lattice has at most 6 2nn(s).
+    LatticesList lattice_list(4, 4, 4);
     // test up boundary
-    auto count = atom_list.get1nn(7, 3, 3, _1nn);
+    auto count = lattice_list.get1nn(7, 3, 3, _1nn);
 
     EXPECT_EQ(count, 1);
     EXPECT_EQ(_1nn[0]->getId(), ID_BOX_4_4_4(6, 3, 3));
 }
 
-TEST(atom_list_get1nn_5, atom_list_test) {
-    Atoms *_1nn[8]; // a lattice has at most 6 2nn(s).
-    AtomList atom_list(4, 4, 4);
+TEST(lattice_list_get1nn_5, lattice_list_test) {
+    Lattice *_1nn[8]; // a lattice has at most 6 2nn(s).
+    LatticesList lattice_list(4, 4, 4);
     // test up boundary
-    auto count = atom_list.get1nn(4, 3, 3, _1nn);
+    auto count = lattice_list.get1nn(4, 3, 3, _1nn);
 
     EXPECT_EQ(count, 8);
     EXPECT_EQ(_1nn[0]->getId(), ID_BOX_4_4_4(3, 2, 2));
@@ -89,10 +89,10 @@ TEST(atom_list_get1nn_5, atom_list_test) {
 }
 
 // tests of get2nn
-TEST(atom_list_get2nn_1, atom_list_test) {
-    Atoms *_2nn[6]; // a lattice has at most 6 2nn(s).
-    AtomList atom_list(4, 4, 4);
-    auto count = atom_list.get2nn(2, 1, 1, _2nn);
+TEST(lattice_list_get2nn_1, lattice_list_test) {
+    Lattice *_2nn[6]; // a lattice has at most 6 2nn(s).
+    LatticesList lattice_list(4, 4, 4);
+    auto count = lattice_list.get2nn(2, 1, 1, _2nn);
     // test count
     EXPECT_EQ(count, 6);
 
@@ -104,10 +104,10 @@ TEST(atom_list_get2nn_1, atom_list_test) {
     EXPECT_EQ(_2nn[5]->getId(), ID_BOX_4_4_4(4, 1, 1));
 }
 
-TEST(atom_list_get2nn_2, atom_list_test) {
-    Atoms *_2nn[6]; // a lattice has at most 6 2nn(s).
-    AtomList atom_list(4, 4, 4);
-    auto count = atom_list.get2nn(0, 0, 0, _2nn);
+TEST(lattice_list_get2nn_2, lattice_list_test) {
+    Lattice *_2nn[6]; // a lattice has at most 6 2nn(s).
+    LatticesList lattice_list(4, 4, 4);
+    auto count = lattice_list.get2nn(0, 0, 0, _2nn);
     // test count
     EXPECT_EQ(count, 3); // test low boundary
 
@@ -116,10 +116,10 @@ TEST(atom_list_get2nn_2, atom_list_test) {
     EXPECT_EQ(_2nn[2]->getId(), ID_BOX_4_4_4(2, 0, 0));
 }
 
-TEST(atom_list_get2nn_3, atom_list_test) {
-    Atoms *_2nn[6]; // a lattice has at most 6 2nn(s).
-    AtomList atom_list(4, 4, 4);
-    auto count = atom_list.get2nn(7, 3, 3, _2nn); // test upper boundary
+TEST(lattice_list_get2nn_3, lattice_list_test) {
+    Lattice *_2nn[6]; // a lattice has at most 6 2nn(s).
+    LatticesList lattice_list(4, 4, 4);
+    auto count = lattice_list.get2nn(7, 3, 3, _2nn); // test upper boundary
     // test count
     EXPECT_EQ(count, 3);
 
@@ -128,10 +128,10 @@ TEST(atom_list_get2nn_3, atom_list_test) {
     EXPECT_EQ(_2nn[2]->getId(), ID_BOX_4_4_4(7, 3, 2));
 }
 
-TEST(atom_list_get2nn_4, atom_list_test) {
-    Atoms *_2nn[6]; // a lattice has at most 6 2nn(s).
-    AtomList atom_list(4, 4, 4);
-    auto count = atom_list.get2nn(3, 3, 3, _2nn);
+TEST(lattice_list_get2nn_4, lattice_list_test) {
+    Lattice *_2nn[6]; // a lattice has at most 6 2nn(s).
+    LatticesList lattice_list(4, 4, 4);
+    auto count = lattice_list.get2nn(3, 3, 3, _2nn);
     // test count
     EXPECT_EQ(count, 4);
 

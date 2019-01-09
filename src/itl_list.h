@@ -8,20 +8,21 @@
 
 #include <map>
 #include "type_define.h"
-#include "atom.h"
+#include "lattice.h"
 
 class ItlList {
 public:
-    // a map to correspond the id and the Itl sequence number.
-    std::map<_type_atom_id, Itl> mp;
+    // a map to correspond the id and the Itl object.
+    std::map<_type_lattice_id, Itl> mp;
 
     /*!
+     * \deprecated
      * \brief to find the sequence number in class Ilt
-     *        which include the extra information about Itl type atoms
-     * \param id use the AtomList getId
+     *        which include the extra information about Itl type todo spell? atoms
+     * \param id use the LatticeList getId
      * \return the sequence number in in Itl
      */
-    Itl getItlnum(_type_atom_coord id);
+    Itl getItlnum(_type_lattice_id id);
 };
 
 

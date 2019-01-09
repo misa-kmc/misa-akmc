@@ -5,7 +5,7 @@
 #ifndef MISA_KMC_BOX_H
 #define MISA_KMC_BOX_H
 
-#include "atom_list.h"
+#include "lattices_list.h"
 #include "itl_list.h"
 #include "vacancy_list.h"
 
@@ -53,7 +53,7 @@ public:
     /*!
      * \brief list of all lattice points.
      */
-    AtomList *atom_list;
+    LatticesList *lattice_list;
 
     /*!
      * \brief list of interval lattice (dumbbell).
@@ -67,19 +67,24 @@ public:
      */
     VacancyList *va_list;
 
-    //find Itl id in Atom.
-//    static std::map<_type_atom_coord, int> mp;
-
 protected:
     // make it private, so you can not create an Box object using new Box() outside its friend class/function.
     // we can only create a Box object by using BoxBuilder.
     Box(_type_box_size size_x, _type_box_size size_y, _type_box_size size_z);
 
     /*!
-     * \brief in this method, the member @var atom_list,itl_list,va_list will be created
+     * \brief in this method, the member @var lattice_list,itl_list,va_list will be created
      * from box size parameter.
      */
     void createBox();
+
+private:
+    //跃迁事件列表
+    static std::vector<int> ilist;
+    //跃迁近邻号
+    static std::vector<int> inbr;
+
+    static _type_rate sum_rate;
 };
 
 

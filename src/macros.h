@@ -15,4 +15,5 @@
    arr[6] = i6; \
    arr[7] = i7; \
 }
+
 #endif //MISA_KMC_MACROS_H

@@ -2,26 +2,26 @@
 // Created by zhaorunchu on 2018-12-06.
 //
 
-#ifndef MISA_KMC_ATOM_LIST_H
-#define MISA_KMC_ATOM_LIST_H
+#ifndef MISA_KMC_LATTICES_LIST_H
+#define MISA_KMC_LATTICES_LIST_H
 
 #include <map>
 #include <vector>
 #include "type_define.h"
-#include "atom.h"
+#include "lattice.h"
 
-class AtomList {
+class LatticesList {
 public:
     /*!
-     * \brief initialize the atoms array(allocate memory) with box size in x,y,z direction.
+     * \brief initialize the lattice_lists array(allocate memory) with box size in x,y,z direction.
      * besides, the lattice id will be set in this constructor.
      * \param box_x box size in x direction.
      * \param box_y box size in y direction.
      * \param box_z box size in z direction.
      */
-    AtomList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z);
+    LatticesList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z);
 
-    ~AtomList();
+    ~LatticesList();
 //    vector<int> Onenn_list, Twonn_list;
 
     /*!
@@ -32,45 +32,45 @@ public:
     /*!
      * \brief get all lattice near 1nn
      * \param x,y,z the coordinate of the lattice point.
-     * \param _1nn_list a array to store all pointers of atoms in the distance of 1nn.
-     * \note note that the coordinate specified by [x,y,z] must be in the AtomList box, or "index out of bounds" may happen.
+     * \param _1nn_list a array to store all pointers of Lattices in the distance of 1nn.
+     * \note note that the coordinate specified by [x,y,z] must be in the lattice box, or "index out of bounds" may happen.
      * \return the count of 1nn list.
      */
-    int get1nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z, Atoms *_1nn_list[8]);
+    int get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_1nn_list[8]);
 
     /*!
      * \brief get all lattice near 2nn
      * \param x,y,z the coordinate of the lattice point.
-     * \param _2nn_list a array to store all pointers of atoms in the distance of 2nn.
-     * \note note that the coordinate specified by [x,y,z] must be in the AtomList box, or "index out of bounds" may happen.
+     * \param _2nn_list a array to store all pointers of Lattices in the distance of 2nn.
+     * \note note that the coordinate specified by [x,y,z] must be in the lattice box, or "index out of bounds" may happen.
      * \return the count in 2nn list.
      */
-    int get2nn(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z, Atoms *_2nn_list[6]);
+    int get2nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_2nn_list[6]);
 
     /*!
      * \brief calculate the corresponding number of coordinate
      * \return Id
      */
-    _type_atom_id getId(_type_atom_coord x, _type_atom_coord y, _type_atom_coord z);
+    _type_lattice_id getId(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z);
 
 private:
     /*!
-     * \brief the size of atom array in each dimension.
+     * \brief the size of lattice lists array in each dimension.
      * \note the size_x is two times then real box size due to BCC structure.
      * size_y and size_y is the same as the simulation real box size.
      */
-    const _type_atom_coord size_x, size_y, size_z;
+    const _type_lattice_coord size_x, size_y, size_z;
 
     /*!
-     * \brief the 3d array of all Atoms.
-     * the first dimension of this array represent x index of atoms in box,
+     * \brief the 3d array of all lattices.
+     * the first dimension of this array represent x index of lattice in box,
      * then second and third represent y and z index.
      *
      * \note if the box size is [b_x, b_y, b_z], then the array size will be [2*b_x, b_y, b_z].
      * the size of array in first dimension is two times then the box size in x direction due to BCC structure.
      */
-    Atoms ***_atoms = nullptr;
+    Lattice ***_lattice_lists = nullptr;
 };
 
 
-#endif //MISA_KMC_ATOM_LIST_H
+#endif //MISA_KMC_LATTICES_LIST_H

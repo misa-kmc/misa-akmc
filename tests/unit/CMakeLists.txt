@@ -3,16 +3,16 @@ set(KMC_TEST_TEMP_STORAGE_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
 # configure a header file to pass some of the CMake settings to the source code
 #configure_file(
-#        "${PROJECT_SOURCE_DIR}/test/unit/test_config.h.in"
-#        "${PROJECT_SOURCE_DIR}/test/unit/test_config.h"
+#        "${CMAKE_CURRENT_SOURCE_DIR}/test/unit/test_config.h.in"
+#        "${CMAKE_CURRENT_SOURCE_DIR}/test/unit/test_config.h"
 #)
 
 set(TEST_HEADER_FILES
         )
 
 set(TEST_SOURCE_FILES
-        atom_type_test.cpp
-        atom_list_test.cpp
+        lattice_types_test.cpp
+        lattices_list_test.cpp
         )
 
 
