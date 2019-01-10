@@ -4,6 +4,7 @@ set(HEADER_FILES
         lattice/lattice.h
         lattice/lattices_list.h
         lattice/lattice_types.h
+        lattice/pure_lattice_list.h
         macros.h
         rates_updater.h
         rates.h
@@ -17,6 +18,7 @@ set(SOURCE_FILES
         lattice/lattice.cpp
         lattice/lattices_list.cpp
         lattice/lattice_types.cpp
+        lattice/pure_lattice_list.cpp
         rates_updater.cpp
         rates.cpp
         vacancy_list.cpp

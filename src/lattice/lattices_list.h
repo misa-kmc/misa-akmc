@@ -86,7 +86,7 @@ public:
      * \note note that the coordinate specified by [x,y,z] must be in the lattice box, or "index out of bounds" may happen.
      * \return the count of 1nn list.
      */
-    int get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_1nn_list[8]);
+    virtual int get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_1nn_list[8]) = 0;
 
     /*!
      * \brief get all lattice near 2nn
@@ -95,7 +95,7 @@ public:
      * \note note that the coordinate specified by [x,y,z] must be in the lattice box, or "index out of bounds" may happen.
      * \return the count in 2nn list.
      */
-    int get2nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_2nn_list[6]);
+    virtual int get2nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_2nn_list[6]) = 0;
 
     /*!
      * \brief calculate the corresponding number of coordinate
@@ -123,7 +123,7 @@ public:
      */
     Lattice &getLatById(_type_lattice_id id);
 
-private:
+protected:
     /*!
      * \brief the size of lattice lists array in each dimension.
      * \note the size_x is two times then real box size due to BCC structure.
