@@ -8,6 +8,7 @@
 #include <map>
 #include <vector>
 #include "type_define.h"
+#include "lattice_types.h"
 
 class Lattice {
     friend class LatticesList;  // so lattice list can set private member:id directly.
@@ -19,11 +20,9 @@ public:
     explicit Lattice();
 
     /*!
-     * \brief grid point type,e.g. Fe, or Cu, or Vacancy, or Dumbbell.
+     * \brief type of lattice point,e.g. Fe, or Cu, or Vacancy, or Dumbbell.
      */
-    int lattice_type;
-
-    _type_rate rate;
+    LatticeTypes type;
 
     /**
      * \brief get unique id of current lattice
