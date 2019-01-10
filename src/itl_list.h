@@ -10,6 +10,24 @@
 #include "type_define.h"
 #include "lattice.h"
 
+
+class Itl {
+public:
+    Itl() {};
+
+    ~Itl();
+
+    /**
+     * \brief transition rates of vacancy.
+     */
+    _type_rate rate;
+
+    int first, second;
+
+    /*direction*/
+    int dir1, dir2, dir3, dir4;
+};
+
 class ItlList {
 public:
     // a map to correspond the id and the Itl object.

@@ -11,12 +11,12 @@
 #include "macros.h"
 
 LatticesList::LatticesList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z)
-        : size_x(2 * box_x), size_y(box_y), size_z(box_z) {
-    _lattice_lists = new Lattice **[size_z];
+        : size_x(2 * box_x), size_y(box_y), size_z(box_z), _max_id(size_z * size_y * size_x - 1) {
+    _lattices = new Lattice **[size_z];
     for (_type_lattice_size z = 0; z < size_z; z++) {
-        _lattice_lists[z] = new Lattice *[size_y];
+        _lattices[z] = new Lattice *[size_y];
         for (_type_lattice_size y = 0; y < size_y; y++) {
-            _lattice_lists[z][y] = new Lattice[size_x];
+            _lattices[z][y] = new Lattice[size_x];
         }
     }
     // set id
@@ -24,7 +24,7 @@ LatticesList::LatticesList(_type_box_size box_x, _type_box_size box_y, _type_box
     for (_type_lattice_size z = 0; z < size_z; z++) {
         for (_type_lattice_size y = 0; y < size_y; y++) {
             for (_type_lattice_size x = 0; x < size_x; x++) {
-                _lattice_lists[z][y][x].id = id++;
+                _lattices[z][y][x].id = id++;
             }
         }
     }
@@ -33,20 +33,19 @@ LatticesList::LatticesList(_type_box_size box_x, _type_box_size box_y, _type_box
 LatticesList::~LatticesList() {
     for (_type_lattice_size z = 0; z < size_z; z++) {
         for (_type_lattice_size y = 0; y < size_y; y++) {
-            delete[] _lattice_lists[z][y];
+            delete[] _lattices[z][y];
         }
-        delete[] _lattice_lists[z];
+        delete[] _lattices[z];
     }
-    delete[] _lattice_lists;
+    delete[] _lattices;
 }
 
-void LatticesList::randomInit(int ratio[], int alloy_types) {
+void LatticesList::randomInit(int ratio[], int alloy_types, double va_rate) {
     // random types
     for (_type_lattice_size z = 0; z < size_z; z++) {
         for (_type_lattice_size y = 0; y < size_y; y++) {
             for (_type_lattice_size x = 0; x < size_x; x++) {
-                _lattice_lists[z][y][x].setType(LatticeTypes::randomAtomsType(ratio, alloy_types));
-                // todo random lattice and direction.
+                _lattices[z][y][x].setType(LatticeTypes::randomAtomsType(ratio, alloy_types));
             }
         }
     }
@@ -117,7 +116,7 @@ int LatticesList::get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lat
     int _count = 0;
     for (int i = 0; i < 8; i++) {
         if ((flag >> i) & 0x01) {
-            _1nn_list[_count] = &_lattice_lists[_1nn_index_z[i]][_1nn_index_y[i]][_1nn_index_x[i]];
+            _1nn_list[_count] = &_lattices[_1nn_index_z[i]][_1nn_index_y[i]][_1nn_index_x[i]];
             _count++;
         }
     }
@@ -131,27 +130,27 @@ int LatticesList::get2nn(_type_lattice_coord x, _type_lattice_coord y, _type_lat
     static const int _2nn_offset_z[] = {0, 0, -1, 1, 0, 0};
     int _count = 0;
     if (x >= 2) {
-        _2nn_list[_count] = &_lattice_lists[z + _2nn_offset_z[0]][y + _2nn_offset_y[0]][x + _2nn_offset_x[0]];
+        _2nn_list[_count] = &_lattices[z + _2nn_offset_z[0]][y + _2nn_offset_y[0]][x + _2nn_offset_x[0]];
         _count++;
     }
     if (y != 0) {
-        _2nn_list[_count] = &_lattice_lists[z + _2nn_offset_z[1]][y + _2nn_offset_y[1]][x + _2nn_offset_x[1]];
+        _2nn_list[_count] = &_lattices[z + _2nn_offset_z[1]][y + _2nn_offset_y[1]][x + _2nn_offset_x[1]];
         _count++;
     }
     if (z != 0) {
-        _2nn_list[_count] = &_lattice_lists[z + _2nn_offset_z[2]][y + _2nn_offset_y[2]][x + _2nn_offset_x[2]];
+        _2nn_list[_count] = &_lattices[z + _2nn_offset_z[2]][y + _2nn_offset_y[2]][x + _2nn_offset_x[2]];
         _count++;
     }
     if (z + 1 != size_z) {
-        _2nn_list[_count] = &_lattice_lists[z + _2nn_offset_z[3]][y + _2nn_offset_y[3]][x + _2nn_offset_x[3]];
+        _2nn_list[_count] = &_lattices[z + _2nn_offset_z[3]][y + _2nn_offset_y[3]][x + _2nn_offset_x[3]];
         _count++;
     }
     if (y + 1 != size_y) {
-        _2nn_list[_count] = &_lattice_lists[z + _2nn_offset_z[4]][y + _2nn_offset_y[4]][x + _2nn_offset_x[4]];
+        _2nn_list[_count] = &_lattices[z + _2nn_offset_z[4]][y + _2nn_offset_y[4]][x + _2nn_offset_x[4]];
         _count++;
     }
     if (x + 2 < size_x) {
-        _2nn_list[_count] = &_lattice_lists[z + _2nn_offset_z[5]][y + _2nn_offset_y[5]][x + _2nn_offset_x[5]];
+        _2nn_list[_count] = &_lattices[z + _2nn_offset_z[5]][y + _2nn_offset_y[5]][x + _2nn_offset_x[5]];
         _count++;
     }
     return _count;
@@ -162,5 +161,5 @@ Lattice &LatticesList::getLatById(_type_lattice_id id) {
     id = id / size_x;
     _type_lattice_coord y = id % size_y;
     _type_lattice_coord z = id / size_y;
-    return _lattice_lists[z][y][x];
+    return _lattices[z][y][x];
 }

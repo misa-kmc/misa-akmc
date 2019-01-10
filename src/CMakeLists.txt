@@ -6,7 +6,7 @@ set(HEADER_FILES
         box.h
         macros.h
         type_define.h
-        vacancy_list.cpp vacancy_list.h
+        vacancy_list.h
         )
 
 
@@ -15,7 +15,9 @@ set(SOURCE_FILES
         lattices_list.cpp
         lattice_types.cpp
         box.cpp
-        vacancy_list.cpp vacancy_list.h)
+        vacancy_list.cpp 
+        vacancy_list.h
+        )
 
 
 # set binary path and lib storage path for compiling process.

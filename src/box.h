@@ -56,18 +56,19 @@ public:
     LatticesList *lattice_list;
 
     /*!
+     * \brief list of vacancy indexed by lattice id.
+     */
+    VacancyList *va_list;
+
+    /*!
      * \brief list of interval lattice (dumbbell).
      * if the type of a lattice is interval/dumbbell,
      * then the extra data such as first/second/direction will be save in this list indexed by lattice id.
      */
     ItlList *itl_list;
 
-    /*!
-     * \brief list of vacancy indexed by lattice id.
-     */
-    VacancyList *va_list;
-
 protected:
+
     // make it private, so you can not create an Box object using new Box() outside its friend class/function.
     // we can only create a Box object by using BoxBuilder.
     Box(_type_box_size size_x, _type_box_size size_y, _type_box_size size_z);

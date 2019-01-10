@@ -1,4 +1,4 @@
-set(PNOHS_VERSION "0.1.0")
+set(KMC_VERSION "0.1.0")
 
 option(KMC_OpenMP_ENABLE_FLAG "Use OpenMP" OFF) #change this flag to OFF to disable OpenMP
 option(KMC_MPI_ENABLE_FLAG "Use MPI library" OFF) #change this flag to false to disable mpi
@@ -7,7 +7,7 @@ option(KMC_TEST_MPI_ENABLE_FLAG "Enable MPI in test" ON) # enable mpi in test, i
 option(KMC_TOOLS_BUILD_ENABLE_FLAG "Enable tools building" ON) # building tools directory.
 option(KMC_DEBUG_ENABLE_FLAG "Enable tools building" ON) # enable debug mode building.
 
-if (PNOHS_DEBUG_ENABLE_FLAG)
+if (KMC_DEBUG_ENABLE_FLAG)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 endif ()
 

@@ -95,7 +95,7 @@ private:
      * \note if the box size is [b_x, b_y, b_z], then the array size will be [2*b_x, b_y, b_z].
      * the size of array in first dimension is two times then the box size in x direction due to BCC structure.
      */
-    Lattice ***_lattice_lists = nullptr;
+    Lattice ***_lattices = nullptr;
 };
 
 
