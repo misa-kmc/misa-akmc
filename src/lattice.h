@@ -32,6 +32,13 @@ public:
         return id;
     }
 
+    /**
+     * \brief set the lattice type
+     */
+    inline void setType(LatticeTypes::lat_type tp) {
+        type._type = tp;
+    }
+
     //states[xi][yi][zi] = a[getId(xi, yi, zi)].type
     /*!
      * \brief 复合反应对象的选择

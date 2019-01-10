@@ -13,7 +13,7 @@ set(HEADER_FILES
 set(SOURCE_FILES
         lattice.cpp
         lattices_list.cpp
-        lattice_types.h
+        lattice_types.cpp
         box.cpp
         vacancy_list.cpp vacancy_list.h)
 

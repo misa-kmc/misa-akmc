@@ -25,9 +25,12 @@ public:
 //    vector<int> Onenn_list, Twonn_list;
 
     /*!
-     * \brief 随机一些原子，包括坐标，类型，如果是间隙，需要取向信息。
+     * \brief generate the lattices type, and direction if a lattice is inter lattice.
+     * \param ratio the ratio of mixed alloy to except.
+     * \param alloy_types the length of array @param ratio
+     * \param va_rate the rate of vacancy
      */
-    void init();
+    void randomInit(int ratio[], int alloy_types, double va_rate);
 
     /*!
      * \brief get all lattice near 1nn
@@ -51,7 +54,27 @@ public:
      * \brief calculate the corresponding number of coordinate
      * \return Id
      */
-    _type_lattice_id getId(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z);
+    inline _type_lattice_id getId(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
+        return x + y * size_x + z * size_x * size_y; // todo return from Lattice object.
+    }
+
+    /**
+     * \return the max lattice id of all lattices.
+     */
+    inline _type_lattice_id maxId() {
+        return _max_id;
+    }
+
+    /**
+     * \brief get Lattice object by lattice id
+     *
+     * @note in the implementations, we does not Guarantee the lattices array boundary.
+     * If the lattice specified the @param id is out of box, your program may crash.
+     *
+     * \param id the given lattice id.
+     * \return the reference of the matched lattice.
+     */
+    Lattice &getLatById(_type_lattice_id id);
 
 private:
     /*!
@@ -60,6 +83,9 @@ private:
      * size_y and size_y is the same as the simulation real box size.
      */
     const _type_lattice_coord size_x, size_y, size_z;
+
+    // the max lattice id in box.
+    const _type_lattice_id _max_id;
 
     /*!
      * \brief the 3d array of all lattices.
