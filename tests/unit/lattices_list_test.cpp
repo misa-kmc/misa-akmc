@@ -3,8 +3,8 @@
 //
 
 #include <gtest/gtest.h>
-#include <lattices_list.h>
-#include "lattice.h"
+#include <lattice/lattices_list.h>
+#include <lattice/lattice.h>
 
 #define ID_BOX_4_4_4(x, y, z) (x + y*8+z*4*8)
 

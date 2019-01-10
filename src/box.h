@@ -5,7 +5,7 @@
 #ifndef MISA_KMC_BOX_H
 #define MISA_KMC_BOX_H
 
-#include "lattices_list.h"
+#include "lattice/lattices_list.h"
 #include "itl_list.h"
 #include "vacancy_list.h"
 
