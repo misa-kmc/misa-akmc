@@ -40,7 +40,37 @@ LatticesList::~LatticesList() {
     delete[] _lattice_lists;
 }
 
-void LatticesList::init() {
+void LatticesList::randomInit(int ratio[], int alloy_types) {
+    // random types
+    for (_type_lattice_size z = 0; z < size_z; z++) {
+        for (_type_lattice_size y = 0; y < size_y; y++) {
+            for (_type_lattice_size x = 0; x < size_x; x++) {
+                _lattice_lists[z][y][x].setType(LatticeTypes::randomAtomsType(ratio, alloy_types));
+                // todo random lattice and direction.
+            }
+        }
+    }
+    // make some lattices vacancy
+    // todo generating rule?
+    // todo update statistics values.
+    const _type_lattice_size va_count = static_cast<_type_lattice_size >(
+            static_cast<double>(_max_id) * va_rate);
+    _type_lattice_size i = 0;
+
+    while (i != va_count) {
+        _type_lattice_id id_a = rand() * _max_id;
+        Lattice &rand_lattice_a = getLatById(id_a);
+        _type_lattice_id id_b = rand() * _max_id;
+        Lattice &rand_lattice_b = getLatById(id_b);
+        if (rand_lattice_a.type.isAtom() && rand_lattice_b.type.isAtom()) {
+            // set type of lattice A to inter, and lattice B to vacancy
+            rand_lattice_a.type._type = LatticeTypes::combineToInter(rand_lattice_a.type._type,
+                                                                     rand_lattice_b.type._type);
+            rand_lattice_b.type._type = LatticeTypes::V;
+            i++;
+        }
+    }
+
 }
 
 int LatticesList::get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_1nn_list[8]) {
@@ -127,6 +157,10 @@ int LatticesList::get2nn(_type_lattice_coord x, _type_lattice_coord y, _type_lat
     return _count;
 }
 
-_type_lattice_id LatticesList::getId(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
-    return x + y * size_x + z * size_x * size_y; // todo return from Lattice object.
+Lattice &LatticesList::getLatById(_type_lattice_id id) {
+    _type_lattice_coord x = id % size_x;
+    id = id / size_x;
+    _type_lattice_coord y = id % size_y;
+    _type_lattice_coord z = id / size_y;
+    return _lattice_lists[z][y][x];
 }

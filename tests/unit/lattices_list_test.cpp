@@ -140,3 +140,19 @@ TEST(lattice_list_get2nn_4, lattice_list_test) {
     EXPECT_EQ(_2nn[2]->getId(), ID_BOX_4_4_4(3, 3, 2));
     EXPECT_EQ(_2nn[3]->getId(), ID_BOX_4_4_4(5, 3, 3));
 }
+
+TEST(lattice_list_getLatById_test, lattice_list_test) {
+    LatticesList lattice_list(4, 4, 4);
+    // check all id in box.
+    for (_type_lattice_id id = 0; id <= lattice_list.maxId(); id++) {
+        auto lat = lattice_list.getLatById(id);
+        EXPECT_EQ(lat.getId(), id);
+    }
+}
+
+TEST(lattice_list_MaxId_test, lattice_list_test) {
+    LatticesList lattice_list(4, 4, 4);
+    // check finding max id (coord max_x: 7, coord max_y: 3, coord max_z: 3).
+    auto id = lattice_list.getId(2 * 3 + 1, 3, 3);
+    EXPECT_EQ(id, lattice_list.maxId());
+}

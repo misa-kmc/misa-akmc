@@ -2,6 +2,7 @@ include(configure.cmake)
 set(HEADER_FILES
         lattice.h
         lattices_list.h
+        lattice_types.h
         box.h
         macros.h
         type_define.h
@@ -12,6 +13,7 @@ set(HEADER_FILES
 set(SOURCE_FILES
         lattice.cpp
         lattices_list.cpp
+        lattice_types.cpp
         box.cpp
         vacancy_list.cpp vacancy_list.h)
 
