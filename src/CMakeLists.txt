@@ -5,6 +5,8 @@ set(HEADER_FILES
         lattice_types.h
         box.h
         macros.h
+        rates_updater.h
+        rates.h
         type_define.h
         vacancy_list.h
         )
@@ -15,10 +17,9 @@ set(SOURCE_FILES
         lattices_list.cpp
         lattice_types.cpp
         box.cpp
+        rates_updater.cpp
         rates.cpp
-        rates.h
-        vacancy_list.cpp 
-        vacancy_list.h
+        vacancy_list.cpp
         )
 
 

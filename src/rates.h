@@ -14,7 +14,7 @@
 template<unsigned int RATE_SIZE>
 class Rates {
 public:
-    std::array<_type_rate, RATE_SIZE> rates;
+    std::array<_type_rate, RATE_SIZE> r;
 
 };
 

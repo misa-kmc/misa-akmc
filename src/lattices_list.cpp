@@ -72,6 +72,18 @@ void LatticesList::randomInit(int ratio[], int alloy_types, double va_rate) {
 
 }
 
+void LatticesList::forAllLattices(LatticesList::func_lattices_callback callback) {
+    for (_type_lattice_size z = 0; z < size_z; z++) {
+        for (_type_lattice_size y = 0; y < size_y; y++) {
+            for (_type_lattice_size x = 0; x < size_x; x++) {
+                if (!callback(x, y, z, _lattices[z][y][x])) {
+                    return;
+                }
+            }
+        }
+    }
+}
+
 int LatticesList::get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_1nn_list[8]) {
     // In our implementation, if x is even,then its 1nn will be ([x-1,x+1], [y-1, y], [z-1,z]),
     // if x is odd, then its 1nn will be ([x-1,x+1], [y, y+1], [z,z+1]).

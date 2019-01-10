@@ -22,7 +22,6 @@ public:
     LatticesList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z);
 
     ~LatticesList();
-//    vector<int> Onenn_list, Twonn_list;
 
     /*!
      * \brief generate the lattices type, and direction if a lattice is inter lattice.
@@ -31,6 +30,18 @@ public:
      * \param va_rate the rate of vacancy
      */
     void randomInit(int ratio[], int alloy_types, double va_rate);
+
+    // typedef of iteration of all lattices.
+    typedef const std::function<bool(const _type_lattice_coord x,
+                                     const _type_lattice_coord y,
+                                     const _type_lattice_coord z,
+                                     Lattice &lattice)> func_lattices_callback;
+
+    /**
+     * \brief iterate all lattice in this list, each lattice will be passed to callback function.
+     * if the callback return false, iteration will break.
+     */
+    void forAllLattices(func_lattices_callback callback);
 
     /*!
      * \brief get all lattice near 1nn

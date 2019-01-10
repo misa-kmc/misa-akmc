@@ -85,7 +85,6 @@ private:
     //跃迁近邻号
     static std::vector<int> inbr;
 
-    static _type_rate sum_rate;
 };
 
 
