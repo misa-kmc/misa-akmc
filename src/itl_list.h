@@ -9,6 +9,7 @@
 #include <map>
 #include "type_define.h"
 #include "lattice.h"
+#include "rates.h"
 
 
 class Itl {
@@ -20,7 +21,7 @@ public:
     /**
      * \brief transition rates of vacancy.
      */
-    _type_rate rate;
+    Rates<4> rates;
 
     int first, second;
 

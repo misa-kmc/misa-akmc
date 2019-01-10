@@ -9,13 +9,14 @@
 #include <array>
 #include <map>
 #include "type_define.h"
+#include "rates.h"
 
 class Vacancy {
 public:
     /**
     * \brief transition rates of vacancy.
     */
-    _type_rate rate;
+    Rates<8> rates;
 };
 
 class VacancyList {

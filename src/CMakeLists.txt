@@ -15,6 +15,8 @@ set(SOURCE_FILES
         lattices_list.cpp
         lattice_types.cpp
         box.cpp
+        rates.cpp
+        rates.h
         vacancy_list.cpp 
         vacancy_list.h
         )
