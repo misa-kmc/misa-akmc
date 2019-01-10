@@ -7,8 +7,15 @@
 
 #include <map>
 #include <vector>
+#include <functional>
 #include "type_define.h"
 #include "lattice.h"
+
+// typedef of iteration of all lattices.
+typedef const std::function<bool(const _type_lattice_coord x,
+                                 const _type_lattice_coord y,
+                                 const _type_lattice_coord z,
+                                 Lattice &lattice)> func_lattices_callback;
 
 class LatticesList {
 public:
@@ -31,11 +38,6 @@ public:
      */
     void randomInit(int ratio[], int alloy_types, double va_rate);
 
-    // typedef of iteration of all lattices.
-    typedef const std::function<bool(const _type_lattice_coord x,
-                                     const _type_lattice_coord y,
-                                     const _type_lattice_coord z,
-                                     Lattice &lattice)> func_lattices_callback;
 
     /**
      * \brief iterate all lattice in this list, each lattice will be passed to callback function.

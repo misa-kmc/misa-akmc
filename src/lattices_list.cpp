@@ -72,7 +72,7 @@ void LatticesList::randomInit(int ratio[], int alloy_types, double va_rate) {
 
 }
 
-void LatticesList::forAllLattices(LatticesList::func_lattices_callback callback) {
+void LatticesList::forAllLattices(func_lattices_callback callback) {
     for (_type_lattice_size z = 0; z < size_z; z++) {
         for (_type_lattice_size y = 0; y < size_y; y++) {
             for (_type_lattice_size x = 0; x < size_x; x++) {
