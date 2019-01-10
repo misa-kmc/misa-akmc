@@ -72,7 +72,7 @@ void LatticesList::randomInit(int ratio[], int alloy_types, double va_rate) {
 
 }
 
-void LatticesList::forAllLattices(func_lattices_callback callback) {
+void LatticesList::forAllLattices(const func_lattices_callback callback) {
     for (_type_lattice_size z = 0; z < size_z; z++) {
         for (_type_lattice_size y = 0; y < size_y; y++) {
             for (_type_lattice_size x = 0; x < size_x; x++) {
@@ -84,25 +84,8 @@ void LatticesList::forAllLattices(func_lattices_callback callback) {
     }
 }
 
-int LatticesList::get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_1nn_list[8]) {
-    // In our implementation, if x is even,then its 1nn will be ([x-1,x+1], [y-1, y], [z-1,z]),
-    // if x is odd, then its 1nn will be ([x-1,x+1], [y, y+1], [z,z+1]).
-    // todo periodic boundary?
-    _type_lattice_coord _1nn_index_x[8], _1nn_index_y[8], _1nn_index_z[8];
-
-    // compute 1nn index in array in x direction.
-    // it can be overflow if x == 0.
-    ASSIGN_ARRAY_8(_1nn_index_x, x - 1, x - 1, x - 1, x - 1, x + 1, x + 1, x + 1, x + 1);
-    // 1nn index in y direction and z direction
-    if (x % 2 == 0) {
-        ASSIGN_ARRAY_8(_1nn_index_y, y - 1, y - 1, y, y, y - 1, y - 1, y, y)
-        ASSIGN_ARRAY_8(_1nn_index_z, z - 1, z, z - 1, z, z - 1, z, z - 1, z)
-    } else {
-        ASSIGN_ARRAY_8(_1nn_index_y, y, y, y + 1, y + 1, y, y, y + 1, y + 1)
-        ASSIGN_ARRAY_8(_1nn_index_z, z, z + 1, z, z + 1, z, z + 1, z, z + 1)
-    }
-    // compute returned index flag(it is not always 8 element).
-    unsigned char flag = 0xFF; // binary 1 for keeping, 0 for abandon
+_type_neighbour_status LatticesList::get1nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
+    _type_neighbour_status flag = 0xFF; // binary 1 for keeping, 0 for abandon
     if (x == 0) {
         flag &= 0xF0; // invalid first 4 index.
     }
@@ -124,10 +107,57 @@ int LatticesList::get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lat
             flag &= 0x55; // 0b01010101 = 0x55
         }
     }
+    return flag;
+}
+
+_type_neighbour_status LatticesList::get2nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
+    _type_neighbour_status status = 0x3F; // 0b00111111
+    // the order is from x to z
+    // (increase x from lower to higher; if x is the same, increase y from lower to higher;
+    // if y is the same, increase z from lower to higher.)
+    if (x < 2) {
+        status &= 0x3E; // 0b 0011 1110
+    }
+    if (y == 0) {
+        status &= 0x3D; // 0b 0011 1101
+    }
+    if (z == 0) {
+        status &= 0x3B; // 0b 0011 1011
+    }
+    if (z + 1 == size_z) {
+        status &= 0x37; // 0b 0011 0111
+    }
+    if (y + 1 == size_y) {
+        status &= 0x2F; // 0b 0010 1111
+    }
+    if (x + 2 >= size_x) {
+        status &= 0x1F; // 0b 0001 1111
+    }
+    return status;
+}
+
+int LatticesList::get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_1nn_list[8]) {
+    // In our implementation, if x is even,then its 1nn will be ([x-1,x+1], [y-1, y], [z-1,z]),
+    // if x is odd, then its 1nn will be ([x-1,x+1], [y, y+1], [z,z+1]).
+    _type_lattice_coord _1nn_index_x[8], _1nn_index_y[8], _1nn_index_z[8];
+
+    // compute 1nn index in array in x direction.
+    // it can be overflow if x == 0.
+    ASSIGN_ARRAY_8(_1nn_index_x, x - 1, x - 1, x - 1, x - 1, x + 1, x + 1, x + 1, x + 1);
+    // 1nn index in y direction and z direction
+    if (x % 2 == 0) {
+        ASSIGN_ARRAY_8(_1nn_index_y, y - 1, y - 1, y, y, y - 1, y - 1, y, y)
+        ASSIGN_ARRAY_8(_1nn_index_z, z - 1, z, z - 1, z, z - 1, z, z - 1, z)
+    } else {
+        ASSIGN_ARRAY_8(_1nn_index_y, y, y, y + 1, y + 1, y, y, y + 1, y + 1)
+        ASSIGN_ARRAY_8(_1nn_index_z, z, z + 1, z, z + 1, z, z + 1, z, z + 1)
+    }
+    // compute returned index flag(it is not always 8 element).
+    _type_neighbour_status status = get1nnStatus(x, y, z);
     // save data into array
     int _count = 0;
     for (int i = 0; i < 8; i++) {
-        if ((flag >> i) & 0x01) {
+        if ((status >> i) & 0x01) {
             _1nn_list[_count] = &_lattices[_1nn_index_z[i]][_1nn_index_y[i]][_1nn_index_x[i]];
             _count++;
         }
