@@ -10,6 +10,7 @@
 #include "type_define.h"
 #include "lattice/lattice.h"
 #include "rates.h"
+#include "direction.h"
 
 
 class Itl {
@@ -23,10 +24,7 @@ public:
      */
     Rates<4> rates;
 
-    int first, second;
-
-    /*direction*/
-    int dir1, dir2, dir3, dir4;
+    tran_dir direction; // todo initialization
 };
 
 class ItlList {

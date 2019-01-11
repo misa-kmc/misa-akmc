@@ -16,6 +16,7 @@ struct LatticeTypes {
      *    (type1 << big_endian_shift) | type2
      * 2. In inter lattice, the smaller atom type will be put at higher bit,
      * the larger atom type will be put at lower bit.
+     * // todo make CuFu different to FeCu.
      */
     typedef enum {
         V = 0, Fe = 0x0001, Cu = 0x0002, Ni = 0x0004, Mn = 0x0008,

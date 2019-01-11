@@ -14,8 +14,8 @@
 class Vacancy {
 public:
     /**
-    * \brief transition rates of vacancy.
-    */
+     * \brief transition rates of vacancy.
+     */
     Rates<8> rates;
 };
 
