@@ -8,7 +8,7 @@
 
 #include <map>
 #include "type_define.h"
-#include "lattice.h"
+#include "lattice/lattice.h"
 #include "rates.h"
 
 

@@ -1,9 +1,10 @@
 include(configure.cmake)
 set(HEADER_FILES
-        lattice.h
-        lattices_list.h
-        lattice_types.h
         box.h
+        lattice/lattice.h
+        lattice/lattices_list.h
+        lattice/lattice_types.h
+        lattice/pure_lattice_list.h
         macros.h
         rates_updater.h
         rates.h
@@ -13,10 +14,11 @@ set(HEADER_FILES
 
 
 set(SOURCE_FILES
-        lattice.cpp
-        lattices_list.cpp
-        lattice_types.cpp
         box.cpp
+        lattice/lattice.cpp
+        lattice/lattices_list.cpp
+        lattice/lattice_types.cpp
+        lattice/pure_lattice_list.cpp
         rates_updater.cpp
         rates.cpp
         vacancy_list.cpp

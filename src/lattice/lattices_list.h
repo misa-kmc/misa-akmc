@@ -1,5 +1,6 @@
 //
 // Created by zhaorunchu on 2018-12-06.
+// updated by genshen on 2018-12-11.
 //
 
 #ifndef MISA_KMC_LATTICES_LIST_H
@@ -12,19 +13,21 @@
 #include "lattice.h"
 
 // typedef of iteration of all lattices.
-typedef const std::function<bool(const _type_lattice_coord x,
-                                 const _type_lattice_coord y,
-                                 const _type_lattice_coord z,
-                                 Lattice &lattice)> func_lattices_callback;
+typedef std::function<bool(const _type_lattice_coord x,
+                           const _type_lattice_coord y,
+                           const _type_lattice_coord z,
+                           Lattice &lattice)> func_lattices_callback;
+
+typedef unsigned char _type_neighbour_status;
 
 class LatticesList {
 public:
     /*!
      * \brief initialize the lattice_lists array(allocate memory) with box size in x,y,z direction.
      * besides, the lattice id will be set in this constructor.
-     * \param box_x box size in x direction.
-     * \param box_y box size in y direction.
-     * \param box_z box size in z direction.
+     * \param box_x box size/lattice count in x direction.
+     * \param box_y box size/lattice count in y direction.
+     * \param box_z box size/lattice count in z direction.
      */
     LatticesList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z);
 
@@ -38,12 +41,43 @@ public:
      */
     void randomInit(int ratio[], int alloy_types, double va_rate);
 
-
     /**
      * \brief iterate all lattice in this list, each lattice will be passed to callback function.
      * if the callback return false, iteration will break.
      */
-    void forAllLattices(func_lattices_callback callback);
+    void forAllLattices(const func_lattices_callback callback);
+
+    /**
+     * \brief get status of 1nn neighbour lattices.
+     *
+     * A lattice have at most 8 1nn neighbour lattices.
+     * But if the lattice is at a corner or box boundary,
+     * some neighbour lattices may be nonexistent (in the case of pure boundary condition),
+     * or on the other side of boundary (in the case of periodic boundary condition).
+     * We call those lattice "hidden lattices".
+     * This method returns the status of neighbour lattices,
+     *
+     * If one neighbour lattice is a "hidden lattice", the corresponding bit will be set to 0, otherwise set to 1.
+     * the bit length of return value is 8.
+     *
+     * The lowest bit indicates the status(hidden or not) of neighbour lattice at position of (-c/2,-c/2,-c/2).
+     * Then second bit is position of (-c/2,-c/2,c/2), third bit is position of (-c/2,c/2,-c/2),
+     * and left bit are position of (-c/2,c/2,c/2), (c/2,-c/2,-c/2),
+     * (c/2,-c/2,c/2), (c/2,c/2,-c/2), (c/2,c/2,c/2) from lower bit to higher bit.
+     * In which c is lattice constant, and sentence like "position of (-c/2,-c/2,-c/2)" means
+     * the relative coordinates from neighbour lattice to center lattice(specified by \param x,y,z).
+     *
+     * \param x,y,z the coordinate of the source lattice point.
+     * \return the status of 1nn neighbour lattices
+     */
+    _type_neighbour_status get1nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z);
+
+    /**
+     * \brief similar as get1nnStatus, it returns the status of 2nn neighbour lattices.
+     * \param x the coordinate of the source lattice point.
+     * \return the status of 2nn neighbour lattices
+     */
+    _type_neighbour_status get2nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z);
 
     /*!
      * \brief get all lattice near 1nn
@@ -52,7 +86,7 @@ public:
      * \note note that the coordinate specified by [x,y,z] must be in the lattice box, or "index out of bounds" may happen.
      * \return the count of 1nn list.
      */
-    int get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_1nn_list[8]);
+    virtual int get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_1nn_list[8]) = 0;
 
     /*!
      * \brief get all lattice near 2nn
@@ -61,7 +95,7 @@ public:
      * \note note that the coordinate specified by [x,y,z] must be in the lattice box, or "index out of bounds" may happen.
      * \return the count in 2nn list.
      */
-    int get2nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_2nn_list[6]);
+    virtual int get2nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_2nn_list[6]) = 0;
 
     /*!
      * \brief calculate the corresponding number of coordinate
@@ -89,7 +123,7 @@ public:
      */
     Lattice &getLatById(_type_lattice_id id);
 
-private:
+protected:
     /*!
      * \brief the size of lattice lists array in each dimension.
      * \note the size_x is two times then real box size due to BCC structure.
