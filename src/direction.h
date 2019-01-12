@@ -8,6 +8,8 @@
 
 struct tran_dir;
 
+typedef unsigned char _type_dirs_status; // todo compatible with _type_neighbour_status
+
 struct dirs {
     typedef enum {
         dir__110, // <110>
@@ -19,6 +21,8 @@ struct dirs {
     } _type_dire;
 
     _type_dire _d;
+
+    _type_dirs_status availableTransDirs();
 
     /**
      * \brief get new direction after transition.
@@ -41,7 +45,7 @@ struct tran_dir {
      * if the first atom is Cu, the second atom is Fe, value reversed will be false.
      */
     bool reversed;
-    dirs::_type_dire dir;
+    dirs dir;
 };
 
 #endif //MISA_KMC_DIRECTION_H

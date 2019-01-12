@@ -6,8 +6,8 @@
 #define MISA_KMC_BOX_H
 
 #include "lattice/lattices_list.h"
-#include "itl_list.h"
-#include "vacancy_list.h"
+#include "defect/itl_list.h"
+#include "defect/vacancy_list.h"
 
 class Box;
 

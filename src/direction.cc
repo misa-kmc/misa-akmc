@@ -5,6 +5,7 @@
 #include "direction.h"
 
 // todo refactor
+// todo test
 tran_dir dirs::trans(_type_dire src_dir, bool is_first_atom, bool is_lower, bool rotate) {
     switch (src_dir) {
         case dir__110:
@@ -169,5 +170,23 @@ tran_dir dirs::trans(_type_dire src_dir, bool is_first_atom, bool is_lower, bool
                 }
             }
             break;
+    }
+}
+
+// todo test
+_type_dirs_status dirs::availableTransDirs() {
+    switch (_d) {
+        case dir__110:
+            return 0xC3;
+        case dir__1_10:
+            return 0x3C;
+        case dir__011:
+            return 0x99;
+        case dir__01_1:
+            return 0x66;
+        case dir__101:
+            return 0xA5;
+        case dir__10_1:
+            return 0x5A;
     }
 }

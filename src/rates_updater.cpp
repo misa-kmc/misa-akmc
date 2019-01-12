@@ -3,8 +3,10 @@
 //
 
 #include <cmath>
-#include "box.h"
 #include "rates_updater.h"
+#include "box.h"
+#include "defect/vacancy_list.h"
+#include "defect/itl_list.h"
 
 
 RatesUpdater::RatesUpdater(Box &box) : box(box) {}

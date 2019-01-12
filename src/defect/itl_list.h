@@ -9,22 +9,21 @@
 #include <map>
 #include "type_define.h"
 #include "lattice/lattice.h"
-#include "rates.h"
 #include "direction.h"
+#include "defect.hpp"
 
 
-class Itl {
+class Itl : public Defect<8> {
 public:
-    Itl() {};
-
-    ~Itl();
-
-    /**
-     * \brief transition rates of vacancy.
-     */
-    Rates<4> rates;
 
     tran_dir direction; // todo initialization
+
+    Itl() {};
+
+    ~Itl() {};
+
+    void updateAvailTranDir(_type_neighbour_status nei_status,
+                            Lattice *_1nn_lats[8]) override;
 };
 
 class ItlList {
