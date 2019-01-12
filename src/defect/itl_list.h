@@ -9,7 +9,7 @@
 #include <map>
 #include "type_define.h"
 #include "lattice/lattice.h"
-#include "direction.h"
+#include "../direction.h"
 #include "defect.hpp"
 
 

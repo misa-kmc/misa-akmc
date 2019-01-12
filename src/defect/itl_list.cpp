@@ -4,7 +4,7 @@
 
 #include "itl_list.h"
 
-void Itl::updateAvailTranDir(_type_neighbour_status nei_status, Lattice **_1nn_lats) {
+void Itl::updateAvailTranDir(_type_neighbour_status nei_status, Lattice *_1nn_lats[8]) {
     int lat_index = 0;
     avail_trans_dir = 0; // clean flags
     _type_dirs_status dir_statue = direction.dir.availableTransDirs();
