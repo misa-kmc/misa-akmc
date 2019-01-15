@@ -7,7 +7,7 @@ set(HEADER_FILES
         lattice/lattice.h
         lattice/lattices_list.h
         lattice/lattice_types.h
-        lattice/pure_lattice_list.h
+        lattice/normal_lattice_list.h
         box.h
         direction.h
         macros.h
@@ -22,7 +22,7 @@ set(SOURCE_FILES
         lattice/lattice.cpp
         lattice/lattices_list.cpp
         lattice/lattice_types.cpp
-        lattice/pure_lattice_list.cpp
+        lattice/normal_lattice_list.cpp
         box.cpp
         direction.cc
         rates_updater.cpp

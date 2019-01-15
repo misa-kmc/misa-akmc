@@ -11,7 +11,7 @@
 /**
  * lattice list for normal boundary condition.
  */
-class PureLatticeList : public LatticesList {
+class NormalLatticeList : public LatticesList {
 public:
     /**
      * \brief create the lattice list of non-boundary with box size: box_x*box_y*box_z.
@@ -19,7 +19,7 @@ public:
      * \param box_y box size/lattice count in y direction.
      * \param box_z box size/lattice count in z direction.
      */
-    PureLatticeList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z);
+    NormalLatticeList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z);
 
     /**
      * \brief get bit status of 1nn neighbour lattice.
