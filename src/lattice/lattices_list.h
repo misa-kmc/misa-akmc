@@ -126,6 +126,10 @@ public:
 
     /*!
      * \brief get all lattices near 1nn
+     * 
+     * if a 1nn neighbour lattice does not exists (also means the corresponding bit in get1nnStatus return value is 0),
+     * the corresponding array element will not get changed.
+     * 
      * \param x,y,z the coordinate of the lattice point.
      * \param _1nn_list a array to store all pointers of Lattices in the distance of 1nn.
      * \note note that the coordinate specified by [x,y,z] must be in the lattice box, or "index out of bounds" may happen.
