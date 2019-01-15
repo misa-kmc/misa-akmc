@@ -10,7 +10,7 @@
 
 struct LatticeTypes {
     /**
-     * @note rules:
+     * \note rules:
      * 0. atom type must be bigger then zero
      * 1. inter lattice must be two atom lattices, two types are combined by:
      *    (type1 << big_endian_shift) | type2
@@ -28,7 +28,7 @@ struct LatticeTypes {
 
     lat_type _type;
 
-    // initialize @member _type
+    // initialize \member _type
     explicit LatticeTypes(lat_type tp) : _type(tp) {}
 
     // default value of _type is V
@@ -49,15 +49,15 @@ struct LatticeTypes {
     /**
      * \brief just random atom type,like Fe,Cu,Ni,Mn.
      * \param ratio the ratio of mixed alloy to except.
-     * \param len the length of array @param ratio
+     * \param len the length of array \param ratio
      * \return the created lattice type.
      */
     static lat_type randomAtomsType(int ratio[], int len);
 
     /**
      * \brief the combined two atom types into inter type.
-     * create an inter form @param atom_a and @param atom_b
-     * for example  @param atom_a is Fe and @param atom_b is Cu, this function will return FeCu.
+     * create an inter form \param atom_a and \param atom_b
+     * for example  \param atom_a is Fe and \param atom_b is Cu, this function will return FeCu.
      * \param atom_a type of atom A
      * \param atom_b type of atom B
      * \return the combined inter lattice type.

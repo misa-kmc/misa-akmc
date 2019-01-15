@@ -29,6 +29,9 @@ public:
 
     /**
      * \brief calculate available transition direction based on neighbour lattice's status and types.
+     *
+     * \param nei_status the status of 1nn neighbour lattices
+     * \param _1nn_lats pointer of 1nn neighbour lattices
      */
     virtual void updateAvailTranDir(_type_neighbour_status nei_status,
                                     Lattice *_1nn_lats[8]) = 0;

@@ -18,6 +18,25 @@ typedef std::function<bool(const _type_lattice_coord x,
                            const _type_lattice_coord z,
                            Lattice &lattice)> func_lattices_callback;
 
+/**
+ * \brief type of neighbour status.
+ *
+ * For 1nn neighbour lattice:
+ * The lowest bit indicates the status of neighbour lattice at position of (-c/2,-c/2,-c/2),
+ * Then second bit is position of (-c/2,-c/2,c/2), third bit is position of (-c/2,c/2,-c/2),
+ * and left bit are position of (-c/2,c/2,c/2), (c/2,-c/2,-c/2),
+ * (c/2,-c/2,c/2), (c/2,c/2,-c/2), (c/2,c/2,c/2) from lower bit to higher bit.
+ *
+ * For 1nn neighbour lattice:
+ * The lowest bit indicates the status of neighbour lattice at position of (-c,0,0),
+ * Then second bit is position of (0,-c,0), and third bit is position of (0,0,-c),
+ * 4th bit is position of (0,0,c), 5th bit is position of (0,c,0),
+ * 6th bit is position of (c,0,0).
+ *
+ * In which c is lattice constant, and phrase like "position of (-c/2,-c/2,-c/2)" means
+ * the relative coordinates from source lattice to neighbour lattice.
+ *
+ */
 typedef unsigned char _type_neighbour_status;
 
 class LatticesList {
@@ -63,7 +82,7 @@ public:
      * and left bit are position of (-c/2,c/2,c/2), (c/2,-c/2,-c/2),
      * (c/2,-c/2,c/2), (c/2,c/2,-c/2), (c/2,c/2,c/2) from lower bit to higher bit.
      * In which c is lattice constant, and phrase like "position of (-c/2,-c/2,-c/2)" means
-     * the relative coordinates from neighbour lattice to center lattice(specified by \param x,y,z).
+     * the relative coordinates from center lattice(specified by \param x,y,z) to neighbour lattice.
      *
      * \param x,y,z the coordinate of the source lattice point.
      * \return bits for status of "1nn out-of-boundary lattices"
@@ -102,7 +121,8 @@ public:
      * \param x the coordinate of the source lattice point.
      * \return bits for status of 2nn neighbour lattices
      */
-    virtual _type_neighbour_status get2nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) = 0;
+    virtual _type_neighbour_status
+    get2nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) = 0;
 
     /*!
      * \brief get all lattices near 1nn
