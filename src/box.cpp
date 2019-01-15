@@ -12,8 +12,8 @@ Box *BoxBuilder::build() {
 }
 
 Box::Box(_type_box_size size_x, _type_box_size size_y, _type_box_size size_z)
-        : lattice_list(nullptr), va_list(nullptr), itl_list(nullptr),
-          size_x(size_x), size_y(size_y), size_z(size_z) {
+        : size_x(size_x), size_y(size_y), size_z(size_z),
+          lattice_list(nullptr), va_list(nullptr), itl_list(nullptr) {
 }
 
 void Box::createBox() {

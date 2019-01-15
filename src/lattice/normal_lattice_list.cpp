@@ -8,8 +8,18 @@
 PureLatticeList::PureLatticeList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z)
         : LatticesList(box_x, box_y, box_z) {}
 
+_type_neighbour_status
+PureLatticeList::get1nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
+    return LatticesList::get1nnBoundaryStatus(x, y, z);
+}
 
-int PureLatticeList::get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_1nn_list[8]) {
+_type_neighbour_status
+PureLatticeList::get2nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
+    return LatticesList::get2nnBoundaryStatus(x, y, z);
+}
+
+int
+PureLatticeList::get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_1nn_list[8]) {
     // In our implementation, if x is even,then its 1nn will be ([x-1,x+1], [y-1, y], [z-1,z]),
     // if x is odd, then its 1nn will be ([x-1,x+1], [y, y+1], [z,z+1]).
     _type_lattice_coord _1nn_index_x[8], _1nn_index_y[8], _1nn_index_z[8];
@@ -39,7 +49,8 @@ int PureLatticeList::get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_
     return _count;
 }
 
-int PureLatticeList::get2nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_2nn_list[6]) {
+int
+PureLatticeList::get2nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_2nn_list[6]) {
     static const int _2nn_offset_x[] = {-2, 0, 0, 0, 0, 2};
     static const int _2nn_offset_y[] = {0, -1, 0, 0, 1, 0};
     static const int _2nn_offset_z[] = {0, 0, -1, 1, 0, 0};

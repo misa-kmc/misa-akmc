@@ -80,7 +80,7 @@ void LatticesList::forAllLattices(const func_lattices_callback callback) {
     }
 }
 
-_type_neighbour_status LatticesList::get1nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
+_type_neighbour_status LatticesList::get1nnBoundaryStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
     _type_neighbour_status flag = 0xFF; // binary 1 for keeping, 0 for abandon
     if (x == 0) {
         flag &= 0xF0; // invalid first 4 index.
@@ -106,7 +106,7 @@ _type_neighbour_status LatticesList::get1nnStatus(_type_lattice_coord x, _type_l
     return flag;
 }
 
-_type_neighbour_status LatticesList::get2nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
+_type_neighbour_status LatticesList::get2nnBoundaryStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
     _type_neighbour_status status = 0x3F; // 0b00111111
     // the order is from x to z
     // (increase x from lower to higher; if x is the same, increase y from lower to higher;
