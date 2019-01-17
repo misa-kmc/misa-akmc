@@ -22,6 +22,16 @@ public:
 
     ~Itl() {};
 
+    /**
+     * \brief calculate available transition direction
+     *
+     * basic rules:
+     * 1. If the target is not single atom, it cannot "jump to";
+     * 2. If the target is not available, it cannot "jump to";
+     *
+     * \param nei_status the status of 1nn neighbour lattices
+     * \param _1nn_lats pointer of 1nn neighbour lattices
+     */
     void updateAvailTranDir(_type_neighbour_status nei_status,
                             Lattice *_1nn_lats[8]) override;
 };

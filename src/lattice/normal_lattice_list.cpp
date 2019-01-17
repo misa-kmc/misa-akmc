@@ -3,13 +3,23 @@
 //
 
 #include <macros.h>
-#include "pure_lattice_list.h"
+#include "normal_lattice_list.h"
 
-PureLatticeList::PureLatticeList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z)
+NormalLatticeList::NormalLatticeList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z)
         : LatticesList(box_x, box_y, box_z) {}
 
+_type_neighbour_status
+NormalLatticeList::get1nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
+    return LatticesList::get1nnBoundaryStatus(x, y, z);
+}
 
-int PureLatticeList::get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_1nn_list[8]) {
+_type_neighbour_status
+NormalLatticeList::get2nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
+    return LatticesList::get2nnBoundaryStatus(x, y, z);
+}
+
+int
+NormalLatticeList::get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_1nn_list[8]) {
     // In our implementation, if x is even,then its 1nn will be ([x-1,x+1], [y-1, y], [z-1,z]),
     // if x is odd, then its 1nn will be ([x-1,x+1], [y, y+1], [z,z+1]).
     _type_lattice_coord _1nn_index_x[8], _1nn_index_y[8], _1nn_index_z[8];
@@ -30,8 +40,8 @@ int PureLatticeList::get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_
     // save data into array
     int _count = 0;
     for (int i = 0; i < 8; i++) {
-        if ((status >> i) & 0x01) {
-            _1nn_list[_count] = &_lattices[_1nn_index_z[i]][_1nn_index_y[i]][_1nn_index_x[i]];
+        if (status & (0x01 << i)) {
+            _1nn_list[i] = &_lattices[_1nn_index_z[i]][_1nn_index_y[i]][_1nn_index_x[i]];
             _count++;
         }
     }
@@ -39,33 +49,34 @@ int PureLatticeList::get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_
     return _count;
 }
 
-int PureLatticeList::get2nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_2nn_list[6]) {
+int
+NormalLatticeList::get2nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_2nn_list[6]) {
     static const int _2nn_offset_x[] = {-2, 0, 0, 0, 0, 2};
     static const int _2nn_offset_y[] = {0, -1, 0, 0, 1, 0};
     static const int _2nn_offset_z[] = {0, 0, -1, 1, 0, 0};
     int _count = 0;
     if (x >= 2) {
-        _2nn_list[_count] = &_lattices[z + _2nn_offset_z[0]][y + _2nn_offset_y[0]][x + _2nn_offset_x[0]];
+        _2nn_list[0] = &_lattices[z + _2nn_offset_z[0]][y + _2nn_offset_y[0]][x + _2nn_offset_x[0]];
         _count++;
     }
     if (y != 0) {
-        _2nn_list[_count] = &_lattices[z + _2nn_offset_z[1]][y + _2nn_offset_y[1]][x + _2nn_offset_x[1]];
+        _2nn_list[1] = &_lattices[z + _2nn_offset_z[1]][y + _2nn_offset_y[1]][x + _2nn_offset_x[1]];
         _count++;
     }
     if (z != 0) {
-        _2nn_list[_count] = &_lattices[z + _2nn_offset_z[2]][y + _2nn_offset_y[2]][x + _2nn_offset_x[2]];
+        _2nn_list[2] = &_lattices[z + _2nn_offset_z[2]][y + _2nn_offset_y[2]][x + _2nn_offset_x[2]];
         _count++;
     }
     if (z + 1 != size_z) {
-        _2nn_list[_count] = &_lattices[z + _2nn_offset_z[3]][y + _2nn_offset_y[3]][x + _2nn_offset_x[3]];
+        _2nn_list[3] = &_lattices[z + _2nn_offset_z[3]][y + _2nn_offset_y[3]][x + _2nn_offset_x[3]];
         _count++;
     }
     if (y + 1 != size_y) {
-        _2nn_list[_count] = &_lattices[z + _2nn_offset_z[4]][y + _2nn_offset_y[4]][x + _2nn_offset_x[4]];
+        _2nn_list[4] = &_lattices[z + _2nn_offset_z[4]][y + _2nn_offset_y[4]][x + _2nn_offset_x[4]];
         _count++;
     }
     if (x + 2 < size_x) {
-        _2nn_list[_count] = &_lattices[z + _2nn_offset_z[5]][y + _2nn_offset_y[5]][x + _2nn_offset_x[5]];
+        _2nn_list[5] = &_lattices[z + _2nn_offset_z[5]][y + _2nn_offset_y[5]][x + _2nn_offset_x[5]];
         _count++;
     }
     return _count;
