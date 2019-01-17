@@ -5,9 +5,9 @@
 #ifndef MISA_KMC_BOX_H
 #define MISA_KMC_BOX_H
 
-#include "lattices_list.h"
-#include "itl_list.h"
-#include "vacancy_list.h"
+#include "lattice/lattices_list.h"
+#include "defect/itl_list.h"
+#include "defect/vacancy_list.h"
 
 class Box;
 
@@ -74,7 +74,7 @@ protected:
     Box(_type_box_size size_x, _type_box_size size_y, _type_box_size size_z);
 
     /*!
-     * \brief in this method, the member @var lattice_list,itl_list,va_list will be created
+     * \brief in this method, the member \var lattice_list,itl_list,va_list will be created
      * from box size parameter.
      */
     void createBox();

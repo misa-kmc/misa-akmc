@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include <lattice_types.h>
+#include <lattice/lattice_types.h>
 
 TEST(lattice_type_test_case1, lattice_type_test) {
     LatticeTypes type(LatticeTypes::Fe);

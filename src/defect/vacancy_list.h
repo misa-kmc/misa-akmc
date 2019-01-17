@@ -9,14 +9,15 @@
 #include <array>
 #include <map>
 #include "type_define.h"
-#include "rates.h"
+#include "defect.hpp"
 
-class Vacancy {
+class Vacancy : public Defect<8> {
 public:
     /**
-    * \brief transition rates of vacancy.
-    */
-    Rates<8> rates;
+     * \brief calculate available transition direction based on neighbour lattice's status and types.
+     */
+    void updateAvailTranDir(_type_neighbour_status nei_status,
+                            Lattice *_1nn_lats[8]) override;
 };
 
 class VacancyList {
