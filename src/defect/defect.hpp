@@ -31,6 +31,13 @@ public:
     _type_avail_trans_dir avail_trans_dir;
 
     /**
+     * \brief this method will be call before calling updateRates.
+     * \param list_1nn 1nn lattices of this lattice.
+     * \param status_1nn 1nn status of this lattice.
+     */
+    virtual void beforeRatesUpdate(Lattice *list_1nn[8], _type_neighbour_status status_1nn);
+
+    /**
      * \brief update transition rates to each direction of this lattice.
      * \param list_1nn 1nn lattices of this lattice.
      * \param status_1nn 1nn status of this lattice.
@@ -42,11 +49,14 @@ public:
      *
      * \param nei_status the status of 1nn neighbour lattices
      * \param _1nn_lats pointer of 1nn neighbour lattices
-     * \return the updated transition direction
+     * \return the available transition direction
      */
-    virtual _type_dirs_status updateAvailTranDir(_type_neighbour_status nei_status,
-                                                 Lattice *_1nn_lats[8]) = 0;
+    virtual _type_dirs_status availTranDirs(_type_neighbour_status nei_status,
+                                            Lattice **_1nn_lats) = 0;
 };
+
+template<unsigned int SIZE>
+void Defect<SIZE>::beforeRatesUpdate(Lattice *list_1nn[8], _type_neighbour_status status_1nn) {}
 
 
 #endif //MISA_KMC_DEFECT_JLIST_H

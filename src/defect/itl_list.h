@@ -23,6 +23,11 @@ public:
     ~Itl() {};
 
     /**
+     * \brief be called before calling updateRates.
+     */
+    void beforeRatesUpdate(Lattice *list_1nn[8], _type_neighbour_status status_1nn) override;
+
+    /**
      * \brief update transition rates of this interstitial lattice.
      * \param list_1nn 1nn lattices of this lattice.
      * \param status_1nn 1nn status of this lattice.
@@ -40,9 +45,9 @@ protected:
      *
      * \param nei_status the status of 1nn neighbour lattices
      * \param _1nn_lats pointer of 1nn neighbour lattices
-     * \return the updated transition direction
+     * \return the available transition direction
      */
-    _type_dirs_status updateAvailTranDir(_type_neighbour_status nei_status,
+    _type_dirs_status availTranDirs(_type_neighbour_status nei_status,
                                          Lattice *_1nn_lats[8]) override;
 
     /**

@@ -4,8 +4,8 @@
 
 #include "itl_list.h"
 
-_type_dirs_status Itl::updateAvailTranDir(_type_neighbour_status nei_status, Lattice *_1nn_lats[8]) {
-    _type_dirs_status dir_statue = direction.dir.availableTransDirs();
+_type_dirs_status Itl::availTranDirs(_type_neighbour_status nei_status, Lattice *_1nn_lats[8]) {
+    _type_dirs_status dir_status = direction.dir.availableTransDirs();
     // search all neighbour lattices, if the neighbour lattice is a destination that the source lattice can jump to
     // (it is available and it is atom),
     // then set the destination as available transition direction.
@@ -17,13 +17,15 @@ _type_dirs_status Itl::updateAvailTranDir(_type_neighbour_status nei_status, Lat
             atom_nei_status |= 1 << b;
         }
     }
-    return avail_trans_dir = dir_statue & atom_nei_status;
+    return (dir_status & atom_nei_status);
+}
+
+void Itl::beforeRatesUpdate(Lattice *list_1nn[8], _type_neighbour_status status_1nn) {
+    // compute and set "which neighbour lattices can jump to"
+    avail_trans_dir = availTranDirs(status_1nn, list_1nn);
 }
 
 void Itl::updateRates(Lattice *list_1nn[8], _type_neighbour_status status_1nn) {
-    // compute "which neighbour lattices can jump to"
-    _type_dirs_status avail_trans_dir = updateAvailTranDir(status_1nn, list_1nn);
-
     // search all neighbour lattices, if the neighbour lattice is a destination that the source lattice can jump to,
     // then calculate the transition rate from source lattice to the neighbour lattice.
     for (unsigned char b = 0; b < 8; b++) {

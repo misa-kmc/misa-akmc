@@ -5,7 +5,7 @@
 #include "vacancy_list.h"
 
 
-_type_neighbour_status Vacancy::updateAvailTranDir(_type_neighbour_status nei_status, Lattice **_1nn_lats) {
+_type_neighbour_status Vacancy::availTranDirs(_type_neighbour_status nei_status, Lattice **_1nn_lats) {
     int lat_index = 0;
     avail_trans_dir = 0; // clean flags
     // search all neighbour lattices, if the neighbour lattice is a destination that the source lattice can jump to,
@@ -20,6 +20,10 @@ _type_neighbour_status Vacancy::updateAvailTranDir(_type_neighbour_status nei_st
         }
     }
     // todo return value
+}
+
+void Vacancy::beforeRatesUpdate(Lattice **list_1nn, _type_neighbour_status status_1nn) {
+    Defect::beforeRatesUpdate(list_1nn, status_1nn);
 }
 
 void Vacancy::updateRates(Lattice **list_1nn, _type_neighbour_status status_1nn) {
