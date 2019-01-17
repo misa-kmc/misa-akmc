@@ -11,6 +11,7 @@ set(HEADER_FILES
         box.h
         direction.h
         macros.h
+        kmc.h
         rates_updater.h
         type_define.h
         )
@@ -25,6 +26,7 @@ set(SOURCE_FILES
         lattice/normal_lattice_list.cpp
         box.cpp
         direction.cc
+        kmc.cpp
         rates_updater.cpp
         )
 

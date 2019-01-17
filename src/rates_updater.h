@@ -10,28 +10,33 @@
 const double BoltzmannConstant = 1.3806485279; // unit: 10^{-23} J/K
 
 class RatesUpdater {
+public:
     _type_rate rate_sum;
 
     explicit RatesUpdater(Box &box);
-
-    /**
-     * \brief calculate the transition rates of each lattice.
-     *
-     * The calculating methods depends on the lattice type(single atom, vacancy and dumbbell).
-     * Different types of lattice have different methods or formulas to calculate the rate.
-     * see the implementation for more details.
-     *
-     * After this step, the rate of every transition direction of each lattice will be set.
-     */
-    void updateRates(double v, double T);
 
 private:
     const Box &box;
 
     /**
+     * \brief calculate the rate based on delta e.
+     *
+     * Arrhenius equation:
+     * k=Ae^{ frac{ -E_a }{ K_bT } }
+     * see https://en.wikipedia.org/wiki/Arrhenius_equation for more details.
+     *
+     * \param v attempt rate
+     * \param T temperature
+     * \param Ea activation energy for the reaction (in the same units as kB*T)
+     * \return the transition rate
+     *
+     */
+    double arrhenius(const double v, const double T, const double delta_e);
+
+    /**
      * return delta E
      */
-    double deltaE();
+    double activeEnergy();
 
 };
 
