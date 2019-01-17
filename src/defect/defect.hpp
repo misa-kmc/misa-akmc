@@ -8,6 +8,7 @@
 #include <array>
 #include "../lattice/lattices_list.h"
 #include "../type_define.h"
+#include "../direction.h"
 #include "def_types.h"
 
 /**
@@ -19,6 +20,8 @@ class Defect {
 public:
     /**
      * \brief the transition rates of lattice in each available transition direction.
+     * If the transition rate is not available for some direction,
+     * it will leave it the array element untouched.
      */
     std::array<_type_rate, SIZE> rates;
 
@@ -28,13 +31,21 @@ public:
     _type_avail_trans_dir avail_trans_dir;
 
     /**
+     * \brief update transition rates to each direction of this lattice.
+     * \param list_1nn 1nn lattices of this lattice.
+     * \param status_1nn 1nn status of this lattice.
+     */
+    virtual void updateRates(Lattice *list_1nn[8], _type_neighbour_status status_1nn) = 0;
+
+    /**
      * \brief calculate available transition direction based on neighbour lattice's status and types.
      *
      * \param nei_status the status of 1nn neighbour lattices
      * \param _1nn_lats pointer of 1nn neighbour lattices
+     * \return the updated transition direction
      */
-    virtual void updateAvailTranDir(_type_neighbour_status nei_status,
-                                    Lattice *_1nn_lats[8]) = 0;
+    virtual _type_dirs_status updateAvailTranDir(_type_neighbour_status nei_status,
+                                                 Lattice *_1nn_lats[8]) = 0;
 };
 
 

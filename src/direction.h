@@ -9,6 +9,8 @@
 struct tran_dir;
 
 typedef unsigned char _type_dirs_status; // todo compatible with _type_neighbour_status
+typedef unsigned char _type_dir_id;
+typedef unsigned char _type_dirs_size;
 
 struct dirs {
     typedef enum {

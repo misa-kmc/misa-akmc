@@ -23,17 +23,40 @@ public:
     ~Itl() {};
 
     /**
-     * \brief calculate available transition direction
+     * \brief update transition rates of this interstitial lattice.
+     * \param list_1nn 1nn lattices of this lattice.
+     * \param status_1nn 1nn status of this lattice.
+     */
+    void updateRates(Lattice *list_1nn[8], _type_neighbour_status status_1nn) override;
+
+protected:
+    /**
+     * \brief calculate available transition direction based on the 1nn nearest neighbour lattices
      *
      * basic rules:
      * 1. If the target is not single atom, it cannot "jump to";
      * 2. If the target is not available, it cannot "jump to";
+     * 3. It must be in the 4 transition directions determined by source lattice direction.
      *
      * \param nei_status the status of 1nn neighbour lattices
      * \param _1nn_lats pointer of 1nn neighbour lattices
+     * \return the updated transition direction
      */
-    void updateAvailTranDir(_type_neighbour_status nei_status,
-                            Lattice *_1nn_lats[8]) override;
+    _type_dirs_status updateAvailTranDir(_type_neighbour_status nei_status,
+                                         Lattice *_1nn_lats[8]) override;
+
+    /**
+     * \brief set transition rate for the direction whose 1nn neighbour id is @param dir_id.
+     *
+     * find rates array index by parameter dir_id, and set rate to the array element.
+     * for example: avail_trans_dir is 0b00110101, and dir_id is 4,
+     *                      dir_id:  4 -----^
+     * the it will set value for rates[3].
+     *
+     * \param rate transition rate
+     * \param dir_id 1nn neighbour lattice id, available values from 0 to 7.
+     */
+    void setRate(double rate, _type_dir_id dir_id);
 };
 
 class ItlList {

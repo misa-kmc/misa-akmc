@@ -16,8 +16,10 @@ public:
     /**
      * \brief calculate available transition direction based on neighbour lattice's status and types.
      */
-    void updateAvailTranDir(_type_neighbour_status nei_status,
+    _type_neighbour_status updateAvailTranDir(_type_neighbour_status nei_status,
                             Lattice *_1nn_lats[8]) override;
+
+    void updateRates(Lattice *list_1nn[8], _type_neighbour_status status_1nn) override;
 };
 
 class VacancyList {

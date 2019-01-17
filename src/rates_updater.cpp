@@ -18,8 +18,14 @@ void RatesUpdater::updateRates(double v, double T) {
                                                Lattice &lattice) {
         if (lattice.type.isAtom()) {
             // todo
-        } else if (lattice.type.isDumbbell()) {
-            // todo
+        } else if (lattice.type.isDumbbell()) { // dumbbell
+            Itl &itl_ref = box.itl_list->mp.at(lattice.getId());
+
+            Lattice *lat_list[8];
+            box.lattice_list->get1nn(x, y, z, lat_list);
+            _type_neighbour_status nei_status = box.lattice_list->get1nnStatus(x, y, z);
+            // update transition rate to each direction
+            itl_ref.updateRates(lat_list, nei_status);
         } else { // vacancy
             Lattice *lat_list[8];
             int size_1nn = box.lattice_list->get1nn(x, y, z, lat_list);
