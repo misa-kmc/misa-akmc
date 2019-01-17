@@ -11,7 +11,7 @@ public:
 
     FRIEND_TEST(itl_availTranDirs_status_test, itl_test);
 
-    FRIEND_TEST(itl_setRate_test, itl_test);
+    FRIEND_TEST(itl_ratesIndex_test, itl_test);
 };
 
 TEST(itl_availTranDirs_test, itl_test) {
@@ -100,12 +100,32 @@ TEST(itl_availTranDirs_status_test, itl_test) {
     EXPECT_EQ(itl.avail_trans_dir, 0x00);
 }
 
-TEST(itl_setRate_test, itl_test) {
-    ItlTester itl;
-    itl.avail_trans_dir = 0x11;
-    itl.setRate(3.1415, 0);
-    EXPECT_EQ(itl.rates[0], 3.1415);
+TEST(itl_ratesIndex_test, itl_test) {
+    // 0xC3 0b 1100 0011
+    EXPECT_EQ(ItlTester::ratesIndex(0, 0xC3, false), 0);
+    EXPECT_EQ(ItlTester::ratesIndex(0, 0xC3, true), 1);
 
-    itl.setRate(1.41, 4);
-    EXPECT_EQ(itl.rates[4], 1.41);
+    EXPECT_EQ(ItlTester::ratesIndex(1, 0xC3, false), 2);
+    EXPECT_EQ(ItlTester::ratesIndex(1, 0xC3, true), 3);
+
+    // better undefined behavior (use latter index)
+    EXPECT_EQ(ItlTester::ratesIndex(2, 0xC3, false), 4);
+    EXPECT_EQ(ItlTester::ratesIndex(2, 0xC3, true), 5);
+    EXPECT_EQ(ItlTester::ratesIndex(3, 0xC3, false), 4);
+    EXPECT_EQ(ItlTester::ratesIndex(3, 0xC3, true), 5);
+
+    EXPECT_EQ(ItlTester::ratesIndex(6, 0xC3, false), 4);
+    EXPECT_EQ(ItlTester::ratesIndex(6, 0xC3, true), 5);
+
+    EXPECT_EQ(ItlTester::ratesIndex(7, 0xC3, false), 6);
+    EXPECT_EQ(ItlTester::ratesIndex(7, 0xC3, true), 7);
+
+    // 0xC0 0b 1100 0000
+    EXPECT_EQ(ItlTester::ratesIndex(0, 0xC0, false), 0);
+    EXPECT_EQ(ItlTester::ratesIndex(0, 0xC0, true), 1);
+
+    EXPECT_EQ(ItlTester::ratesIndex(6, 0xC0, false), 0);
+    EXPECT_EQ(ItlTester::ratesIndex(6, 0xC0, true), 1);
+    EXPECT_EQ(ItlTester::ratesIndex(7, 0xC0, false), 2);
+    EXPECT_EQ(ItlTester::ratesIndex(7, 0xC0, true), 3);
 }

@@ -48,20 +48,22 @@ protected:
      * \return the available transition direction
      */
     _type_dirs_status availTranDirs(_type_neighbour_status nei_status,
-                                         Lattice *_1nn_lats[8]) override;
+                                    Lattice *_1nn_lats[8]) override;
 
     /**
-     * \brief set transition rate for the direction whose 1nn neighbour id is @param dir_id.
+     * \brief calculate the index of rates array by _1nn_id and trans_dirs.
+     * for example, tran_dirs is 0b 01101010, _1nn_id is 5,
+     * the 5th bit (staring from 0) in tran_dirs (0b 01101010 (from lower bit to higher bit)
+     *                      5th bit in tran_dirs  _____^
+     * is 2nd (start counting from 0) 'bit 1' in tran_dirs from lower bit to higher bit,
+     * so, the rate index will be 2*2nd=4 (if up is false) or 2*2nd+1=5 (if up is true)
      *
-     * find rates array index by parameter dir_id, and set rate to the array element.
-     * for example: avail_trans_dir is 0b00110101, and dir_id is 4,
-     *                      dir_id:  4 -----^
-     * the it will set value for rates[3].
-     *
-     * \param rate transition rate
-     * \param dir_id 1nn neighbour lattice id, available values from 0 to 7.
+     * \param _1nn_id  lattice id of 1nn neighbour, available values from 0 to 7.
+     * \param trans_dirs the 4 available transition directions determined by interval orientation, which is recorded by 8-bits.
+     * \param up rotate direction
+     * \return the index of rates array
      */
-    void setRate(double rate, _type_dir_id dir_id);
+    static int ratesIndex(_type_dir_id _1nn_id, _type_dirs_status trans_dirs, bool up);
 };
 
 class ItlList {

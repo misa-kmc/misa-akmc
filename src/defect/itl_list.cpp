@@ -26,6 +26,7 @@ void Itl::beforeRatesUpdate(Lattice *list_1nn[8], _type_neighbour_status status_
 }
 
 void Itl::updateRates(Lattice *list_1nn[8], _type_neighbour_status status_1nn) {
+    _type_dirs_status trans_dirs = direction.dir.availableTransDirs();
     // search all neighbour lattices, if the neighbour lattice is a destination that the source lattice can jump to,
     // then calculate the transition rate from source lattice to the neighbour lattice.
     for (unsigned char b = 0; b < 8; b++) {
@@ -35,24 +36,18 @@ void Itl::updateRates(Lattice *list_1nn[8], _type_neighbour_status status_1nn) {
             // calculate the rate from itl_ref to lat_nei.
 //            double Ea = deltaE();
             double rate = 0; // (v, T, Ea);  // todo compute rate
-            setRate(0, b);
+            rates[ratesIndex(b, trans_dirs, false)] = rate;
         }
     }
 }
 
-void Itl::setRate(double rate, _type_dir_id dir_id) {
-    // todo check if avail_trans_dir has been updated ?
-    // todo clear rate array.
-    if ((avail_trans_dir >> dir_id) & 0x1) {
-        return; // if the direction is not in available transition directions set, skip it.
-    }
-    // calculate the rate array index first by dir_id.
-//    _type_dirs_status dir_statue = avail_trans_dir & (static_cast<_type_dirs_status>(1U) << dir_id);
-//    static _type_dirs_status d1 = 0x5555, d2 = 0x3333, d3 = 0x0f0f;
-//    dir_statue = (dir_statue & d1) + ((dir_statue >> 1) & d1);
-//    dir_statue = (dir_statue & d2) + ((dir_statue >> 2) & d2);
-//    dir_statue = (dir_statue & d3) + ((dir_statue >> 4) & d3);
-    rates[dir_id] = rate;
+int Itl::ratesIndex(_type_dir_id _1nn_id, _type_dirs_status trans_dirs, bool up) {
+    _type_dirs_status dir_status = trans_dirs & ~(static_cast<_type_dirs_status>(0xFF) << _1nn_id);
+    static _type_dirs_status d1 = 0x5555, d2 = 0x3333, d3 = 0x0f0f;
+    dir_status = (dir_status & d1) + ((dir_status >> 1) & d1);
+    dir_status = (dir_status & d2) + ((dir_status >> 2) & d2);
+    dir_status = (dir_status & d3) + ((dir_status >> 4) & d3);
+    return up ? 2 * dir_status + 1 : 2 * dir_status;
 }
 
 Itl ItlList::getItlnum(_type_lattice_id id) {
