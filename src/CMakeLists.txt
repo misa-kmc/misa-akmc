@@ -9,7 +9,7 @@ set(HEADER_FILES
         lattice/lattice_types.h
         lattice/normal_lattice_list.h
         box.h
-        direction.h
+        orientation.h
         macros.h
         kmc.h
         rates_updater.h
@@ -25,7 +25,7 @@ set(SOURCE_FILES
         lattice/lattice_types.cpp
         lattice/normal_lattice_list.cpp
         box.cpp
-        direction.cc
+        orientation.cc
         kmc.cpp
         rates_updater.cpp
         )

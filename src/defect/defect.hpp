@@ -8,7 +8,7 @@
 #include <array>
 #include "../lattice/lattices_list.h"
 #include "../type_define.h"
-#include "../direction.h"
+#include "../orientation.h"
 #include "def_types.h"
 
 /**

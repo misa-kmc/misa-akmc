@@ -16,8 +16,8 @@ public:
 
 TEST(itl_availTranDirs_test, itl_test) {
     ItlTester itl;
-    itl.direction.dir._d = dirs::dir__110;
-    itl.direction.reversed = false;
+    itl.orientation.orient._ori = orientation::dir__110;
+    itl.orientation.reversed = false;
 
     _type_neighbour_status nei_status = 0xFF;
     Lattice data[8];
@@ -56,8 +56,8 @@ TEST(itl_availTranDirs_test, itl_test) {
 
 TEST(itl_availTranDirs_status_test, itl_test) {
     ItlTester itl;
-    itl.direction.dir._d = dirs::dir__110;
-    itl.direction.reversed = false;
+    itl.orientation.orient._ori = orientation::dir__110;
+    itl.orientation.reversed = false;
 
     Lattice data[8];
     data[0].type._type = LatticeTypes::Fe;

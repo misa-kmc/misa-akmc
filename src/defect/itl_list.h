@@ -9,14 +9,14 @@
 #include <map>
 #include "type_define.h"
 #include "lattice/lattice.h"
-#include "../direction.h"
+#include "../orientation.h"
 #include "defect.hpp"
 
 
 class Itl : public Defect<8> {
 public:
 
-    tran_dir direction; // todo initialization
+    tran_orient orientation; // todo initialization
 
     Itl() {};
 
@@ -41,11 +41,11 @@ protected:
      * basic rules:
      * 1. If the target is not single atom, it cannot "jump to";
      * 2. If the target is not available, it cannot "jump to";
-     * 3. It must be in the 4 transition directions determined by source lattice direction.
+     * 3. It must be in the 4 transition directions determined by source lattice orientation.
      *
      * \param nei_status the status of 1nn neighbour lattices
      * \param _1nn_lats pointer of 1nn neighbour lattices
-     * \return the available transition direction
+     * \return the available transition directions
      */
     _type_dirs_status availTranDirs(_type_neighbour_status nei_status,
                                     Lattice *_1nn_lats[8]) override;
