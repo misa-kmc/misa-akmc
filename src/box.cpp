@@ -3,6 +3,7 @@
 //
 
 #include "box.h"
+#include "lattice/normal_lattice_list.h"
 
 Box *BoxBuilder::build() {
     Box *box = new Box(size_x, size_y, size_z); // todo remember to delete
@@ -11,10 +12,11 @@ Box *BoxBuilder::build() {
 }
 
 Box::Box(_type_box_size size_x, _type_box_size size_y, _type_box_size size_z)
-        : lattice_list(nullptr), va_list(nullptr), itl_list(nullptr),
-          size_x(size_x), size_y(size_y), size_z(size_z) {
+        : size_x(size_x), size_y(size_y), size_z(size_z),
+          lattice_list(nullptr), va_list(nullptr), itl_list(nullptr) {
 }
 
 void Box::createBox() {
-    lattice_list = new LatticesList(size_x, size_y, size_z); // new Lattice array and set lattice id.
+    // todo other type of boundary.
+    lattice_list = new NormalLatticeList(size_x, size_y, size_z); // new Lattice array and set lattice id.
 }

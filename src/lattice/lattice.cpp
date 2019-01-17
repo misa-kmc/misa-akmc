@@ -4,5 +4,5 @@
 
 #include "lattice.h"
 
-Lattice::Lattice() : id(0), rate(0) {
+Lattice::Lattice() : id(0) {
 }

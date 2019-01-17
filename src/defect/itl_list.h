@@ -8,24 +8,32 @@
 
 #include <map>
 #include "type_define.h"
-#include "lattice.h"
+#include "lattice/lattice.h"
+#include "../direction.h"
+#include "defect.hpp"
 
 
-class Itl {
+class Itl : public Defect<8> {
 public:
+
+    tran_dir direction; // todo initialization
+
     Itl() {};
 
-    ~Itl();
+    ~Itl() {};
 
     /**
-     * \brief transition rates of vacancy.
+     * \brief calculate available transition direction
+     *
+     * basic rules:
+     * 1. If the target is not single atom, it cannot "jump to";
+     * 2. If the target is not available, it cannot "jump to";
+     *
+     * \param nei_status the status of 1nn neighbour lattices
+     * \param _1nn_lats pointer of 1nn neighbour lattices
      */
-    _type_rate rate;
-
-    int first, second;
-
-    /*direction*/
-    int dir1, dir2, dir3, dir4;
+    void updateAvailTranDir(_type_neighbour_status nei_status,
+                            Lattice *_1nn_lats[8]) override;
 };
 
 class ItlList {

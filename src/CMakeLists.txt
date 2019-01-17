@@ -1,22 +1,31 @@
 include(configure.cmake)
 set(HEADER_FILES
-        lattice.h
-        lattices_list.h
-        lattice_types.h
+        defect/def_types.h
+        defect/defect.hpp
+        defect/itl_list.h
+        defect/vacancy_list.h
+        lattice/lattice.h
+        lattice/lattices_list.h
+        lattice/lattice_types.h
+        lattice/normal_lattice_list.h
         box.h
+        direction.h
         macros.h
+        rates_updater.h
         type_define.h
-        vacancy_list.h
         )
 
 
 set(SOURCE_FILES
-        lattice.cpp
-        lattices_list.cpp
-        lattice_types.cpp
+        defect/itl_list.cpp
+        defect/vacancy_list.cpp
+        lattice/lattice.cpp
+        lattice/lattices_list.cpp
+        lattice/lattice_types.cpp
+        lattice/normal_lattice_list.cpp
         box.cpp
-        vacancy_list.cpp 
-        vacancy_list.h
+        direction.cc
+        rates_updater.cpp
         )
 
 
