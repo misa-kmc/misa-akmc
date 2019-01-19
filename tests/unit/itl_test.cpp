@@ -120,3 +120,62 @@ TEST(itl_ratesIndex_test, itl_test) {
     EXPECT_EQ(ItlTester::ratesIndex(7, 0xC0, false), 2);
     EXPECT_EQ(ItlTester::ratesIndex(7, 0xC0, true), 3);
 }
+
+TEST(itl_get1nnIdByRatesIndex_test, itl_test) {
+    // test data is the same as above test.
+    // given a 1nn id, we can get the index in rates array,
+    // given a index of rates array, we can also calculate the 1nn id.
+
+    // 0xC3 0b 1100 0011
+    int index = ItlTester::ratesIndex(0, 0xC3, false); // the first parameter is 1nn neighbour id
+    EXPECT_EQ(ItlTester::get1nnIdByRatesIndex(index, 0xC3), 0); // assert 1nn neighbour id
+    index = ItlTester::ratesIndex(0, 0xC3, true); // index=1
+    EXPECT_EQ(ItlTester::get1nnIdByRatesIndex(index, 0xC3), 0);
+
+    index = ItlTester::ratesIndex(1, 0xC3, true); // index=3
+    EXPECT_EQ(ItlTester::get1nnIdByRatesIndex(index, 0xC3), 1);
+
+    index = ItlTester::ratesIndex(6, 0xC3, true); // index=5
+    EXPECT_EQ(ItlTester::get1nnIdByRatesIndex(index, 0xC3), 6);
+
+    index = ItlTester::ratesIndex(7, 0xC3, true); // index=7
+    EXPECT_EQ(ItlTester::get1nnIdByRatesIndex(index, 0xC3), 7);
+
+    // 0xC0 0b 1100 0000
+    index = ItlTester::ratesIndex(6, 0xC0, true); // index=1
+    EXPECT_EQ(ItlTester::get1nnIdByRatesIndex(index, 0xC0), 6);
+
+    index = ItlTester::ratesIndex(7, 0xC0, true); // index=3
+    EXPECT_EQ(ItlTester::get1nnIdByRatesIndex(index, 0xC0), 7);
+}
+
+TEST(itl_getRatesStatus_test, itl_test) {
+    ItlTester itl;
+    itl.orientation.orient._ori = orientation::dir__110; // 0,1,6,7
+
+    itl.avail_trans_dir = 0xC3; // 0b 1100 0011
+    EXPECT_EQ(itl.getRatesStatus(), 0xFF);
+
+    itl.avail_trans_dir = 0x83; // 0b 1000 0011
+    EXPECT_EQ(itl.getRatesStatus(), 0xCF);
+
+    itl.avail_trans_dir = 0x43; // 0b 0100 0011
+    EXPECT_EQ(itl.getRatesStatus(), 0x3F);
+
+    itl.avail_trans_dir = 0x03; // 0b 0000 0011
+    EXPECT_EQ(itl.getRatesStatus(), 0x0F);
+
+    itl.avail_trans_dir = 0x01; // 0b 0100 0001
+    EXPECT_EQ(itl.getRatesStatus(), 0x03);
+
+    itl.avail_trans_dir = 0x02; // 0b 0100 0010
+    EXPECT_EQ(itl.getRatesStatus(), 0x0C);
+
+    // not excepted value processing
+    itl.avail_trans_dir = 0xF3; // 0b 1111 0011
+    EXPECT_EQ(itl.getRatesStatus(), 0xFF);
+    itl.avail_trans_dir = 0xFF; // 0b 1111 1111
+    EXPECT_EQ(itl.getRatesStatus(), 0xFF);
+    itl.avail_trans_dir = 0xCC; // 0b 1100 1100
+    EXPECT_EQ(itl.getRatesStatus(), 0xF0);
+}

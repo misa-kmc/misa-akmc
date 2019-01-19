@@ -40,13 +40,46 @@ void Itl::updateRates(Lattice *list_1nn[8], _type_neighbour_status status_1nnRat
     }
 }
 
+_type_rates_status Itl::getRatesStatus() {
+    _type_rates_status status = 0;
+    _type_dirs_status trans_dirs = orientation.orient.availTransDirections();
+    int i = 0;
+    for (unsigned char b = 0; b < 8; b++) {
+        if ((trans_dirs >> b) & 0x01) {
+            if ((avail_trans_dir >> b) & 0x01) { // also in available transition directions list.
+                status |= (0x01 << i);
+                status |= (0x01 << (i + 1));
+            }
+            i += 2; // i max to 8 (but 8 is not used).
+        }
+    }
+    return status;
+}
+
 int Itl::ratesIndex(_type_dir_id _1nn_id, _type_dirs_status trans_dirs, bool up) {
     _type_dirs_status dir_status = trans_dirs & ~(static_cast<_type_dirs_status>(0xFF) << _1nn_id);
-    static _type_dirs_status d1 = 0x5555, d2 = 0x3333, d3 = 0x0f0f;
+    static const _type_dirs_status d1 = 0x5555, d2 = 0x3333, d3 = 0x0f0f;
     dir_status = (dir_status & d1) + ((dir_status >> 1) & d1);
     dir_status = (dir_status & d2) + ((dir_status >> 2) & d2);
     dir_status = (dir_status & d3) + ((dir_status >> 4) & d3);
     return up ? 2 * dir_status + 1 : 2 * dir_status;
+}
+
+_type_dir_id Itl::get1nnIdByRatesIndex(int rate_index, _type_dirs_status trans_dirs) {
+    rate_index /= 2;
+    // example:
+    // 0b 0101 0110 , index=2
+    //       ^---- return => 5
+    int i = 0;
+    for (unsigned char b = 0; b < 8; b++) {
+        if ((0x01 << b) & trans_dirs) {
+            if (i == rate_index) {
+                return b;
+            }
+            i++;
+        }
+    }
+    return 0;
 }
 
 Itl ItlList::getItlnum(_type_lattice_id id) {
