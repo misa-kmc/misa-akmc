@@ -7,6 +7,9 @@
 
 #include "box.h"
 
+/**
+ * \brief interface of rates solver for different type of lattice.
+ */
 class RatesSolver {
 public:
     _type_rate rate_sum;

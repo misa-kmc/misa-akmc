@@ -18,6 +18,16 @@ typedef std::function<bool(const _type_lattice_coord x,
                            const _type_lattice_coord z,
                            Lattice &lattice)> func_lattices_callback;
 
+// convert lattice id to x,y,z coordinate, and call callback function using x,y,z.
+#define ID_TO_XYZ(id, callback) {       \
+id -= local_base_id;                    \
+_type_lattice_coord x = id % size_x;    \
+id = id / size_x;                       \
+_type_lattice_coord y = id % size_y;    \
+_type_lattice_coord z = id / size_y;    \
+callback;                               \
+}
+
 /**
  * \brief type of neighbour status.
  *
@@ -91,6 +101,15 @@ public:
     get1nnBoundaryStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z);
 
     /**
+     * \brief similar as above one (use x,y,z to specific a lattice), but it receives a lattice id.
+     * \param id global lattice id to specific lattice position.
+     * \return bits for status of "1nn out-of-boundary lattices"
+     */
+    _type_neighbour_status get1nnBoundaryStatus(_type_lattice_id id) {
+        ID_TO_XYZ(id, return get1nnBoundaryStatus(x, y, z));
+    }
+
+    /**
      * \brief similar as get1nnBoundaryStatus, it returns the "out-of-boundary lattices" of 2nn neighbour lattices.
      *
      * In this method, we look 6 2nn neighbour lattices, some neighbour lattices may be out of boundary of simulation box.
@@ -102,6 +121,15 @@ public:
      */
     virtual _type_neighbour_status
     get2nnBoundaryStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z);
+
+    /**
+     * \brief similar as above one (use x,y,z to specific a lattice), but it receives a lattice id.
+     * \param id global lattice id to specific lattice position.
+     * \return bits for status of "2nn out-of-boundary lattices"
+     */
+    _type_neighbour_status get2nnBoundaryStatus(_type_lattice_id id) {
+        ID_TO_XYZ(id, return get2nnBoundaryStatus(x, y, z));
+    }
 
     /**
      * \brief return the bits status of 1nn lattices.
@@ -117,12 +145,30 @@ public:
     get1nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) = 0;
 
     /**
+     * \brief similar as above one (use x,y,z to specific a lattice), but it receives a lattice id.
+     * \param id global lattice id to specific lattice position.
+     * \return bits for status of 1nn neighbour lattices.
+     */
+    _type_neighbour_status get1nnStatus(_type_lattice_id id) {
+        ID_TO_XYZ(id, return get1nnStatus(x, y, z));
+    }
+
+    /**
      * \brief similar as get1nnStatus, it returns the bits status of 2nn neighbour lattices.
      * \param x the coordinate of the source lattice point.
      * \return bits for status of 2nn neighbour lattices
      */
     virtual _type_neighbour_status
     get2nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) = 0;
+
+    /**
+     * \brief similar as above one (use x,y,z to specific a lattice), but it receives a lattice id.
+     * \param id global lattice id to specific lattice position.
+     * \return bits for status of 2nn neighbour lattices.
+     */
+    _type_neighbour_status get2nnStatus(_type_lattice_id id) {
+        ID_TO_XYZ(id, return get2nnStatus(x, y, z));
+    }
 
     /*!
      * \brief get all lattices near 1nn
@@ -137,6 +183,15 @@ public:
      */
     virtual int get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_1nn_list[8]) = 0;
 
+    /**
+     * \brief similar as above one (use x,y,z to specific a lattice), but it receives a lattice id.
+     * \param id global lattice id to specific lattice position.
+     * \return the lattice pointers count in 1nn list.
+     */
+    _type_neighbour_status get1nn(_type_lattice_id id, Lattice *_1nn_list[8]) {
+        ID_TO_XYZ(id, return get1nn(x, y, z, _1nn_list));
+    }
+
     /*!
      * \brief get all lattice near 2nn
      * \param x,y,z the coordinate of the lattice point.
@@ -145,6 +200,15 @@ public:
      * \return the lattice pointers count in 2nn list.
      */
     virtual int get2nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_2nn_list[6]) = 0;
+
+    /**
+    * \brief similar as above one (use x,y,z to specific a lattice), but it receives a lattice id.
+    * \param id global lattice id to specific lattice position.
+    * \return the lattice pointers count in 2nn list.
+    */
+    _type_neighbour_status get2nn(_type_lattice_id id, Lattice *_2nn_list[6]) {
+        ID_TO_XYZ(id, return get2nn(x, y, z, _2nn_list));
+    }
 
     /*!
      * \brief calculate the corresponding id of coordinate
@@ -162,6 +226,16 @@ public:
     }
 
     /**
+     * \brief get a lattice reference by lattice coordinate
+     * \param x,y,z lattice coordinate
+     * \return the reference of the matched lattice.
+     */
+    inline Lattice &getLat(const _type_lattice_coord x, const _type_lattice_coord y,
+                           const _type_lattice_coord z) const {
+        return _lattices[z][y][x]; // read only
+    };
+
+    /**
      * \brief get Lattice object by lattice id
      *
      * \note in the implementations, we does not Guarantee the lattices array boundary.
@@ -170,7 +244,7 @@ public:
      * \param id the given lattice id.
      * \return the reference of the matched lattice.
      */
-    Lattice &getLatById(_type_lattice_id id);
+    Lattice &getLat(_type_lattice_id id);
 
 protected:
     /*!
@@ -182,6 +256,9 @@ protected:
 
     // the max lattice id in box.
     const _type_lattice_id _max_id;
+
+    // global id = local id + local_base_id
+    const _type_lattice_id local_base_id = 0;
 
     /*!
      * \brief the 3d array of all lattices.
