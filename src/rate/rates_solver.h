@@ -2,8 +2,8 @@
 // Created by genshen on 2019-01-10.
 //
 
-#ifndef MISA_KMC_RATES_UPDATER_H
-#define MISA_KMC_RATES_UPDATER_H
+#ifndef MISA_KMC_RATES_SOLVER_H
+#define MISA_KMC_RATES_SOLVER_H
 
 #include "box.h"
 
@@ -13,7 +13,18 @@ public:
 
     explicit RatesSolver(Box &box);
 
-private:
+    /**
+     * \brief return the transition rate from lattice specified by @param source_lattice and @param x,y,z
+     * to its neighbour specified by 1nn_id @param _1nn_id.
+     * \param x,y,z the coordinate of source_lattice
+     * \param source_lattice reference of source lattice
+     * \param _1nn_id 1nn neighbour lattice id.
+     * \return the transition rate.
+     */
+    virtual _type_rate rate(const _type_lattice_coord x, const _type_lattice_coord y, const _type_lattice_coord z,
+                            const Lattice &source_lattice, const _type_dir_id _1nn_id) = 0;
+
+protected:
     const Box &box;
 
     /**
@@ -38,4 +49,4 @@ private:
 
 };
 
-#endif //MISA_KMC_RATES_UPDATER_H
+#endif //MISA_KMC_RATES_SOLVER_H

@@ -3,7 +3,7 @@
 //
 
 #include <cmath>
-#include "rates_updater.h"
+#include "rates_solver.h"
 
 RatesSolver::RatesSolver(Box &box) : box(box) {}
 
