@@ -7,33 +7,85 @@
 
 
 #include <map>
+#include "defect.hpp"
+#include "../rate/rates_types.h"
 #include "type_define.h"
 #include "lattice/lattice.h"
-#include "../direction.h"
-#include "defect.hpp"
+#include "../orientation.h"
 
 
 class Itl : public Defect<8> {
 public:
 
-    tran_dir direction; // todo initialization
+    tran_orient orientation; // todo initialization
 
     Itl() {};
 
     ~Itl() {};
 
     /**
-     * \brief calculate available transition direction
+     * \brief be called before calling updateRates.
+     */
+    void beforeRatesUpdate(Lattice *list_1nn[8], _type_neighbour_status status_1nn) override;
+
+    /**
+     * \brief update transition rates of this interstitial lattice.
+     * \param list_1nn 1nn lattices of this lattice.
+     * \param status_1nn 1nn status of this lattice.
+     */
+    void updateRates(Lattice *list_1nn[8], _type_neighbour_status status_1nn,
+                     rateCallback callback) override;
+
+    /**
+     * \brief get status of array rates.
+     * If a rate exists for some transition direction and rotate in array rates,
+     * then the bit flag in return status will be set to 1, otherwise bit flag will be set to 0.
+     * \return rates status.
+     */
+    _type_rates_status getRatesStatus();
+
+    /**
+     * \brief calculate the index of rates array by _1nn_id and trans_dirs.
+     * for example, tran_dirs is 0b 01101010, _1nn_id is 5,
+     * the 5th bit (staring from 0) in tran_dirs (0b 01101010 (from lower bit to higher bit)
+     *                      5th bit in tran_dirs  -----^
+     * is 2nd (start counting from 0) 'bit 1' in tran_dirs from lower bit to higher bit,
+     * so, the rate index will be 2*2nd=4 (if up is false) or 2*2nd+1=5 (if up is true)
+     *
+     * \param _1nn_id  lattice id of 1nn neighbour, available values from 0 to 7.
+     * \param trans_dirs the 4 available transition directions determined by interval orientation, which is recorded by 8-bits.
+     * \param up rotate direction
+     * \return the index of rates array
+     */
+    static int ratesIndex(_type_dir_id _1nn_id, _type_dirs_status trans_dirs, bool up);
+
+    /**
+     * \brief given a index of rates array, it returns the 1nn neighbour id of current lattice.
+     * which means the rate in rate array specified by @param rate_index
+     * is the transition rate of the 1nn direction specified by return value
+     * \param rate_index index of rates array from 0 to 7.
+     * \param trans_dirs the 4 available transition directions determined by interval orientation,
+     * which is recorded by 8-bits.
+     * \return the 1nn neighbour id of current lattice for @param rate_index
+     */
+    static _type_dir_id get1nnIdByRatesIndex(int rate_index, _type_dirs_status trans_dirs);
+
+protected:
+    /**
+     * \brief calculate available transition direction based on the 1nn nearest neighbour lattices
      *
      * basic rules:
      * 1. If the target is not single atom, it cannot "jump to";
      * 2. If the target is not available, it cannot "jump to";
+     * 3. It must be in the 4 transition directions determined by source lattice orientation.
      *
      * \param nei_status the status of 1nn neighbour lattices
      * \param _1nn_lats pointer of 1nn neighbour lattices
+     * \return the available transition directions
      */
-    void updateAvailTranDir(_type_neighbour_status nei_status,
-                            Lattice *_1nn_lats[8]) override;
+    _type_dirs_status availTranDirs(_type_neighbour_status nei_status,
+                                    Lattice *_1nn_lats[8]) override;
+
 };
 
 class ItlList {

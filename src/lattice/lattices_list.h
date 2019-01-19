@@ -53,7 +53,7 @@ public:
     ~LatticesList();
 
     /*!
-     * \brief generate the lattices type, and direction if a lattice is inter lattice.
+     * \brief generate the lattices type, and orientation if a lattice is inter lattice.
      * \param ratio the ratio of mixed alloy to except.
      * \param alloy_types the length of array \param ratio
      * \param va_rate the rate of vacancy

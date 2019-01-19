@@ -63,7 +63,7 @@ public:
     /*!
      * \brief list of interval lattice (dumbbell) indexed by lattice id.
      * if the type of a lattice is interval/dumbbell,
-     * then the extra data such as first/second/direction will be save in this list indexed by lattice id.
+     * then the extra data such as first/second/orientation will be save in this list indexed by lattice id.
      */
     ItlList *itl_list;
 

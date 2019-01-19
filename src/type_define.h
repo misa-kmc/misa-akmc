@@ -13,8 +13,6 @@ typedef unsigned long _type_lattice_coord;
 typedef _type_lattice_coord _type_lattice_size;
 typedef unsigned long _type_lattice_id;
 
-typedef std::pair<_type_lattice_coord, std::pair<_type_lattice_coord, _type_lattice_coord> > _type_atom_pair;
-
 /*!
  * \brief the type of transition rate
  */
