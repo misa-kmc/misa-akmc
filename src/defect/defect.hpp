@@ -10,6 +10,7 @@
 #include "../type_define.h"
 #include "../orientation.h"
 #include "def_types.h"
+#include "rate/rates_types.h"
 
 /**
  * In KMC defect includes interval(or calling dumbbell) and vacancy.
@@ -39,10 +40,12 @@ public:
 
     /**
      * \brief update transition rates to each direction of this lattice.
+     * the rates calculating will be done by calling function pointer @param callback.
      * \param list_1nn 1nn lattices of this lattice.
      * \param status_1nn 1nn status of this lattice.
      */
-    virtual void updateRates(Lattice *list_1nn[8], _type_neighbour_status status_1nn) = 0;
+    virtual void updateRates(Lattice *list_1nn[8], _type_neighbour_status status_1nn,
+                             rateCallback callback) = 0;
 
     /**
      * \brief calculate available transition direction based on neighbour lattice's status and types.

@@ -29,7 +29,8 @@ public:
      * \param list_1nn 1nn lattices of this lattice.
      * \param status_1nn 1nn status of this lattice.
      */
-    void updateRates(Lattice *list_1nn[8], _type_neighbour_status status_1nn) override;
+    void updateRates(Lattice *list_1nn[8], _type_neighbour_status status_1nn,
+                     rateCallback callback) override;
 };
 
 class VacancyList {

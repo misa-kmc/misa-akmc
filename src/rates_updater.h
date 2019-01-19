@@ -7,13 +7,11 @@
 
 #include "box.h"
 
-const double BoltzmannConstant = 1.3806485279; // unit: 10^{-23} J/K
-
-class RatesUpdater {
+class RatesSolver {
 public:
     _type_rate rate_sum;
 
-    explicit RatesUpdater(Box &box);
+    explicit RatesSolver(Box &box);
 
 private:
     const Box &box;

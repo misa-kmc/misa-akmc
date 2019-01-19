@@ -4,18 +4,14 @@
 
 #include <cmath>
 #include "rates_updater.h"
-#include "box.h"
-#include "defect/vacancy_list.h"
-#include "defect/itl_list.h"
 
+RatesSolver::RatesSolver(Box &box) : box(box) {}
 
-RatesUpdater::RatesUpdater(Box &box) : box(box) {}
-
-double RatesUpdater::activeEnergy() {
+double RatesSolver::activeEnergy() {
     // todo
     return 0;
 }
 
-double RatesUpdater::arrhenius(const double v, const double T, const double Ea) {
+double RatesSolver::arrhenius(const double v, const double T, const double Ea) {
     return v * exp(-Ea / (BoltzmannConstant * T));
 }

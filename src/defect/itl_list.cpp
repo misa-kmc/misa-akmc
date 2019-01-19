@@ -25,7 +25,7 @@ void Itl::beforeRatesUpdate(Lattice *list_1nn[8], _type_neighbour_status status_
     avail_trans_dir = availTranDirs(status_1nn, list_1nn);
 }
 
-void Itl::updateRates(Lattice *list_1nn[8], _type_neighbour_status status_1nn) {
+void Itl::updateRates(Lattice *list_1nn[8], _type_neighbour_status status_1nnRatesUpdater, rateCallback callback) {
     _type_dirs_status trans_dirs = orientation.orient.availTransDirections();
     // search all neighbour lattices, if the neighbour lattice is a destination that the source lattice can jump to,
     // then calculate the transition rate from source lattice to the neighbour lattice.
@@ -34,8 +34,7 @@ void Itl::updateRates(Lattice *list_1nn[8], _type_neighbour_status status_1nn) {
             // the neighbour lattice is list_1nn[b]
             Lattice *lat_nei = list_1nn[b];
             // calculate the rate from itl_ref to lat_nei.
-//            double Ea = deltaE();
-            double rate = 0; // (v, T, Ea);  // todo compute rate
+            _type_rate rate = callback(b); // compute rate
             rates[ratesIndex(b, trans_dirs, false)] = rate;
         }
     }

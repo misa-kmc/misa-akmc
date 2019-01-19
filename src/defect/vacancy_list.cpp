@@ -26,6 +26,6 @@ void Vacancy::beforeRatesUpdate(Lattice **list_1nn, _type_neighbour_status statu
     Defect::beforeRatesUpdate(list_1nn, status_1nn);
 }
 
-void Vacancy::updateRates(Lattice **list_1nn, _type_neighbour_status status_1nn) {
+void Vacancy::updateRates(Lattice **list_1nn, _type_neighbour_status status_1nn, rateCallback callback) {
     // todo implementations
 }

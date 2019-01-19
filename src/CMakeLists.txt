@@ -14,6 +14,7 @@ set(HEADER_FILES
         kmc.h
         rates_updater.h
         type_define.h
+        rate/rates_types.h
         )
 
 
