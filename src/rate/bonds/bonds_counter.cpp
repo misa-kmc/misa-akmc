@@ -50,3 +50,52 @@ const std::map<PairBond::bond_type, _type_pair_ia> BondsCounter::_2nn_bonds = {
         {PairBond::CuMn, -0.249},
         {PairBond::NiMn, -0.464},
 };
+
+double BondsCounter::count(LatticesList *lat_list, _type_lattice_id source_id, LatticeTypes src_atom_type) {
+    Lattice *_1nn_neighbour[LatticesList::MAX_1NN]; // todo new array many times.
+    _type_neighbour_status _1nn_status = lat_list->get1nnStatus(source_id);
+    lat_list->get1nn(source_id, _1nn_neighbour);
+
+    // Traver all 1nn neighbour lattices, and calculate bond energy contribution.
+    _type_pair_ia energy = 0.0;
+    for (int b = 0; b < LatticesList::MAX_NEI_BITS; b++) {
+        if ((_1nn_status >> b) & 0x1) {
+            // we assume that src_atom_type is single atom or vacancy.
+            if (_1nn_neighbour[b]->type.isDumbbell()) {
+                const PairBond::bond_type bond_high = PairBond::makeBond(
+                        _1nn_neighbour[b]->type.getHighEnd(), src_atom_type._type); // get one atom of dumbbell
+                const PairBond::bond_type bond_low = PairBond::makeBond(
+                        _1nn_neighbour[b]->type.getLowEnd(), src_atom_type._type); // get another atom of dumbbell
+                energy += _1nn_bonds.at(bond_high);
+                energy += _1nn_bonds.at(bond_low);
+            } else {
+                // is vacancy or single atom.
+                const PairBond::bond_type bond = PairBond::makeBond(_1nn_neighbour[b]->type, src_atom_type);
+                energy += _1nn_bonds.at(bond);
+            }
+        }
+    }
+
+    // Traver all 2nn neighbour lattices, and calculate bond energy contribution.
+    Lattice *_2nn_neighbour[LatticesList::MAX_1NN]; // todo new array many times.
+    _type_neighbour_status _2nn_status = lat_list->get2nnStatus(source_id);
+    lat_list->get2nn(source_id, _2nn_neighbour);
+    for (int b = 0; b < LatticesList::MAX_NEI_BITS; b++) {
+        if ((_2nn_status >> b) & 0x1) {
+            // we assume that src_atom_type is single atom or vacancy.
+            if (_2nn_neighbour[b]->type.isDumbbell()) {
+                const PairBond::bond_type bond_high = PairBond::makeBond(
+                        _2nn_neighbour[b]->type.getHighEnd(), src_atom_type._type); // get one atom of dumbbell
+                const PairBond::bond_type bond_low = PairBond::makeBond(
+                        _2nn_neighbour[b]->type.getLowEnd(), src_atom_type._type); // get another atom of dumbbell
+                energy += _2nn_bonds.at(bond_high);
+                energy += _2nn_bonds.at(bond_low);
+            } else {
+                // is vacancy or single atom.
+                const PairBond::bond_type bond = PairBond::makeBond(_2nn_neighbour[b]->type, src_atom_type);
+                energy += _2nn_bonds.at(bond);
+            }
+        }
+    }
+    return energy;
+}

@@ -19,9 +19,21 @@ typedef double _type_pair_ia; // type of pair interactions
  * Journal of nuclear materials 351.1-3 (2006): 88-99} and table 7 for more details.
  */
 class BondsCounter {
+public:
+    /**
+     * \brief calculate the bonds energy contribution of the atom(specified by \param src_atom_type) in lattice
+     * specified by \param source_id
+     *
+     * \param lat_list lattices list, we can get 1nn/2nn neighbour lattices from this list
+     * \param source_id the id of source lattice
+     * \param src_atom_type the atom type in source lattice(vacancy/single atom/inter's first/inter's second)
+     * \return the bonds energy in 1nn and 2nn neighbour lattices of the atom(\param src_atom_type) in source lattice
+     */
+    static _type_pair_ia count(LatticesList *lat_list, _type_lattice_id source_id, LatticeTypes src_atom_type);
+
+protected:
     static const std::map<PairBond::bond_type, _type_pair_ia> _1nn_bonds;
     static const std::map<PairBond::bond_type, _type_pair_ia> _2nn_bonds;
-
 };
 
 

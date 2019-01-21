@@ -23,7 +23,18 @@ struct PairBond {
 
     const static uint16_t big_endian_shift = 8;
 
-    explicit PairBond(bond_type b);
+    explicit PairBond(bond_type b) : bond(b) {}
+
+    /**
+     * \brief combine two atom types into bond type.
+     * The parameter types are LatticeTypes, instead of LatticeTypes::bond_type
+     * \param atom_a type of atom A
+     * \param atom_b type of atom B
+     * \return the combined bond type.
+     */
+    static inline bond_type makeBond(LatticeTypes atom_a, LatticeTypes atom_b) {
+        return makeBond(atom_a._type, atom_b._type);
+    }
 
     /**
      * \brief  combine two atom types into bond type.
@@ -33,19 +44,15 @@ struct PairBond {
      * \param atom_b type of atom B
      * \return the combined bond type.
      */
-    static bond_type makeBond(LatticeTypes::lat_type atom_a, LatticeTypes::lat_type atom_b);
-};
-
-PairBond::PairBond(PairBond::bond_type b) : bond(b) {}
-
-PairBond::bond_type PairBond::makeBond(LatticeTypes::lat_type atom_a, LatticeTypes::lat_type atom_b) {
-    if (atom_a > atom_b) {
-        LatticeTypes::lat_type temp = atom_a;
-        atom_a = atom_b;
-        atom_b = temp;
+    static bond_type makeBond(LatticeTypes::lat_type atom_a, LatticeTypes::lat_type atom_b) {
+        if (atom_a > atom_b) {
+            LatticeTypes::lat_type temp = atom_a;
+            atom_a = atom_b;
+            atom_b = temp;
+        }
+        return static_cast<bond_type>((atom_a << big_endian_shift) | atom_b);
     }
-    return static_cast<bond_type>((atom_a << big_endian_shift) | atom_b);
-}
+};
 
 
 #endif //MISA_KMC_PAIR_BOND_H
