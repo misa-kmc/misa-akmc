@@ -36,14 +36,43 @@ struct LatticeTypes {
 
     const static uint16_t c = 4;
     const static uint16_t dumbbell_critical_point = 1 << (c - 1); // 0x0008 (max single atom enum)
-    const static uint16_t big_endian_shift = 8; // 8 bits of left shift for one atom type in inter lattices.
+    const static uint16_t high_endian_shift = 8; // 8 bits of left shift for one atom type in inter lattices.
 
-    bool isDumbbell() {
+    inline bool isDumbbell() {
         return _type > dumbbell_critical_point;
     }
 
-    bool isAtom() {
+    inline bool isVacancy() {
+        return _type == V;
+    }
+
+    inline bool isAtom() {
         return (_type <= dumbbell_critical_point) && (_type != V);
+    }
+
+    /**
+     * \brief get the high 8 bits of types.
+     * this is useful for get first atom and second atom of dumbbell.
+     * for example:
+     * _type is FeCu, the method will return Fe;
+     * _type is Cu, the method will return V;
+     * \return the high 8 bits of types
+     */
+    inline lat_type getHighEnd() {
+        return static_cast<lat_type>(_type >> high_endian_shift);
+    }
+
+    /**
+      * \brief get the low 8 bits of types.
+      * this is useful for get first atom or second atom of dumbbell.
+      * for example:
+      * _type is FeCu, the method will return Cu;
+      * _type is Cu, the method will return Cu;
+      * \return the low 8 bits of types
+      */
+    inline lat_type getLowEnd() {
+//        return static_cast<lat_type>(_type & ((unsigned short) -1 >> high_endian_shift));
+        return static_cast<lat_type>(_type & ((1 << high_endian_shift) - 1));
     }
 
     /**
@@ -53,6 +82,15 @@ struct LatticeTypes {
      * \return the created lattice type.
      */
     static lat_type randomAtomsType(int ratio[], int len);
+
+    /**
+     * \brief combine current type with another atom type.
+     * \param another_atom another atom.
+     * \return the combined lattice type.
+     */
+    inline lat_type combineToInter(lat_type another_atom) {
+        return combineToInter(_type, another_atom);
+    }
 
     /**
      * \brief the combined two atom types into inter type.
