@@ -27,7 +27,7 @@ void Itl::beforeRatesUpdate(Lattice *list_1nn[LatticesList::MAX_1NN],
     avail_trans_dir = availTranDirs(status_1nn, list_1nn);
 }
 
-void Itl::updateRates(Lattice *list_1nn[LatticesList::MAX_1NN],
+void Itl::updateRates(Lattice &lattice, Lattice *list_1nn[LatticesList::MAX_1NN],
                       _type_neighbour_status status_1nn,
                       rateCallback callback) {
     _type_dirs_status trans_dirs = orientation.orient.availTransDirections();
@@ -37,8 +37,15 @@ void Itl::updateRates(Lattice *list_1nn[LatticesList::MAX_1NN],
         if ((avail_trans_dir >> b) & 1) { // the neighbour lattice is available, and can trans.
             // the neighbour lattice is list_1nn[b]
             Lattice *lat_nei = list_1nn[b];
+            // get the transition atom
+            LatticeTypes::lat_type trans_atom;
+            if (b < LatticesList::MAX_NEI_BITS / 2) {
+                trans_atom = lattice.type.getFirst(orientation.reversed);
+            } else {
+                trans_atom = lattice.type.getSecond(orientation.reversed);
+            }
             // calculate the rate from itl_ref to lat_nei.
-            _type_rate rate = callback(b); // compute rate
+            _type_rate rate = callback(lat_nei, trans_atom, b); // compute rate
             rates[ratesIndex(b, trans_dirs, false)] = rate;
         }
     }

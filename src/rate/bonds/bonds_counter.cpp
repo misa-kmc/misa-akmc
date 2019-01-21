@@ -51,7 +51,7 @@ const std::map<PairBond::bond_type, _type_pair_ia> BondsCounter::_2nn_bonds = {
         {PairBond::NiMn, -0.464},
 };
 
-double BondsCounter::count(LatticesList *lat_list, _type_lattice_id source_id, LatticeTypes src_atom_type) {
+_type_pair_ia BondsCounter::count(LatticesList *lat_list, _type_lattice_id source_id, LatticeTypes src_atom_type) {
     Lattice *_1nn_neighbour[LatticesList::MAX_1NN]; // todo new array many times.
     _type_neighbour_status _1nn_status = lat_list->get1nnStatus(source_id);
     lat_list->get1nn(source_id, _1nn_neighbour);

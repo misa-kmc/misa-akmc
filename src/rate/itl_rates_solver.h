@@ -10,18 +10,20 @@
 
 class ItlRatesSolver : public RatesSolver {
 public:
-    ItlRatesSolver(Box &box);
+    explicit ItlRatesSolver(Box &box, const double v, const double T);
 
     /**
-     * \brief return the transition rate from lattice specified by @param source_lattice and @param x,y,z
-     * to its neighbour specified by 1nn_id @param _1nn_id.
-     * \param x,y,z the coordinate of source_lattice
+     * \brief return the transition rate from source lattice specified by @param source_lattice
+     * to its neighbour lattice specified by @param target_lattice.
      * \param source_lattice reference of source lattice
-     * \param _1nn_id 1nn neighbour lattice id.
+     * \param target_lattice reference of target lattice
+     * \param trans_atom transition atom for dumbbell or just vacancy.
+     * \param _1nn_offset offset of target lattice .
      * \return the transition rate.
      */
-    _type_rate rate(const _type_lattice_coord x, const _type_lattice_coord y, const _type_lattice_coord z,
-                    const Lattice &source_lattice, const _type_dir_id _1nn_id);
+    _type_rate rate(const Lattice &source_lattice, const Lattice &target_lattice,
+                    const LatticeTypes::lat_type trans_atom,
+                    const _type_dir_id _1nn_offset) override;
 };
 
 

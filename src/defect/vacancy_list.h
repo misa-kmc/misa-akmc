@@ -27,10 +27,14 @@ public:
 
     /**
      * \brief update transition rate for each possible 1nn neighbour lattices of this vacancy.
+     *
+     * \param lattice the lattice reference of current defect.
      * \param list_1nn 1nn lattices of this lattice.
      * \param status_1nn 1nn status of this lattice.
+     * \param callback callback function to get transition rate.
      */
-    void updateRates(Lattice *list_1nn[LatticesList::MAX_1NN],
+    void updateRates(Lattice &lattice,
+                     Lattice *list_1nn[LatticesList::MAX_1NN],
                      _type_neighbour_status status_1nn,
                      rateCallback callback) override;
 };
