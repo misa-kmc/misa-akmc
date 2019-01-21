@@ -16,7 +16,7 @@ void kmc::updateRates(double v, double T) {
         } else if (lattice.type.isDumbbell()) { // dumbbell
             Itl &itl_ref = box->itl_list->mp.at(lattice.getId());
 
-            Lattice *lat_list[8];
+            Lattice *lat_list[LatticesList::MAX_1NN]; // todo new array many times.
             box->lattice_list->get1nn(x, y, z, lat_list);
             _type_neighbour_status nei_status = box->lattice_list->get1nnStatus(x, y, z);
             // update transition rate to each direction
@@ -26,7 +26,7 @@ void kmc::updateRates(double v, double T) {
                                     return itl_rate.rate(x, y, z, lattice, _1nn_id);
                                 });
         } else { // vacancy
-            Lattice *lat_list[8];
+            Lattice *lat_list[LatticesList::MAX_1NN]; // todo new array many times.
             int size_1nn = box->lattice_list->get1nn(x, y, z, lat_list);
             Vacancy &vacancy = box->va_list->mp.at(lattice.getId());
             for (int i = 0; i < size_1nn; i++) {

@@ -10,7 +10,7 @@ _type_neighbour_status Vacancy::availTranDirs(_type_neighbour_status nei_status,
     avail_trans_dir = 0; // clean flags
     // search all neighbour lattices, if the neighbour lattice is a destination that the source lattice can jump to,
     // then set the destination as available transition direction.
-    for (int b = 0; b < 8; b++) {
+    for (int b = 0; b < LatticesList::MAX_NEI_BITS; b++) {
         if ((nei_status >> b) & 1) { // the neighbour lattice is available.
             // the neighbour lattice is _1nn_lats[lat_index]
             if (_1nn_lats[lat_index]->type.isAtom()) { // can trans

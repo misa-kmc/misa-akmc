@@ -51,7 +51,7 @@ public:
      * \param _1nn_list array to save 1nn lattices
      * \return the lattice pointers count of 1nn lattice.
      */
-    int get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_1nn_list[8]) override;
+    int get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_1nn_list[MAX_1NN]) override;
 
     /**
      * \brief get 2nn lattices of a lattice specified by \param x,y,z
