@@ -58,7 +58,7 @@ _type_rates_status Itl::getRatesStatus() {
 
 int Itl::ratesIndex(_type_dir_id _1nn_id, _type_dirs_status trans_dirs, bool up) {
     _type_dirs_status dir_status = trans_dirs & ~(static_cast<_type_dirs_status>(0xFF) << _1nn_id);
-    static const _type_dirs_status d1 = 0x5555, d2 = 0x3333, d3 = 0x0f0f;
+    static const _type_dirs_status d1 = 0x55, d2 = 0x33, d3 = 0x0f;
     dir_status = (dir_status & d1) + ((dir_status >> 1) & d1);
     dir_status = (dir_status & d2) + ((dir_status >> 2) & d2);
     dir_status = (dir_status & d3) + ((dir_status >> 4) & d3);
