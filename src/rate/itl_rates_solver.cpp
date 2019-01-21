@@ -10,7 +10,10 @@ ItlRatesSolver::ItlRatesSolver(Box &box) : RatesSolver(box) {
 
 _type_rate ItlRatesSolver::rate(const _type_lattice_coord x, const _type_lattice_coord y, const _type_lattice_coord z,
                                 const Lattice &source_lattice, const _type_dir_id _1nn_id) {
-    // box.lattice_list->getLat(x, y, z);
-
+#ifdef EAM_POT_ENABLED
+    return 0; // todo eam
+#else
+    box.lattice_list->getLat(x, y, z);
     return 0;
+#endif
 }
