@@ -58,7 +58,7 @@ struct LatticeTypes {
      * _type is Cu, the method will return V;
      * \return the high 8 bits of types
      */
-    inline lat_type getHighEnd() {
+    inline lat_type getHighEnd() const {
         return static_cast<lat_type>(_type >> high_endian_shift);
     }
 
@@ -70,9 +70,39 @@ struct LatticeTypes {
       * _type is Cu, the method will return Cu;
       * \return the low 8 bits of types
       */
-    inline lat_type getLowEnd() {
+    inline lat_type getLowEnd() const {
 //        return static_cast<lat_type>(_type & ((unsigned short) -1 >> high_endian_shift));
         return static_cast<lat_type>(_type & ((1 << high_endian_shift) - 1));
+    }
+
+    /**
+     * \brief get the first atom based on lattice type and orientation(\param is_reversed).
+     * \param is_reversed whether the type of inter/dumbbell is reversed.
+     * \return first atom type
+     */
+    LatticeTypes::lat_type getFirst(const bool is_reversed) const {
+        if (is_reversed) {
+            // first atom will be at higher bits, second atom will be at lower bits.
+            return getHighEnd();
+        } else {
+            // first atom will be at lower bits, second atom will be at higher bits.
+            return getLowEnd();
+        }
+    }
+
+    /**
+     * \brief get the second atom based on lattice type and orientation(\param is_reversed).
+     * \param is_reversed whether the type of inter/dumbbell is reversed.
+     * \return second atom type
+     */
+    LatticeTypes::lat_type getSecond(const bool is_reversed) const {
+        if (is_reversed) {
+            // first atom will be at lower bits, second atom will be at higher bits.
+            return getLowEnd();
+        } else {
+            // first atom will be at higher bits, second atom will be at lower bits.
+            return getHighEnd();
+        }
     }
 
     /**
@@ -88,7 +118,7 @@ struct LatticeTypes {
      * \param another_atom another atom.
      * \return the combined lattice type.
      */
-    inline lat_type combineToInter(lat_type another_atom) {
+    inline lat_type combineToInter(lat_type another_atom) const {
         return combineToInter(_type, another_atom);
     }
 
