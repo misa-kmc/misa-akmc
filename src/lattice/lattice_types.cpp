@@ -32,5 +32,5 @@ LatticeTypes::lat_type LatticeTypes::combineToInter(lat_type atom_a, lat_type at
         atom_a = atom_b;
         atom_b = temp;
     }
-    return static_cast<lat_type>((atom_a << big_endian_shift) | atom_b);
+    return static_cast<lat_type>((atom_a << high_endian_shift) | atom_b);
 }

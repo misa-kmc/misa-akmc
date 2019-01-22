@@ -5,6 +5,8 @@
 #ifndef MISA_KMC_TYPE_DEFINE_H
 #define MISA_KMC_TYPE_DEFINE_H
 
+#include "building_config.h"
+
 /**
  * the type of lattice position in cartesian coordinate system
  */

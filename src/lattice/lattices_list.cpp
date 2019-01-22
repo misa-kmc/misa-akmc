@@ -54,9 +54,9 @@ void LatticesList::randomInit(int ratio[], int alloy_types, double va_rate) {
 
     while (i != va_count) {
         _type_lattice_id id_a = rand() * _max_id;
-        Lattice &rand_lattice_a = getLatById(id_a);
+        Lattice &rand_lattice_a = getLat(id_a);
         _type_lattice_id id_b = rand() * _max_id;
-        Lattice &rand_lattice_b = getLatById(id_b);
+        Lattice &rand_lattice_b = getLat(id_b);
         if (rand_lattice_a.type.isAtom() && rand_lattice_b.type.isAtom()) {
             // set type of lattice A to inter, and lattice B to vacancy
             rand_lattice_a.type._type = LatticeTypes::combineToInter(rand_lattice_a.type._type,
@@ -132,7 +132,7 @@ _type_neighbour_status LatticesList::get2nnBoundaryStatus(_type_lattice_coord x,
     return status;
 }
 
-Lattice &LatticesList::getLatById(_type_lattice_id id) {
+Lattice &LatticesList::getLat(_type_lattice_id id) {
     _type_lattice_coord x = id % size_x;
     id = id / size_x;
     _type_lattice_coord y = id % size_y;

@@ -8,13 +8,16 @@ set(HEADER_FILES
         lattice/lattices_list.h
         lattice/lattice_types.h
         lattice/normal_lattice_list.h
+        rate/bonds/bonds_counter.h
+        rate/bonds/pair_bond.hpp
+        rate/itl_rates_solver.h
+        rate/rates_types.h
+        rate/rates_solver.h
         box.h
-        orientation.h
         macros.h
         kmc.h
-        rates_updater.h
+        orientation.h
         type_define.h
-        rate/rates_types.h
         )
 
 
@@ -25,10 +28,12 @@ set(SOURCE_FILES
         lattice/lattices_list.cpp
         lattice/lattice_types.cpp
         lattice/normal_lattice_list.cpp
+        rate/bonds/bonds_counter.cpp
+        rate/itl_rates_solver.cpp
+        rate/rates_solver.cpp
         box.cpp
         orientation.cc
         kmc.cpp
-        rates_updater.cpp
         )
 
 

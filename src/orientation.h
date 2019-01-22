@@ -46,7 +46,7 @@ struct tran_orient {
      * \brief if the atom type does not follow the orientation,
      * this value will be true, otherwise will be false.
      *
-     * For example, the atom type is CuFe,
+     * For example, the atom type is FeCu,
      * if the first atom is Fe, the second atom is Cu, value reversed will be true;
      * if the first atom is Cu, the second atom is Fe, value reversed will be false.
      */

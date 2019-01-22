@@ -11,6 +11,8 @@ if (KMC_DEBUG_ENABLE_FLAG)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 endif ()
 
+option(EAM_POT_EBNABLE_FLAG "Enable using eam potential to calculate system energy" OFF)
+
 ## architecture ralated values.
 # option(ARCH_SW "Enable sunway athread" OFF) # enable sunway athread if its running on sunway system.
 

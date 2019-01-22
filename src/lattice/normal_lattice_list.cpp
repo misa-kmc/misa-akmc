@@ -19,10 +19,10 @@ NormalLatticeList::get2nnStatus(_type_lattice_coord x, _type_lattice_coord y, _t
 }
 
 int
-NormalLatticeList::get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_1nn_list[8]) {
+NormalLatticeList::get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_1nn_list[MAX_1NN]) {
     // In our implementation, if x is even,then its 1nn will be ([x-1,x+1], [y-1, y], [z-1,z]),
     // if x is odd, then its 1nn will be ([x-1,x+1], [y, y+1], [z,z+1]).
-    _type_lattice_coord _1nn_index_x[8], _1nn_index_y[8], _1nn_index_z[8];
+    _type_lattice_coord _1nn_index_x[MAX_1NN], _1nn_index_y[MAX_1NN], _1nn_index_z[MAX_1NN];
 
     // compute 1nn index in array in x direction.
     // it can be overflow if x == 0.
@@ -39,7 +39,7 @@ NormalLatticeList::get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_la
     _type_neighbour_status status = get1nnStatus(x, y, z);
     // save data into array
     int _count = 0;
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < MAX_1NN; i++) {
         if (status & (0x01 << i)) {
             _1nn_list[i] = &_lattices[_1nn_index_z[i]][_1nn_index_y[i]][_1nn_index_x[i]];
             _count++;

@@ -20,6 +20,12 @@ template<unsigned int SIZE>
 class Defect {
 public:
     /**
+     * \brief the bit length of \var variable avail_trans_dir.
+     * A lattice can jump to its 8 1nn neighbour lattices.
+     */
+    static const int TRANS_DIRS_BITS_SIZE = 8;
+
+    /**
      * \brief the transition rates of lattice in each available transition direction.
      * If the transition rate is not available for some direction,
      * it will leave it the array element untouched.
@@ -36,15 +42,21 @@ public:
      * \param list_1nn 1nn lattices of this lattice.
      * \param status_1nn 1nn status of this lattice.
      */
-    virtual void beforeRatesUpdate(Lattice *list_1nn[8], _type_neighbour_status status_1nn);
+    virtual void beforeRatesUpdate(Lattice *list_1nn[LatticesList::MAX_1NN],
+                                   _type_neighbour_status status_1nn);
 
     /**
      * \brief update transition rates to each direction of this lattice.
      * the rates calculating will be done by calling function pointer @param callback.
+     *
+     * \param lattice the lattice reference of current defect.
      * \param list_1nn 1nn lattices of this lattice.
      * \param status_1nn 1nn status of this lattice.
+     * \param callback callback function to get transition rate.
      */
-    virtual void updateRates(Lattice *list_1nn[8], _type_neighbour_status status_1nn,
+    virtual void updateRates(Lattice &lattice,
+                             Lattice *list_1nn[LatticesList::MAX_1NN],
+                             _type_neighbour_status status_1nn,
                              rateCallback callback) = 0;
 
     /**
@@ -59,7 +71,8 @@ public:
 };
 
 template<unsigned int SIZE>
-void Defect<SIZE>::beforeRatesUpdate(Lattice *list_1nn[8], _type_neighbour_status status_1nn) {}
+void Defect<SIZE>::beforeRatesUpdate(Lattice *list_1nn[LatticesList::MAX_1NN],
+                                     _type_neighbour_status status_1nn) {}
 
 
 #endif //MISA_KMC_DEFECT_JLIST_H

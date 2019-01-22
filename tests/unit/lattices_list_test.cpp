@@ -158,7 +158,7 @@ TEST(lattice_list_getLatById_test, lattice_list_test) {
     NormalLatticeList lattice_list(4, 4, 4);
     // check all id in box.
     for (_type_lattice_id id = 0; id <= lattice_list.maxId(); id++) {
-        auto lat = lattice_list.getLatById(id);
+        auto lat = lattice_list.getLat(id);
         EXPECT_EQ(lat.getId(), id);
     }
 }

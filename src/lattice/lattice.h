@@ -28,7 +28,7 @@ public:
      * \brief get unique id of current lattice
      * \return lattice id
      */
-    inline _type_lattice_id getId() {
+    inline _type_lattice_id getId() const{
         return id;
     }
 
