@@ -174,7 +174,7 @@ tran_orient orientation::trans(_type_dire src_orient, bool is_first_atom, bool i
 }
 
 // todo test
-_type_dirs_status orientation::availTransDirections() {
+_type_dirs_status orientation::availTransDirections() const {
     switch (_ori) {
         case dir__110:
             return 0xC3;
