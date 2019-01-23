@@ -26,5 +26,6 @@ typedef double _type_rate;
 #define MAX_X 100
 #define MAX_Y 100
 #define MAX_Z 100
+#define MAX_ITL 100
 
 #endif //MISA_KMC_TYPE_DEFINE_H

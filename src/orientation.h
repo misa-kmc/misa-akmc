@@ -28,7 +28,7 @@ struct orientation {
      * \brief get available transition directions of this orientation.
      * \return
      */
-    _type_dirs_status availTransDirections();
+    _type_dirs_status availTransDirections() const;
 
     /**
      * \brief get new orientation after transition.

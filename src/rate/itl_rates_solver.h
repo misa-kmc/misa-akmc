@@ -24,6 +24,28 @@ public:
     _type_rate rate(const Lattice &source_lattice, const Lattice &target_lattice,
                     const LatticeTypes::lat_type trans_atom,
                     const _type_dir_id _1nn_offset) override;
+
+    // todo tests
+    double Edumb();
+
+    /** // todo tests
+     * \brief calculate compsol of dumbbell of FeX type (X can be Cu,Ni,Mn)
+     * \param id id of lattice
+     * \param type type of dumbbell lattice
+     * \param itl the inter/dumbbell instance.
+     * \param _1nns the 1nn neighbour lattices list.
+     * \param _2nns the 2nn neighbour lattices list.
+     * \param _1nn_status lattice status of 1nn neighbour lattices
+     * \param _2nn_status lattice status of 2nn neighbour lattices
+     * \return
+     */
+    double FeX_comp(const _type_lattice_id id,
+                    const LatticeTypes type, const Itl &itl,
+                    Lattice *_1nns[LatticesList::MAX_1NN],
+                    Lattice *_2nns[LatticesList::MAX_2NN],
+                    const _type_neighbour_status _1nn_status,
+                    const _type_neighbour_status _2nn_status);
+
 };
 
 

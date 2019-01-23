@@ -67,10 +67,7 @@ public:
      */
     void rules_recb(int xi, int yi, int zi, int xv, int yv, int zv);
 
-    //first, second, dir1,dir2,dir3,dir4, int StateFeX,
-    double FeXcomp(int x, int y, int z);
 
-    double Edumb();
 
 private:
     _type_lattice_id id;
