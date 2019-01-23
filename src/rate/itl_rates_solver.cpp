@@ -12,6 +12,13 @@ ItlRatesSolver::ItlRatesSolver(Box &box, const double v, const double T) : Rates
 _type_rate ItlRatesSolver::rate(Lattice &source_lattice, Lattice &target_lattice,
                                 const LatticeTypes::lat_type trans_atom,
                                 const _type_dir_id _1nn_offset) {
+#ifdef DEBUG_MODE
+    {
+        const bool debug_bool = target_lattice.type.isAtom();
+        assert(debug_bool);
+    };
+#endif
+
 #ifdef EAM_POT_ENABLED
     return 0; // todo eam
 #else
@@ -37,8 +44,8 @@ _type_rate ItlRatesSolver::rate(Lattice &source_lattice, Lattice &target_lattice
     //calculate system energy before transition.
     double e_before = 0;
     {
-    // bonds energy of src lattice contributed by its 1nn/2nn neighbour lattice.
-    _type_pair_ia e_src = BondsCounter::count(box.lattice_list, source_lattice.getId(), LatticeTypes{trans_atom});
+        // bonds energy of src lattice contributed by its 1nn/2nn neighbour lattice.
+        _type_pair_ia e_src = BondsCounter::count(box.lattice_list, source_lattice.getId(), LatticeTypes{trans_atom});
         // bonds energy of des lattice contributed by its 1nn/2nn neighbour lattice(it is an atom).
         _type_pair_ia e_des = BondsCounter::count(box.lattice_list, target_lattice.getId(), target_lattice.type);
         double e_dumbbell = Edumb(); // the count of dumbbells does not change, so we does not count this term.
