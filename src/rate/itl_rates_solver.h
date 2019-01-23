@@ -13,15 +13,16 @@ public:
     explicit ItlRatesSolver(Box &box, const double v, const double T);
 
     /**
+     * // todo tests
      * \brief return the transition rate from source lattice specified by @param source_lattice
      * to its neighbour lattice specified by @param target_lattice.
-     * \param source_lattice reference of source lattice
-     * \param target_lattice reference of target lattice
-     * \param trans_atom transition atom for dumbbell or just vacancy.
+     * \param source_lattice reference of source lattice, witch is a dumbbell.
+     * \param target_lattice reference of target lattice, which is an atom.
+     * \param trans_atom transition atom for dumbbell.
      * \param _1nn_offset offset of target lattice .
      * \return the transition rate.
      */
-    _type_rate rate(const Lattice &source_lattice, const Lattice &target_lattice,
+    _type_rate rate(Lattice &source_lattice, Lattice &target_lattice,
                     const LatticeTypes::lat_type trans_atom,
                     const _type_dir_id _1nn_offset) override;
 

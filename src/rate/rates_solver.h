@@ -25,7 +25,7 @@ public:
      * \param _1nn_offset offset of target lattice .
      * \return the transition rate.
      */
-    virtual _type_rate rate(const Lattice &source_lattice, const Lattice &target_lattice,
+    virtual _type_rate rate(Lattice &source_lattice, Lattice &target_lattice,
                             const LatticeTypes::lat_type trans_atom,
                             const _type_dir_id _1nn_offset) = 0;
 

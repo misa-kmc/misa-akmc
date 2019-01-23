@@ -9,18 +9,62 @@ ItlRatesSolver::ItlRatesSolver(Box &box, const double v, const double T) : Rates
     // todo save T,v
 }
 
-_type_rate ItlRatesSolver::rate(const Lattice &source_lattice, const Lattice &target_lattice,
+_type_rate ItlRatesSolver::rate(Lattice &source_lattice, Lattice &target_lattice,
                                 const LatticeTypes::lat_type trans_atom,
                                 const _type_dir_id _1nn_offset) {
 #ifdef EAM_POT_ENABLED
     return 0; // todo eam
 #else
+    double e0 = 0;
+    switch (trans_atom) {
+        case LatticeTypes::Fe:
+            e0 = 0.32;
+            break;
+        case LatticeTypes::Cu:
+            e0 = 0.36;
+            break;
+        case LatticeTypes::Ni:
+            e0 = 0.45;
+            break;
+        case LatticeTypes::Mn:
+            e0 = 0.31;
+            break;
+        default:
+            e0 = 0;
+            break;
+    }
+
+    //calculate system energy before transition.
+    double e_before = 0;
+    {
     // bonds energy of src lattice contributed by its 1nn/2nn neighbour lattice.
     _type_pair_ia e_src = BondsCounter::count(box.lattice_list, source_lattice.getId(), LatticeTypes{trans_atom});
-    // bonds energy of des lattice contributed by its 1nn/2nn neighbour lattice.
-    _type_pair_ia e_des = BondsCounter::count(box.lattice_list, _1nn_offset, target_lattice.type);
-//    return arrhenius(v,t,);
-    return 0;
+        // bonds energy of des lattice contributed by its 1nn/2nn neighbour lattice(it is an atom).
+        _type_pair_ia e_des = BondsCounter::count(box.lattice_list, target_lattice.getId(), target_lattice.type);
+        double e_dumbbell = Edumb(); // the count of dumbbells does not change, so we does not count this term.
+        e_before = e_src + e_des + e_dumbbell;
+    }
+
+    // exchange atoms of jump atom and neighbour lattice atom.
+    const LatticeTypes cached_source_type = source_lattice.type;
+    const LatticeTypes cached_target_type = target_lattice.type;
+    source_lattice.type._type = source_lattice.type.diff(LatticeTypes{trans_atom});
+    target_lattice.type._type = target_lattice.type.combineToInter(trans_atom);
+
+    double e_after = 0;
+    {
+        _type_pair_ia e_src = BondsCounter::count(box.lattice_list, source_lattice.getId(), source_lattice.type);
+        _type_pair_ia e_des = BondsCounter::count(box.lattice_list, target_lattice.getId(), LatticeTypes{trans_atom});
+        double e_dumbbell = Edumb(); // the count of dumbbells does not change, so we does not count this term.
+        e_after = e_src + e_des + e_dumbbell;
+    }
+
+    // exchange atoms back.
+    source_lattice.type = cached_source_type;
+    target_lattice.type = cached_target_type;
+
+    double active_energy = e0 + (e_after - e_before) / 2;
+    return arrhenius(box.v, box.T, active_energy);
 #endif
 }
 
