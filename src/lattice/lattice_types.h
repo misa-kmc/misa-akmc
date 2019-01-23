@@ -38,17 +38,30 @@ struct LatticeTypes {
     const static uint16_t dumbbell_critical_point = 1 << (c - 1); // 0x0008 (max single atom enum)
     const static uint16_t high_endian_shift = 8; // 8 bits of left shift for one atom type in inter lattices.
 
-    inline bool isDumbbell() {
+    inline bool isDumbbell() const {
         return _type > dumbbell_critical_point;
     }
 
-    inline bool isVacancy() {
+    inline bool isVacancy() const {
         return _type == V;
     }
 
-    inline bool isAtom() {
+    inline bool isAtom() const {
         return (_type <= dumbbell_critical_point) && (_type != V);
     }
+
+    /**
+     * \brief it returns the difference set C of atoms (with lat_type format)
+     * of two lattices type A and B, in which, C = A-B.
+     *
+     * \warning in currently implementations, we assumes A is dumbbell and B is single atom.
+     *
+     * For instance, A= FeCu, B=Cu, this function will return lattice type Fe.
+     * \return lattice type of C.
+     */
+    lat_type diff(const LatticeTypes A, const LatticeTypes B) const;
+
+    lat_type diff(const LatticeTypes B) const;
 
     /**
      * \brief get the high 8 bits of types.
@@ -80,7 +93,7 @@ struct LatticeTypes {
      * \param is_reversed whether the type of inter/dumbbell is reversed.
      * \return first atom type
      */
-    LatticeTypes::lat_type getFirst(const bool is_reversed) const {
+    lat_type getFirst(const bool is_reversed) const {
         if (is_reversed) {
             // first atom will be at higher bits, second atom will be at lower bits.
             return getHighEnd();
