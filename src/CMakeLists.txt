@@ -13,6 +13,7 @@ set(HEADER_FILES
         rate/itl_rates_solver.h
         rate/rates_types.h
         rate/rates_solver.h
+        rate/vacancy_rates_solver.h
         box.h
         macros.h
         kmc.h
@@ -31,6 +32,7 @@ set(SOURCE_FILES
         rate/bonds/bonds_counter.cpp
         rate/itl_rates_solver.cpp
         rate/rates_solver.cpp
+        rate/vacancy_rates_solver.cpp
         box.cpp
         orientation.cc
         kmc.cpp
