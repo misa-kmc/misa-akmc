@@ -34,3 +34,23 @@ LatticeTypes::lat_type LatticeTypes::combineToInter(lat_type atom_a, lat_type at
     }
     return static_cast<lat_type>((atom_a << high_endian_shift) | atom_b);
 }
+
+LatticeTypes::lat_type LatticeTypes::diff(const LatticeTypes A, const LatticeTypes B) const {
+    if (A.getLowEnd() == B._type) {
+        return A.getHighEnd();
+    }
+    if (A.getHighEnd() == B._type) {
+        return A.getLowEnd();
+    }
+    return A._type;
+}
+
+LatticeTypes::lat_type LatticeTypes::diff(const LatticeTypes B) const {
+    if (getLowEnd() == B._type) {
+        return getHighEnd();
+    }
+    if (getHighEnd() == B._type) {
+        return getLowEnd();
+    }
+    return _type;
+}

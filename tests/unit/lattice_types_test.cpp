@@ -62,3 +62,15 @@ TEST(lattice_type_FirstSecondAtom_test, lattice_type_test) {
     EXPECT_EQ(type3.getFirst(false), LatticeTypes::Cu);
     EXPECT_EQ(type3.getSecond(false), LatticeTypes::Cu);
 }
+
+TEST(lattice_type_diff_test, lattice_type_test) {
+    LatticeTypes type1(LatticeTypes::FeCu);
+    LatticeTypes type2(LatticeTypes::Cu);
+    EXPECT_EQ(type1.diff(type2), LatticeTypes::Fe);
+
+    LatticeTypes type3(LatticeTypes::V);
+    EXPECT_EQ(type1.diff(type3), LatticeTypes::FeCu);
+
+    LatticeTypes type4(LatticeTypes::Ni);
+    EXPECT_EQ(type1.diff(type4), LatticeTypes::FeCu);
+}

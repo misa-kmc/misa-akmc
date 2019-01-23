@@ -22,7 +22,7 @@ void kmc::updateRates(double v, double T) {
             itl_ref.beforeRatesUpdate(lat_list, nei_status);
             // update transition rate to each direction
             itl_ref.updateRates(lattice, lat_list, nei_status,
-                                [&lattice, &itl_rate](const Lattice *lat_nei,
+                                [&lattice, &itl_rate](Lattice *lat_nei,
                                                       const LatticeTypes::lat_type trans_atom,
                                                       const _type_dir_id _1nn_offset) -> _type_rate {
                                     // in lambda, it returns the rate of transition

@@ -28,6 +28,20 @@ public:
         this->size_z = size_z;
     }
 
+    /**
+     * \brief set attempt rate of transition for box
+     */
+    inline void setV(double v) {
+        this->v = v;
+    }
+
+    /**
+     * \brief set system temperature for box
+     */
+    inline void setT(double t) {
+        this->T = t;
+    }
+
     /*!
      * \brief build the simulation box, initialize lattice information.
      * \return the pointer to new box.
@@ -37,6 +51,8 @@ public:
 private:
     // the box size
     _type_box_size size_x, size_y, size_z;
+
+    double v, T;
 };
 
 
@@ -50,6 +66,8 @@ public:
     // the box size in dimension x,y,z.
     const _type_box_size size_x, size_y, size_z;
 
+    const double v;
+    const double T;
     /*!
      * \brief list of all lattice points.
      */
@@ -71,7 +89,7 @@ protected:
 
     // make it private, so you can not create an Box object using new Box() outside its friend class/function.
     // we can only create a Box object by using BoxBuilder.
-    Box(_type_box_size size_x, _type_box_size size_y, _type_box_size size_z);
+    Box(_type_box_size size_x, _type_box_size size_y, _type_box_size size_z, double v, double T);
 
     /*!
      * \brief in this method, the member \var lattice_list,itl_list,va_list will be created
