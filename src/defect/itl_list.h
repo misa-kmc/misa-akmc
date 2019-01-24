@@ -17,11 +17,11 @@
 class Itl : public Defect<8> {
 public:
 
-    tran_orient orientation; // todo initialization
+    tran_orient orientation{}; // todo initialization
 
-    Itl() {};
+    Itl() = default;
 
-    ~Itl() {};
+    ~Itl() = default;
 
     /**
      * \brief be called before calling updateRates.

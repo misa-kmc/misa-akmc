@@ -5,6 +5,9 @@
 #include "vacancy_list.h"
 
 void Vacancy::beforeRatesUpdate(Lattice *list_1nn[LatticesList::MAX_1NN], _type_neighbour_status status_1nn) {
+    // zero rates array
+    Defect::beforeRatesUpdate(list_1nn, status_1nn);
+    // set available transition dir.
     avail_trans_dir = availTranDirs(status_1nn, list_1nn);
 }
 
