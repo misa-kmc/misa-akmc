@@ -26,6 +26,11 @@ public:
     static const int TRANS_DIRS_BITS_SIZE = 8;
 
     /**
+     * \brief size of transition rates array.
+     */
+    static const int RATES_SIZE = SIZE;
+
+    /**
      * \brief the transition rates of lattice in each available transition direction.
      * If the transition rate is not available for some direction,
      * it will leave it the array element untouched.

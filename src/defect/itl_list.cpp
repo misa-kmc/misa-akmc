@@ -30,6 +30,9 @@ void Itl::beforeRatesUpdate(Lattice *list_1nn[LatticesList::MAX_1NN],
 void Itl::updateRates(Lattice &lattice, Lattice *list_1nn[LatticesList::MAX_1NN],
                       _type_neighbour_status status_1nn,
                       rateCallback callback) {
+#ifdef DEBUG_MODE
+    assert(lattice.type.isDumbbell());
+#endif
     _type_dirs_status trans_dirs = orientation.orient.availTransDirections();
     // search all neighbour lattices, if the neighbour lattice is a destination that the source lattice can jump to,
     // then calculate the transition rate from source lattice to the neighbour lattice.
@@ -47,6 +50,7 @@ void Itl::updateRates(Lattice &lattice, Lattice *list_1nn[LatticesList::MAX_1NN]
             // calculate the rate from itl_ref to lat_nei.
             _type_rate rate = callback(lat_nei, trans_atom, b); // compute rate
             rates[ratesIndex(b, trans_dirs, false)] = rate;
+            rates[ratesIndex(b, trans_dirs, true)] = rate;
         }
     }
 }
