@@ -5,10 +5,27 @@
 #ifndef MISA_KMC_TYPE_DEFINE_H
 #define MISA_KMC_TYPE_DEFINE_H
 
-/**
- * the type of atom lattice position in cartesian coordinate system
- */
-typedef unsigned long _type_atom_pos;
+#include "building_config.h"
 
+/**
+ * the type of lattice position in cartesian coordinate system
+ */
+typedef unsigned long _type_box_size;
+typedef unsigned long _type_lattice_coord;
+typedef _type_lattice_coord _type_lattice_size;
+typedef unsigned long _type_lattice_id;
+
+/*!
+ * \brief the type of transition rate
+ */
+typedef double _type_rate;
+
+/*!
+ * the number of all the lattices
+ */
+#define MAX_X 100
+#define MAX_Y 100
+#define MAX_Z 100
+#define MAX_ITL 100
 
 #endif //MISA_KMC_TYPE_DEFINE_H

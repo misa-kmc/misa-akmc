@@ -17,5 +17,6 @@ add_subdirectory(src)
 ################################
 if (KMC_TEST_BUILD_ENABLE_FLAG)
     MESSAGE(STATUS "TEST is enabled")
+    enable_testing()
     add_subdirectory(tests)
 endif ()

@@ -1,12 +1,41 @@
 include(configure.cmake)
 set(HEADER_FILES
-        atom.h
+        defect/def_types.h
+        defect/defect.hpp
+        defect/itl_list.h
+        defect/vacancy_list.h
+        lattice/lattice.h
+        lattice/lattices_list.h
+        lattice/lattice_types.h
+        lattice/normal_lattice_list.h
+        rate/bonds/bonds_counter.h
+        rate/bonds/pair_bond.hpp
+        rate/itl_rates_solver.h
+        rate/rates_types.h
+        rate/rates_solver.h
+        rate/vacancy_rates_solver.h
+        box.h
+        macros.h
+        kmc.h
+        orientation.h
         type_define.h
         )
 
 
 set(SOURCE_FILES
-        atom.cpp
+        defect/itl_list.cpp
+        defect/vacancy_list.cpp
+        lattice/lattice.cpp
+        lattice/lattices_list.cpp
+        lattice/lattice_types.cpp
+        lattice/normal_lattice_list.cpp
+        rate/bonds/bonds_counter.cpp
+        rate/itl_rates_solver.cpp
+        rate/rates_solver.cpp
+        rate/vacancy_rates_solver.cpp
+        box.cpp
+        orientation.cc
+        kmc.cpp
         )
 
 
@@ -23,7 +52,7 @@ target_include_directories(
 )
 
 # make binary
-add_executable(${KMC_EXECUTE_BIN_NAME} main.cpp )
+add_executable(${KMC_EXECUTE_BIN_NAME} main.cpp)
 
 target_link_libraries(${KMC_EXECUTE_BIN_NAME} PRIVATE ${KMC_LIB_NAME} ${EXTRA_LIBS})
 
