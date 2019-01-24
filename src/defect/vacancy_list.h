@@ -16,8 +16,10 @@ public:
     /**
      * \brief calculate available transition direction based on neighbour lattice's status and types.
      */
-    _type_neighbour_status availTranDirs(_type_neighbour_status nei_status,
-                                         Lattice *_1nn_lats[LatticesList::MAX_1NN]) override;
+    inline _type_neighbour_status availTranDirs(_type_neighbour_status nei_status,
+                                                Lattice *_1nn_lats[LatticesList::MAX_1NN]) override {
+        return nei_status;
+    }
 
     /**
      * \brief be called before calling updateRates.
