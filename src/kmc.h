@@ -17,7 +17,7 @@ public:
      * \brief
      * \return
      */
-    _type_rate random();
+    double random();
 
     /**
      * \brief calculate the transition rates of each lattice.
@@ -27,11 +27,24 @@ public:
      * see the implementation for more details.
      *
      * After this step, the rate of every transition direction of each lattice will be set.
+     * \return return the sum of rates of all KMC events,
+     * including dumbbell transition and vacancy transition and defect generation).
      */
-    void updateRates(double v, double T);
+    _type_rate updateRates(double v, double T);
+
+
+    /**
+     * \brief select an event randomly and execute this event.
+     *
+     * \param random random number.
+     */
+    void execute(double random);
+
+protected:
+    double time = 0;
 
 private:
-    Box *box; // todo init box pointer
+    Box *box = nullptr; // todo init box pointer
 };
 
 
