@@ -20,176 +20,130 @@ const char orientation::JumpAtomHashTable[orientation::orientation_count][Lattic
         {_, X, _, X, Y, _, Y, _}, // 6: <10-1>
 };
 
-// todo refactor
-// todo test
-tran_orient orientation::trans(_type_dire src_orient, bool is_first_atom, bool is_lower, bool rotate) {
-    switch (src_orient) {
-        case dir__110:
-            if (is_first_atom) {
-                if (is_lower) { // dir2
-                    if (!rotate) { // rotate
-                        return tran_orient{true, dir__01_1};
-                    } // rotate to another angle
-                    return tran_orient{true, dir__10_1};
-                } else { // dir1
-                    if (!rotate) {
-                        return tran_orient{true, dir__011};
-                    }
-                    return tran_orient{true, dir__101};
-                }
-            } else {
-                if (is_lower) { // dir4
-                    if (!rotate) {
-                        return tran_orient{true, dir__011};
-                    }
-                    return tran_orient{true, dir__101};
-                } else { // dir3
-                    if (!rotate) {
-                        return tran_orient{true, dir__01_1};
-                    }
-                    return tran_orient{true, dir__10_1};
-                }
-            }
-            break;
-        case dir__1_10:
-            if (is_first_atom) {
-                if (is_lower) { // dir2
-                    if (!rotate) { // rotate
-                        return tran_orient{false, dir__011};
-                    } // rotate to another angle
-                    return tran_orient{true, dir__10_1};
-                } else { // dir1
-                    if (!rotate) {
-                        return tran_orient{false, dir__01_1};
-                    }
-                    return tran_orient{true, dir__101};
-                }
-            } else {
-                if (is_lower) { // dir4
-                    if (!rotate) {
-                        return tran_orient{false, dir__01_1};
-                    }
-                    return tran_orient{true, dir__101};
-                } else { // dir3
-                    if (!rotate) {
-                        return tran_orient{false, dir__011};
-                    }
-                    return tran_orient{true, dir__10_1};
-                }
-            }
-            break;
-        case dir__011:
-            if (is_first_atom) {
-                if (is_lower) { // dir2
-                    if (!rotate) {
-                        return tran_orient{false, dir__10_1};
-                    }
-                    return tran_orient{false, dir__1_10};
-                } else { // dir1
-                    if (!rotate) {
-                        return tran_orient{true, dir__110};
-                    }
-                    return tran_orient{true, dir__101};
-                }
-            } else {
-                if (is_lower) { // dir4
-                    if (!rotate) {
-                        return tran_orient{true, dir__110};
-                    }
-                    return tran_orient{true, dir__101};
-                } else { // dir3
-                    if (!rotate) {
-                        return tran_orient{false, dir__10_1};
-                    }
-                    return tran_orient{false, dir__1_10};
-                }
-            }
-            break;
-        case dir__01_1:
-            if (is_first_atom) {
-                if (is_lower) { // dir2
-                    if (!rotate) {
-                        return tran_orient{false, dir__1_10};
-                    }
-                    return tran_orient{false, dir__101};
-                } else { // dir1
-                    if (!rotate) {
-                        return tran_orient{true, dir__110};
-                    }
-                    return tran_orient{true, dir__10_1};
-                }
-            } else {
-                if (is_lower) { // dir4
-                    if (!rotate) {
-                        return tran_orient{true, dir__110};
-                    }
-                    return tran_orient{true, dir__10_1};
-                } else { // dir3
-                    if (!rotate) {
-                        return tran_orient{false, dir__1_10};
-                    }
-                    return tran_orient{false, dir__101};
-                }
-            }
-            break;
-        case dir__101:
-            if (is_first_atom) {
-                if (is_lower) { // dir2
-                    if (!rotate) {
-                        return tran_orient{false, dir__01_1};
-                    }
-                    return tran_orient{true, dir__1_10};
-                } else { // dir1
-                    if (!rotate) {
-                        return tran_orient{true, dir__011};
-                    }
-                    return tran_orient{true, dir__110};
-                }
-            } else {
-                if (is_lower) { // dir4
-                    if (!rotate) {
-                        return tran_orient{true, dir__011};
-                    }
-                    return tran_orient{true, dir__110};
-                } else { // dir3
-                    if (!rotate) {
-                        return tran_orient{false, dir__01_1};
-                    }
-                    return tran_orient{true, dir__1_10};
-                }
-            }
-            break;
-        case dir__10_1:
-            if (is_first_atom) {
-                if (is_lower) { // dir2
-                    if (!rotate) {
-                        return tran_orient{false, dir__011};
-                    }
-                    return tran_orient{true, dir__1_10};
-                } else { // dir1
-                    if (!rotate) {
-                        return tran_orient{true, dir__01_1};
-                    }
-                    return tran_orient{true, dir__110};
-                }
-            } else {
-                if (is_lower) { // dir4
-                    if (!rotate) {
-                        return tran_orient{true, dir__01_1};
-                    }
-                    return tran_orient{true, dir__110};
-                } else { // dir3
-                    if (!rotate) {
-                        return tran_orient{false, dir__011};
-                    }
-                    return tran_orient{true, dir__1_10};
-                }
-            }
-            break;
-    }
-}
+const orientation::_type_dire orientation::TransHashTable[single_orient_count][LatticesList::MAX_1NN][2][2]{
+// we only handle a half transition table,
+// because the negative part is similar as positive part.
+        // 1: <110>
+        {
+                // 1nn 0
+                {{r_011, r_101}, {s_011, s_101}},
+                // 1nn 1
+                {{r_01_1, r_10_1}, {s_01_1, s_10_1}},
+                // 1nn 2
+                {}, // default is 0: unknown
+                // 1nn 3
+                {},
+                // 1nn 4
+                {},
+                // 1nn 5
+                {},
+                // 1nn 6
+                {{s_01_1},         {s_10_1}},
+                // 1nn 7
+                {{r_01_1},       {r_10_1}}
+        },
 
-// todo test
+        // 2: <1-10>
+        {
+                // 1nn 0
+                {},
+                // 1nn 1
+                {},
+                // 1nn 2
+                {{s_01_1, r_101},  {r_01_1, s_101}},
+                // 1nn 3
+                {{s_011,  r_10_1}, {r_011,  s_10_1}},
+                // 1nn 4
+                {{r_011,  s_10_1}, {s_011,  r_10_1}},
+                // 1nn 5
+                {{r_01_1, s_101},  {s_01_1, r_101}},
+                // 1nn 6
+                {},
+                // 1nn 7
+                {}
+        },
+
+        // 3: <011>
+        {
+                // 1nn 0
+                {{r_110, r_101}, {s_110, s_101}},
+                // 1nn 1
+                {},
+                // 1nn 2
+                {},
+                // 1nn 3
+                {{r_10_1, r_1_10}, {s_10_1, s_1_10}},
+                // 1nn 4
+                {{s_10_1, s_1_10}, {r_10_1, r_1_10}},
+                // 1nn 5
+                {},
+                // 1nn 6
+                {},
+                // 1nn 7
+                {{s_110, s_101}, {r_110, r_101}}
+        },
+
+        // 4: <01-1>
+        {
+                // 1nn 0
+                {},
+                // 1nn 1
+                {{r_110,  r_10_1}, {s_110,  s_10_1}},
+                // 1nn 2
+                {{r_1_10, r_101},  {s_1_10, s_101}},
+                // 1nn 3
+                {},
+                // 1nn 4
+                {},
+                // 1nn 5
+                {{s_1_10, s_101},  {r_1_10, r_101}},
+                // 1nn 6
+                {{s_110,  s_10_1}, {r_110,  r_10_1}},
+                // 1nn 7
+                {}
+        },
+
+        // 5: <101>
+        {
+                // 1nn 0
+                {{r_011, r_110}, {s_011, s_110}},
+                // 1nn 1
+                {},
+                // 1nn 2
+                {{r_01_1, s_1_10}, {s_01_1, r_1_10}},
+                // 1nn 3
+                {},
+                // 1nn 4
+                {},
+                // 1nn 5
+                {{s_01_1, r_1_10}, {r_01_1, s_1_10}},
+                // 1nn 6
+                {},
+                // 1nn 7
+                {{s_011, s_110}, {r_011, r_110}}
+        },
+
+        // 6: <10-1>
+        {
+                // 1nn 0
+                {},
+                // 1nn 1
+                {{r_01_1, r_110},  {s_01_1, s_110}},
+                // 1nn 2
+                {},
+                // 1nn 3
+                {{r_011,  s_1_10}, {s_011,  r_1_10}},
+                // 1nn 4
+                {{s_011,  r_1_10}, {r_011,  s_1_10}},
+                // 1nn 5
+                {},
+                // 1nn 6
+                {{s_01_1, s_110},  {r_01_1, r_110}},
+                // 1nn 7
+                {}
+        },
+};
+
 _type_dirs_status orientation::availTransDirs() const {
     switch (_ori) {
         case s_110:
@@ -297,4 +251,15 @@ LatticeTypes orientation::tranAtom(const LatticeTypes type, const _type_dir_id _
 #endif
             return type;
     }
+}
+
+// todo test
+orientation orientation::trans(const _type_dir_id _1nn_tag, const bool new_higher, const bool rotate) const {
+    if (_ori == 0) {
+#ifdef DEBUG_MODE
+        throw std::runtime_error("unexpected 1nn tag");
+#endif
+        return orientation{unknown};
+    }
+    return orientation{TransHashTable[tranHash(_ori)][_1nn_tag][!new_higher][!rotate]};
 }

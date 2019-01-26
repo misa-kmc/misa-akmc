@@ -44,3 +44,9 @@ TEST(orientation_availTransDirs_test, orientation_test) {
     EXPECT_EQ(ori2.tranAtom(LatticeTypes{LatticeTypes::FeCu}, 6)._type, LatticeTypes::Fe);
     EXPECT_EQ(ori2.tranAtom(LatticeTypes{LatticeTypes::FeCu}, 7)._type, LatticeTypes::Fe);
 }
+
+TEST(orientation_trans_test, orientation_test) {
+    const orientation ori = orientation{orientation::s_110};
+    EXPECT_EQ(ori.trans(0, true, true)._ori, orientation::r_011);
+    EXPECT_EQ(ori.trans(1, true, true)._ori, orientation::r_01_1);
+}

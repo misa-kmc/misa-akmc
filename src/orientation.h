@@ -37,15 +37,6 @@ struct orientation {
 
     _type_dire _ori;
 
-    /**
-     * \brief find jump atom in JumpAtomHashTable based on \param _1nn_tag and dumbbell orientation.
-     * \param _1nn_tag 1nn neighbour lattice tag
-     * \return atom tag: 'X'(atom X can jump) or 'Y'(atom Y can jump), or '_' (none can jump).
-     */
-    inline char findJumpAtom(const _type_dir_id _1nn_tag) const {
-        // hashing dumbbell orient to array index.
-        return JumpAtomHashTable[_ori + single_orient_count][_1nn_tag];
-    }
 
     /**
      * \brief get available transition directions of two atoms in dumbbell under this orientation.
@@ -87,13 +78,12 @@ struct orientation {
     /**
      * \deprecated currently
      * \brief get new orientation after transition.
-     * \param src_orient the source orientation.
-     * \param is_first_atom whether the transition atom is first atom.
-     * \param is_lower whether the transition orientation is lower position.
-     * \param rotate rotate orientation.
+     * \param _1nn_tag 1nn neighbour lattice tag (value from 0 to 7) for transition.
+     * \param new_higher whether the jump atom is at higher bits in new dumbbell.
+     * \param rotate rotate direction, true for positive, false for negative.
      * \return new orientation after transition.
      */
-    static orientation trans(_type_dire src_orient, bool is_first_atom, bool is_lower, bool rotate);
+    orientation trans(const _type_dir_id _1nn_tag, const bool new_higher, const bool rotate) const;
 
 private:
     const static char X = 'X';
@@ -101,11 +91,33 @@ private:
     const static char _ = '_';
 
     /**
+     * \brief find jump atom in JumpAtomHashTable based on \param _1nn_tag and dumbbell orientation.
+     * \param _1nn_tag 1nn neighbour lattice tag
+     * \return atom tag: 'X'(atom X can jump) or 'Y'(atom Y can jump), or '_' (none can jump).
+     */
+    inline char findJumpAtom(const _type_dir_id _1nn_tag) const {
+        // hashing dumbbell orient to array index.
+        return JumpAtomHashTable[_ori + single_orient_count][_1nn_tag];
+    }
+
+    inline int tranHash(_type_dire orient) const {
+        return orient < 0 ? -orient - 1 : orient - 1;
+    }
+
+    /**
      * \brief assuming the dumbbell type is XY,
      * we can search this table to determine which atom (X or Y)
      * can jump to the corresponding neighbour lattice.
      */
     const static char JumpAtomHashTable[orientation_count][LatticesList::MAX_1NN];
+
+    /**
+     * \brief transition table.
+     * we can get new orientation after transition from this table by
+     * origin orientation, 1nn lattice tag, jump atom position in new dumbbell and rotate direction
+     *
+     */
+    const static _type_dire TransHashTable[single_orient_count][LatticesList::MAX_1NN][2][2];
 };
 
 #endif //MISA_KMC_ORIENTATION_H
