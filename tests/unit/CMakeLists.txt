@@ -17,6 +17,7 @@ set(TEST_SOURCE_FILES
         itl_test.cpp
         rate/bonds/bonds_counter_test.cpp
         defect/itl_rates_test.cpp
+        orientation_test.cpp
         )
 
 

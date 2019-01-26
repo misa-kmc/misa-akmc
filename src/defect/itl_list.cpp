@@ -6,7 +6,7 @@
 
 _type_dirs_status Itl::availTranDirs(_type_neighbour_status nei_status,
                                      Lattice *_1nn_lats[LatticesList::MAX_1NN]) {
-    _type_dirs_status dir_status = orientation.orient.availTransDirections();
+    _type_dirs_status dir_status = orient.availTransDirs();
     // search all neighbour lattices, if the neighbour lattice is a destination that the source lattice can jump to
     // (it is available and it is atom),
     // then set the destination as available transition direction.
@@ -33,7 +33,7 @@ void Itl::updateRates(Lattice &lattice, Lattice *list_1nn[LatticesList::MAX_1NN]
 #ifdef DEBUG_MODE
     assert(lattice.type.isDumbbell());
 #endif
-    _type_dirs_status trans_dirs = orientation.orient.availTransDirections();
+    _type_dirs_status trans_dirs = orient.availTransDirs();
     // search all neighbour lattices, if the neighbour lattice is a destination that the source lattice can jump to,
     // then calculate the transition rate from source lattice to the neighbour lattice.
     for (unsigned char b = 0; b < LatticesList::MAX_NEI_BITS; b++) {
@@ -41,14 +41,9 @@ void Itl::updateRates(Lattice &lattice, Lattice *list_1nn[LatticesList::MAX_1NN]
             // the neighbour lattice is list_1nn[b]
             Lattice *lat_nei = list_1nn[b];
             // get the transition atom
-            LatticeTypes::lat_type trans_atom;
-            if (b < LatticesList::MAX_NEI_BITS / 2) {
-                trans_atom = lattice.type.getFirst(orientation.reversed);
-            } else {
-                trans_atom = lattice.type.getSecond(orientation.reversed);
-            }
+            const LatticeTypes trans_atom = orient.tranAtom(lattice.type, b);
             // calculate the rate from itl_ref to lat_nei.
-            _type_rate rate = callback(lat_nei, trans_atom, b); // compute rate
+            _type_rate rate = callback(lat_nei, trans_atom._type, b); // compute rate
             rates[ratesIndex(b, trans_dirs, false)] = rate;
             rates[ratesIndex(b, trans_dirs, true)] = rate;
         }
@@ -57,7 +52,7 @@ void Itl::updateRates(Lattice &lattice, Lattice *list_1nn[LatticesList::MAX_1NN]
 
 _type_rates_status Itl::getRatesStatus() {
     _type_rates_status status = 0;
-    _type_dirs_status trans_dirs = orientation.orient.availTransDirections();
+    _type_dirs_status trans_dirs = orient.availTransDirs();
     int i = 0;
     for (unsigned char b = 0; b < TRANS_DIRS_BITS_SIZE; b++) {
         if ((trans_dirs >> b) & 0x01) {

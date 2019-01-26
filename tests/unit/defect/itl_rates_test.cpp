@@ -10,7 +10,7 @@ TEST(itl_updateRates_with_beforeRatesUpdate_test, itl_rates_update_test) {
     lattice.type._type = LatticeTypes::NiMn;
 
     Itl itl;
-    itl.orientation = tran_orient{false, {orientation::dir__110}};
+    itl.orient = orientation{orientation::s_110};
 
     Lattice data[8];
     data[0].type._type = LatticeTypes::Fe;
@@ -63,7 +63,7 @@ TEST(itl_updateRates_test, itl_rates_update_test) {
     lattice.type._type = LatticeTypes::NiMn;
 
     Itl itl;
-    itl.orientation = tran_orient{false, {orientation::dir__110}};
+    itl.orient = orientation{orientation::s_110};
 
     Lattice *_1nn[8];
     // callback function to update transition rate.

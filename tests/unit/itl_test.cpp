@@ -16,8 +16,7 @@ public:
 
 TEST(itl_availTranDirs_test, itl_test) {
     ItlTester itl;
-    itl.orientation.orient._ori = orientation::dir__110;
-    itl.orientation.reversed = false;
+    itl.orient._ori = orientation::s_110;
 
     _type_neighbour_status nei_status = 0xFF;
     Lattice data[8];
@@ -52,8 +51,7 @@ TEST(itl_availTranDirs_test, itl_test) {
 
 TEST(itl_availTranDirs_status_test, itl_test) {
     ItlTester itl;
-    itl.orientation.orient._ori = orientation::dir__110;
-    itl.orientation.reversed = false;
+    itl.orient._ori = orientation::s_110;
 
     Lattice data[8];
     data[0].type._type = LatticeTypes::Fe;
@@ -151,7 +149,7 @@ TEST(itl_get1nnIdByRatesIndex_test, itl_test) {
 
 TEST(itl_getRatesStatus_test, itl_test) {
     ItlTester itl;
-    itl.orientation.orient._ori = orientation::dir__110; // 0,1,6,7
+    itl.orient._ori = orientation::s_110; // 0,1,6,7
 
     itl.avail_trans_dir = 0xC3; // 0b 1100 0011
     EXPECT_EQ(itl.getRatesStatus(), 0xFF);

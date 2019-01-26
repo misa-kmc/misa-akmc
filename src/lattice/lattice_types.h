@@ -89,6 +89,7 @@ struct LatticeTypes {
     }
 
     /**
+     * \deprecated
      * \brief get the first atom based on lattice type and orientation(\param is_reversed).
      * \param is_reversed whether the type of inter/dumbbell is reversed.
      * \return first atom type
@@ -104,6 +105,7 @@ struct LatticeTypes {
     }
 
     /**
+     * \deprecated
      * \brief get the second atom based on lattice type and orientation(\param is_reversed).
      * \param is_reversed whether the type of inter/dumbbell is reversed.
      * \return second atom type

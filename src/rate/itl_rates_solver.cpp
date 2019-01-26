@@ -157,7 +157,7 @@ double ItlRatesSolver::Edumb() {
                 // for 1nn
                 for (int b = 0; b < LatticesList::MAX_NEI_BITS; b++) {
                     if ((_1nn_status >> b) & 0x01) { //  the 1nn neighbour exists
-                        if (!((inter_instance.orientation.orient.availTransDirections() >> b) & 0x01)) {
+                        if (!((inter_instance.orient.availTransDirs() >> b) & 0x01)) {
                             // it is not transition direction.
                             // the second condition can also be:
                             // (inter_instance.avail_trans_dir >> b) & 0x01
@@ -216,16 +216,9 @@ double ItlRatesSolver::FeX_comp(const _type_lattice_id id, const LatticeTypes ty
     double ecomp_FeX = 0;
     double eb_FeX = 0;
     _type_dirs_status comp_status = itl.avail_trans_dir; // todo make sure avail_trans_dir have been set.
-    LatticeTypes compsol;
-    if (type.getFirst(itl.orientation.reversed) == LatticeTypes::Fe) {
-        comp_status &= 0xF0; // set 4 lower bits to 0.
-        compsol = LatticeTypes{type.getSecond(itl.orientation.reversed)};
-    }
-    if (type.getSecond(itl.orientation.reversed) == LatticeTypes::Fe) {
-        comp_status &= 0x0F; // set 4 higher bits to 0.
-        compsol = LatticeTypes{type.getFirst(itl.orientation.reversed)};
-
-    }
+    // in dumbbell type, Fe is always higher bits.
+    comp_status &= itl.orient.availTransDirsLow(); // for type FeX, get trans dirs of atom X.
+    LatticeTypes compsol = LatticeTypes{type.getLowEnd()};
 
     // for 1nn neighbour lattice
     for (int b = 0; b < Itl::TRANS_DIRS_BITS_SIZE; b++) {
