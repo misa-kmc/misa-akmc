@@ -33,10 +33,13 @@ TEST(orientation_availTransDirs_test, orientation_test) {
     EXPECT_EQ(ori.tranAtom(LatticeTypes{LatticeTypes::FeCu}, 6)._type, LatticeTypes::Cu);
     EXPECT_EQ(ori.tranAtom(LatticeTypes{LatticeTypes::FeCu}, 7)._type, LatticeTypes::Cu);
 
+    // fixme this only be true in debug mode.
+#ifdef DEBUG_MODE
     EXPECT_THROW(ori.tranAtom(LatticeTypes{LatticeTypes::FeCu}, 2), std::runtime_error);
     EXPECT_THROW(ori.tranAtom(LatticeTypes{LatticeTypes::FeCu}, 3), std::runtime_error);
     EXPECT_THROW(ori.tranAtom(LatticeTypes{LatticeTypes::FeCu}, 4), std::runtime_error);
     EXPECT_THROW(ori.tranAtom(LatticeTypes{LatticeTypes::FeCu}, 5), std::runtime_error);
+#endif
 
     const orientation ori2 = orientation{orientation::r_110};
     EXPECT_EQ(ori2.tranAtom(LatticeTypes{LatticeTypes::FeCu}, 0)._type, LatticeTypes::Cu);
