@@ -17,7 +17,7 @@
 class Itl : public Defect<8> {
 public:
 
-    tran_orient orientation; // todo initialization
+    orientation orient; // todo initialization
 
     Itl() {};
 
