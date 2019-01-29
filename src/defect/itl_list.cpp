@@ -23,6 +23,8 @@ _type_dirs_status Itl::availTranDirs(_type_neighbour_status nei_status,
 
 void Itl::beforeRatesUpdate(Lattice *list_1nn[LatticesList::MAX_1NN],
                             _type_neighbour_status status_1nn) {
+    // zero rates array
+    Defect::beforeRatesUpdate(list_1nn, status_1nn);
     // compute and set "which neighbour lattices can jump to"
     avail_trans_dir = availTranDirs(status_1nn, list_1nn);
 }

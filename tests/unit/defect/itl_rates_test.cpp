@@ -28,7 +28,7 @@ TEST(itl_updateRates_with_beforeRatesUpdate_test, itl_rates_update_test) {
     auto test_rates_updater = [](Lattice *lat_nei,
                                  const LatticeTypes::lat_type trans_atom,
                                  const _type_dir_id _1nn_offset) -> _type_rate {
-        return _1nn_offset;
+        return _1nn_offset + 1;
     };
 
     // case 1
@@ -36,22 +36,19 @@ TEST(itl_updateRates_with_beforeRatesUpdate_test, itl_rates_update_test) {
     itl.updateRates(lattice, _1nn, _1nn_status, test_rates_updater);
 
     // transition rate of neighbour 0,0,1,1,6,6,7,7, namely.
-    _type_rate expected_rated_1[Itl::RATES_SIZE] = {0, 0, 1, 1, 6, 6, 7, 7};
+    _type_rate expected_rated_1[Itl::RATES_SIZE] = {1, 1, 2, 2, 7, 7, 8, 8};
     for (int i = 0; i < Itl::RATES_SIZE; i++) {
         EXPECT_EQ(itl.rates[i], expected_rated_1[i]);
     }
 
     // case 2.
-    // clear rates
-    for (int i = 0; i < Itl::RATES_SIZE; i++) {
-        itl.rates[i] = -1;
-    }
     data[1].type._type = LatticeTypes::FeCu;
     itl.beforeRatesUpdate(_1nn, _1nn_status); // set avail_trans_dir to  (orientation: <110>).
     itl.updateRates(lattice, _1nn, _1nn_status, test_rates_updater);
 
     // transition rate of neighbour 0,0,1,1,6,6,7,7, namely.
-    _type_rate expected_rated_2[Itl::RATES_SIZE] = {0, 0, -1, -1, 6, 6, 7, 7};
+    // default value of rate is zero (set in function beforeRatesUpdate).
+    _type_rate expected_rated_2[Itl::RATES_SIZE] = {1, 1, 0, 0, 7, 7, 8, 8};
     for (int i = 0; i < Itl::RATES_SIZE; i++) {
         EXPECT_EQ(itl.rates[i], expected_rated_2[i]);
     }

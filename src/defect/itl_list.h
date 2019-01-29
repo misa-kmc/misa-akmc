@@ -19,9 +19,9 @@ public:
 
     orientation orient; // todo initialization
 
-    Itl() {};
+    Itl() = default;
 
-    ~Itl() {};
+    ~Itl() = default;
 
     /**
      * \brief be called before calling updateRates.

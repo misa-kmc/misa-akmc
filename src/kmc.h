@@ -7,6 +7,7 @@
 
 #include "type_define.h"
 #include "box.h"
+#include "event.h"
 
 /*!
  * \brief the main routine of KMC simulation.
@@ -17,7 +18,7 @@ public:
      * \brief
      * \return
      */
-    _type_rate random();
+    double random();
 
     /**
      * \brief calculate the transition rates of each lattice.
@@ -27,11 +28,32 @@ public:
      * see the implementation for more details.
      *
      * After this step, the rate of every transition direction of each lattice will be set.
+     * \return return the sum of rates of all KMC events,
+     * including dumbbell transition and vacancy transition and defect generation).
      */
-    void updateRates(double v, double T);
+    _type_rate updateRates(double v, double T);
+
+
+    /**
+     * \brief select an event randomly.
+     *
+     * \param random random number between 0-1.
+     * \param total_rates the sum rates
+     * \return the selected event.
+     */
+    event::SelectedEvent select(const double random, const _type_rate sum_rates);
+
+    /**
+     * \brief  execute the selected KMC event.
+     *
+     */
+    void execute(const event::SelectedEvent selected);
+
+protected:
+    double time = 0;
 
 private:
-    Box *box; // todo init box pointer
+    Box *box = nullptr; // todo init box pointer
 };
 
 
