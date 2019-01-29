@@ -9,6 +9,7 @@ set(HEADER_FILES
         lattice/lattice_types.h
         lattice/normal_lattice_list.h
         rate/bonds/bonds_counter.h
+        rate/bonds/energy_dumbbell.h
         rate/bonds/pair_bond.hpp
         rate/itl_rates_solver.h
         rate/rates_types.h
@@ -30,6 +31,7 @@ set(SOURCE_FILES
         lattice/lattice_types.cpp
         lattice/normal_lattice_list.cpp
         rate/bonds/bonds_counter.cpp
+        rate/bonds/energy_dumbbell.cpp
         rate/itl_rates_solver.cpp
         rate/rates_solver.cpp
         rate/vacancy_rates_solver.cpp

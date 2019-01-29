@@ -9,7 +9,7 @@
  * "Solute interaction with point defects in α Fe during thermal ageing: A combined ab initio and atomic kinetic Monte Carlo approach."  \
  * Journal of nuclear materials 351.1-3 (2006): 88-99}.
  */
-const std::map<PairBond::bond_type, _type_pair_ia> BondsCounter::_1nn_bonds = {
+const std::map<bonds::PairBond::bond_type, bonds::_type_pair_ia> bonds::BondsCounter::_1nn_bonds = {
         {PairBond::FeFe, -0.778},
         {PairBond::VV,   0.315},
         {PairBond::CuCu, -0.581},
@@ -30,7 +30,7 @@ const std::map<PairBond::bond_type, _type_pair_ia> BondsCounter::_1nn_bonds = {
         {PairBond::NiMn, -0.831},
 };
 
-const std::map<PairBond::bond_type, _type_pair_ia> BondsCounter::_2nn_bonds = {
+const std::map<bonds::PairBond::bond_type, bonds::_type_pair_ia> bonds::BondsCounter::_2nn_bonds = {
         {PairBond::FeFe, -0.389},
         {PairBond::VV,   -0.214},
         {PairBond::CuCu, -0.389},
@@ -51,7 +51,7 @@ const std::map<PairBond::bond_type, _type_pair_ia> BondsCounter::_2nn_bonds = {
         {PairBond::NiMn, -0.464},
 };
 
-_type_pair_ia BondsCounter::count(LatticesList *lat_list, _type_lattice_id source_id, LatticeTypes src_atom_type) {
+bonds::_type_pair_ia bonds::BondsCounter::count(LatticesList *lat_list, _type_lattice_id source_id, LatticeTypes src_atom_type) {
     Lattice *_1nn_neighbour[LatticesList::MAX_1NN]; // todo new array many times.
     _type_neighbour_status _1nn_status = lat_list->get1nnStatus(source_id);
     lat_list->get1nn(source_id, _1nn_neighbour);
