@@ -59,5 +59,41 @@ _type_rate kmc::updateRates(double v, double T) {
     return sum_rates;
 }
 
-void kmc::execute(double random) {
+event::SelectedEvent kmc::select(const double random, const _type_rate sum_rates) {
+    const _type_rate excepted_rate = sum_rates * random;
+    _type_rate rate_accumulator = 0.0;
+    event::SelectedEvent selected_event{event::DefectGen, 0, 0}; // default event is defect generation.
+    box->lattice_list->forAllLattices([&](const _type_lattice_coord x,
+                                          const _type_lattice_coord y,
+                                          const _type_lattice_coord z,
+                                          Lattice &lattice) {
+        if (lattice.type.isDumbbell()) { // dumbbell
+            const Itl &itl_ref = box->itl_list->mp.at(lattice.getId());
+            for (int i = 0; i < Itl::RATES_SIZE; i++) {
+                rate_accumulator += itl_ref.rates[i];
+                if (rate_accumulator > excepted_rate) {
+                    selected_event.id = lattice.getId();
+                    selected_event.event_type = event::DumbbellTrans;
+                    selected_event.rate_index = i;
+                    return false;
+                }
+            }
+        } else if (lattice.type.isVacancy()) {
+            const Vacancy &vacancy = box->va_list->mp.at(lattice.getId());
+            for (int i = 0; i < Vacancy::RATES_SIZE; i++) {
+                rate_accumulator += vacancy.rates[i];
+                if (rate_accumulator > excepted_rate) {
+                    selected_event.id = lattice.getId();
+                    selected_event.event_type = event::VacancyTrans;
+                    selected_event.rate_index = i;
+                    return false;
+                }
+            }
+        }
+        return true;
+    });
+#ifdef DEBUG_MODE
+//    todo assert total rates == rate_accumulator + defect_gen_rate
+#endif
+    return selected_event;
 }

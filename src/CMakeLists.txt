@@ -34,6 +34,7 @@ set(SOURCE_FILES
         rate/rates_solver.cpp
         rate/vacancy_rates_solver.cpp
         box.cpp
+        event.h
         orientation.cc
         kmc.cpp
         )

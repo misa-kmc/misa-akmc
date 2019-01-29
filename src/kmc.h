@@ -7,6 +7,7 @@
 
 #include "type_define.h"
 #include "box.h"
+#include "event.h"
 
 /*!
  * \brief the main routine of KMC simulation.
@@ -34,11 +35,19 @@ public:
 
 
     /**
-     * \brief select an event randomly and execute this event.
+     * \brief select an event randomly.
      *
-     * \param random random number.
+     * \param random random number between 0-1.
+     * \param total_rates the sum rates
+     * \return the selected event.
      */
-    void execute(double random);
+    event::SelectedEvent select(const double random, const _type_rate sum_rates);
+
+    /**
+     * \brief  execute the selected KMC event.
+     *
+     */
+    void execute(const event::SelectedEvent selected);
 
 protected:
     double time = 0;
