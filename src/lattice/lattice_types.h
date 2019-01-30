@@ -89,6 +89,22 @@ struct LatticeTypes {
     }
 
     /**
+     * \brief check whether an atom is the higher part of a dumbbell lattice type.
+     * \return true for is higher part, false for otherwise.
+     */
+    inline bool isHighEnd(const lat_type atom) {
+        return getHighEnd() == atom;
+    }
+
+    /**
+     * \brief check whether an atom is the lower part of a dumbbell lattice type.
+     * \return true for is lower part, false for otherwise.
+     */
+    inline bool isLowEnd(const lat_type atom) {
+        return getLowEnd() == atom;
+    }
+
+    /**
      * \deprecated
      * \brief get the first atom based on lattice type and orientation(\param is_reversed).
      * \param is_reversed whether the type of inter/dumbbell is reversed.

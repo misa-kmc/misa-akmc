@@ -47,6 +47,20 @@ TEST(lattice_type_getHighLowEnd_test, lattice_type_test) {
     EXPECT_EQ(type3.getLowEnd(), LatticeTypes::V);
 }
 
+TEST(lattice_type_isHighLowEnd_test, lattice_type_test) {
+    LatticeTypes type1(LatticeTypes::FeCu);
+    EXPECT_EQ(type1.isHighEnd(LatticeTypes::Fe), true);
+    EXPECT_EQ(type1.isHighEnd(LatticeTypes::V), false);
+    EXPECT_EQ(type1.isHighEnd(LatticeTypes::Cu), false);
+    EXPECT_EQ(type1.isLowEnd(LatticeTypes::Fe), false);
+    EXPECT_EQ(type1.isLowEnd(LatticeTypes::V), false);
+    EXPECT_EQ(type1.isLowEnd(LatticeTypes::Cu), true);
+
+    LatticeTypes type2(LatticeTypes::CuCu);
+    EXPECT_EQ(type2.isHighEnd(LatticeTypes::Cu), true);
+    EXPECT_EQ(type2.isLowEnd(LatticeTypes::Cu), true);
+}
+
 TEST(lattice_type_FirstSecondAtom_test, lattice_type_test) {
     LatticeTypes type1(LatticeTypes::FeCu);
     EXPECT_EQ(type1.getFirst(true), LatticeTypes::Fe);
