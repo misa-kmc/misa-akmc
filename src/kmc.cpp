@@ -97,3 +97,57 @@ event::SelectedEvent kmc::select(const double random, const _type_rate sum_rates
 #endif
     return selected_event;
 }
+
+void kmc::execute(const event::SelectedEvent selected) {
+    switch (selected.event_type) {
+        case event::VacancyTrans: {
+            Lattice &lat_from = box->lattice_list->getLat(selected.id);
+            Lattice *_1nn_list[LatticesList::MAX_1NN] = {nullptr};
+            box->lattice_list->get1nn(selected.id, _1nn_list);
+            Lattice &lat_to = *(_1nn_list[selected.rate_index]);
+#ifdef DEBUG_MODE
+            assert(lat_from.type.isVacancy());
+            assert(lat_to.type.isAtom());
+#endif
+            // exchange lattice type
+            LatticeTypes tp_temp = lat_from.type;
+            lat_from.type = lat_to.type;
+            lat_to.type = tp_temp;
+            // update vacancies list: remove lat_from, add lat_to.
+            box->va_list->replace(lat_from.getId(), lat_to.getId());
+            // recombination
+        }
+            break;
+        case event::DumbbellTrans: {
+            Lattice &lat_from = box->lattice_list->getLat(selected.id);
+            Lattice *_1nn_list[LatticesList::MAX_1NN] = {nullptr};
+            box->lattice_list->get1nn(selected.id, _1nn_list);
+            // convert rate index to 1nn list array index.
+            const orientation ori = box->itl_list->mp[selected.id].orient;
+            const _type_dir_id _1nn_tag = Itl::get1nnIdByRatesIndex(
+                    selected.rate_index,
+                    ori.availTransDirs());
+            Lattice &lat_to = *(_1nn_list[_1nn_tag]);
+#ifdef DEBUG_MODE
+            assert(lat_from.type.isDumbbell());
+            assert(lat_to.type.isAtom());
+#endif
+            // find jump atom and exchange atoms.
+            LatticeTypes jump_atom = ori.tranAtom(lat_from.type, _1nn_tag); // for example: jump_atom = X
+            lat_from.type._type = lat_from.type.diff(LatticeTypes{jump_atom});  // XY -> Y
+            lat_to.type._type = LatticeTypes::combineToInter(lat_to.type._type,
+                                                             jump_atom._type); // N -> NX or N -> XN
+            // update orientation
+            Itl itl;
+            itl.orient = ori.trans(_1nn_tag, lat_to.type.isHighEnd(jump_atom._type), _1nn_tag % 2 != 0);
+            // todo update avail tran dirs.
+            box->itl_list->replace(lat_from.getId(), lat_from.getId(), itl);
+            // recombination
+        }
+            break;
+        case event::DefectGen: {
+// todo
+        }
+            break;
+    }
+}

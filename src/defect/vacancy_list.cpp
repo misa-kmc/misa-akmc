@@ -20,3 +20,9 @@ void Vacancy::updateRates(Lattice &lattice, Lattice *list_1nn[LatticesList::MAX_
         }
     }
 }
+
+void VacancyList::replace(const _type_lattice_id old_lat_id, const _type_lattice_id new_lat_id) {
+    mp.erase(old_lat_id);
+    // todo init vacancy
+    mp.insert(std::make_pair(new_lat_id, Vacancy{}));
+}

@@ -48,6 +48,15 @@ public:
      * \brief  a map to correspond the id and the Itl sequence number.
      */
     std::map<_type_lattice_id, Vacancy> mp;
+
+    /**
+     * \brief replace an existed old vacancy with new vacancy.
+     *  remove the old one and add the new one.
+     * \param old_lat_id the lattice id of the old vacancy
+     * \param new_lat_id the lattice id of the new vacancy
+     */
+    void replace(const _type_lattice_id old_lat_id, const _type_lattice_id new_lat_id);
+
 };
 
 
