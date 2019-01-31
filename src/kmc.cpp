@@ -5,6 +5,7 @@
 #include "kmc.h"
 #include "rate/itl_rates_solver.h"
 #include "rate/vacancy_rates_solver.h"
+#include "recombine.h"
 
 _type_rate kmc::updateRates(double v, double T) {
     _type_rate sum_rates = 0;
@@ -116,6 +117,12 @@ void kmc::execute(const event::SelectedEvent selected) {
             // update vacancies list: remove lat_from, add lat_to.
             box->va_list->replace(lat_from.getId(), lat_to.getId());
             // recombination
+            rec::RecList rec_list;
+            rec_list.create(box->lattice_list, box->itl_list, lat_to.getId());
+            if (!rec_list.rec_list.empty()) {
+                rec::Rec picked_rec = rec_list.pickMinimum();
+                picked_rec.recombine(box->lattice_list, box->va_list, box->itl_list);
+        }
         }
             break;
         case event::DumbbellTrans: {
@@ -141,8 +148,14 @@ void kmc::execute(const event::SelectedEvent selected) {
             Itl itl;
             itl.orient = ori.trans(_1nn_tag, lat_to.type.isHighEnd(jump_atom._type), _1nn_tag % 2 != 0);
             // todo update avail tran dirs.
-            box->itl_list->replace(lat_from.getId(), lat_from.getId(), itl);
+            box->itl_list->replace(lat_from.getId(), lat_to.getId(), itl);
             // recombination
+            rec::RecList rec_list;
+            rec_list.create(box->lattice_list, box->itl_list, lat_to.getId());
+            if (!rec_list.rec_list.empty()) {
+                rec::Rec picked_rec = rec_list.pickMinimum();
+                picked_rec.recombine(box->lattice_list, box->va_list, box->itl_list);
+            }
         }
             break;
         case event::DefectGen: {
