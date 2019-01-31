@@ -20,6 +20,7 @@ set(HEADER_FILES
         macros.h
         orientation.h
         type_define.h
+        recombine.h
         )
 
 
@@ -39,6 +40,7 @@ set(SOURCE_FILES
         event.h
         kmc.cpp
         orientation.cc
+        recombine.cpp
         )
 
 
