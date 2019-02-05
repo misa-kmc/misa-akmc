@@ -6,7 +6,7 @@
 
 double bond::Edumb(LatticesList &lattice_list, ItlList &itl_list) {
     // used in each inter loop.
-    Lattice *_1nn_list[LatticesList::MAX_1NN];
+    Lattice *_1nn_list[LatticesList::MAX_1NN]; // todo reset to null in each for statement
     Lattice *_2nn_list[LatticesList::MAX_2NN];
 
     double edumb = 0;
@@ -193,6 +193,8 @@ double bond::FeX_comp(const _type_lattice_id id, const LatticeTypes type,
                             ecomp_FeX += 0.28;
                         }
                     }
+                    break;
+                default:
                     break;
             }
         }

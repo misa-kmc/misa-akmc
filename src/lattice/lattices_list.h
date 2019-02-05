@@ -193,7 +193,7 @@ public:
      * \param id global lattice id to specific lattice position.
      * \return the lattice pointers count in 1nn list.
      */
-    _type_neighbour_status get1nn(_type_lattice_id id, Lattice *_1nn_list[MAX_1NN]) {
+    int get1nn(_type_lattice_id id, Lattice *_1nn_list[MAX_1NN]) {
         ID_TO_XYZ(id, return get1nn(x, y, z, _1nn_list));
     }
 
@@ -204,14 +204,15 @@ public:
      * \note note that the coordinate specified by [x,y,z] must be in the lattice box, or "index out of bounds" may happen.
      * \return the lattice pointers count in 2nn list.
      */
-    virtual int get2nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_2nn_list[MAX_2NN]) = 0;
+    virtual int
+    get2nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_2nn_list[MAX_2NN]) = 0;
 
     /**
     * \brief similar as above one (use x,y,z to specific a lattice), but it receives a lattice id.
     * \param id global lattice id to specific lattice position.
     * \return the lattice pointers count in 2nn list.
     */
-    _type_neighbour_status get2nn(_type_lattice_id id, Lattice *_2nn_list[MAX_2NN]) {
+    int get2nn(_type_lattice_id id, Lattice *_2nn_list[MAX_2NN]) {
         ID_TO_XYZ(id, return get2nn(x, y, z, _2nn_list));
     }
 

@@ -19,7 +19,7 @@ _type_rate kmc::updateRates(double v, double T) {
         if (lattice.type.isDumbbell()) { // dumbbell
             Itl &itl_ref = box->itl_list->mp.at(lattice.getId());
 
-            Lattice *lat_list[LatticesList::MAX_1NN]; // todo new array many times.
+            Lattice *lat_list[LatticesList::MAX_1NN] = {nullptr}; // todo new array many times.
             box->lattice_list->get1nn(x, y, z, lat_list);
             _type_neighbour_status nei_status = box->lattice_list->get1nnStatus(x, y, z);
             itl_ref.beforeRatesUpdate(lat_list, nei_status);
@@ -38,7 +38,7 @@ _type_rate kmc::updateRates(double v, double T) {
         } else if (lattice.type.isVacancy()) { // vacancy
             Vacancy &vacancy = box->va_list->mp.at(lattice.getId());
 
-            Lattice *lat_list[LatticesList::MAX_1NN]; // todo new array many times.
+            Lattice *lat_list[LatticesList::MAX_1NN] = {nullptr}; // todo new array many times.
             box->lattice_list->get1nn(x, y, z, lat_list);
             _type_neighbour_status nei_status = box->lattice_list->get1nnStatus(x, y, z);
             vacancy.beforeRatesUpdate(lat_list, nei_status);
@@ -94,7 +94,7 @@ event::SelectedEvent kmc::select(const double random, const _type_rate sum_rates
         return true;
     });
 #ifdef DEBUG_MODE
-//    todo assert total rates == rate_accumulator + defect_gen_rate
+    //    todo assert total rates == rate_accumulator + defect_gen_rate
 #endif
     return selected_event;
 }
@@ -104,9 +104,10 @@ void kmc::execute(const event::SelectedEvent selected) {
         case event::VacancyTrans: {
             Lattice &lat_from = box->lattice_list->getLat(selected.id);
             Lattice *_1nn_list[LatticesList::MAX_1NN] = {nullptr};
-            box->lattice_list->get1nn(selected.id, _1nn_list);
+            box->lattice_list->get1nn(selected.id, _1nn_list); // todo make sure it is not null.
             Lattice &lat_to = *(_1nn_list[selected.rate_index]);
 #ifdef DEBUG_MODE
+            assert(_1nn_list[selected.rate_index]);
             assert(lat_from.type.isVacancy());
             assert(lat_to.type.isAtom());
 #endif
@@ -122,7 +123,7 @@ void kmc::execute(const event::SelectedEvent selected) {
             if (!rec_list.rec_list.empty()) {
                 rec::Rec picked_rec = rec_list.pickMinimum();
                 picked_rec.recombine(box->lattice_list, box->va_list, box->itl_list);
-        }
+            }
         }
             break;
         case event::DumbbellTrans: {
@@ -134,8 +135,9 @@ void kmc::execute(const event::SelectedEvent selected) {
             const _type_dir_id _1nn_tag = Itl::get1nnIdByRatesIndex(
                     selected.rate_index,
                     ori.availTransDirs());
-            Lattice &lat_to = *(_1nn_list[_1nn_tag]);
+            Lattice &lat_to = *(_1nn_list[_1nn_tag]); // todo make sure it is not null.
 #ifdef DEBUG_MODE
+            assert(_1nn_list[_1nn_tag]);
             assert(lat_from.type.isDumbbell());
             assert(lat_to.type.isAtom());
 #endif

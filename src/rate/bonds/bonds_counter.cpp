@@ -51,8 +51,9 @@ const std::map<bonds::PairBond::bond_type, bonds::_type_pair_ia> bonds::BondsCou
         {PairBond::NiMn, -0.464},
 };
 
-bonds::_type_pair_ia bonds::BondsCounter::count(LatticesList *lat_list, _type_lattice_id source_id, LatticeTypes src_atom_type) {
-    Lattice *_1nn_neighbour[LatticesList::MAX_1NN]; // todo new array many times.
+bonds::_type_pair_ia
+bonds::BondsCounter::count(LatticesList *lat_list, _type_lattice_id source_id, LatticeTypes src_atom_type) {
+    Lattice *_1nn_neighbour[LatticesList::MAX_1NN] = {nullptr}; // todo new array many times.
     _type_neighbour_status _1nn_status = lat_list->get1nnStatus(source_id);
     lat_list->get1nn(source_id, _1nn_neighbour);
 
@@ -77,7 +78,7 @@ bonds::_type_pair_ia bonds::BondsCounter::count(LatticesList *lat_list, _type_la
     }
 
     // Traver all 2nn neighbour lattices, and calculate bond energy contribution.
-    Lattice *_2nn_neighbour[LatticesList::MAX_1NN]; // todo new array many times.
+    Lattice *_2nn_neighbour[LatticesList::MAX_1NN] = {nullptr}; // todo new array many times.
     _type_neighbour_status _2nn_status = lat_list->get2nnStatus(source_id);
     lat_list->get2nn(source_id, _2nn_neighbour);
     for (int b = 0; b < LatticesList::MAX_NEI_BITS; b++) {
