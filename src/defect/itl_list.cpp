@@ -97,3 +97,8 @@ _type_dir_id Itl::get1nnIdByRatesIndex(int rate_index, _type_dirs_status trans_d
 Itl ItlList::getItlnum(_type_lattice_id id) {
     return mp[id];
 }
+
+void ItlList::replace(const _type_lattice_id old_lat_id, const _type_lattice_id new_lat_id, const Itl &new_itl) {
+    mp.erase(old_lat_id);
+    mp.insert(std::make_pair(new_lat_id, new_itl));
+}

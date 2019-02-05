@@ -16,10 +16,11 @@ set(HEADER_FILES
         rate/rates_solver.h
         rate/vacancy_rates_solver.h
         box.h
-        macros.h
         kmc.h
+        macros.h
         orientation.h
         type_define.h
+        recombine.h
         )
 
 
@@ -37,8 +38,9 @@ set(SOURCE_FILES
         rate/vacancy_rates_solver.cpp
         box.cpp
         event.h
-        orientation.cc
         kmc.cpp
+        orientation.cc
+        recombine.cpp
         )
 
 

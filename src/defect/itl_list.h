@@ -65,8 +65,12 @@ public:
 
     /**
      * \brief given a index of rates array, it returns the 1nn neighbour id of current lattice.
-     * which means the rate in rate array specified by @param rate_index
-     * is the transition rate of the 1nn direction specified by return value
+     *
+     * for example, tran_dirs is 0b 01101010, rate_index is 4,
+     * this function will return 5, which points to:
+     * 0b 01101010
+     *      ^----- 5th bit from right to left starting from 0.
+     *
      * \param rate_index index of rates array from 0 to 7.
      * \param trans_dirs the 4 available transition directions determined by interval orientation,
      * which is recorded by 8-bits.
@@ -105,6 +109,15 @@ public:
      * \return the sequence number in in Itl
      */
     Itl getItlnum(_type_lattice_id id);
+
+    /**
+     * \brief replace an existed old interstitial with new interstitial.
+     *  remove the old one and add the new one.
+     * \param old_lat_id lattice id of old interstitial.
+     * \param new_lat_id lattice id of new interstitial.
+     * \param new_itl reference of new interstitial.
+     */
+    void replace(const _type_lattice_id old_lat_id, const _type_lattice_id new_lat_id, const Itl &new_itl);
 };
 
 
