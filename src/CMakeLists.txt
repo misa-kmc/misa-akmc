@@ -18,6 +18,7 @@ set(HEADER_FILES
         utils/random/rand_generators.h
         utils/random/random.h
         box.h
+        env.h
         kmc.h
         macros.h
         orientation.h
@@ -41,6 +42,7 @@ set(SOURCE_FILES
         utils/random/rand_generators.cpp
         utils/random/random.cpp
         box.cpp
+        env.cpp
         event.h
         kmc.cpp
         orientation.cc

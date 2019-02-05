@@ -20,8 +20,6 @@ typedef unsigned long _type_lattice_id;
  */
 typedef double _type_rate;
 
-const double Ef110 = 0; // unit ev
-
 /*!
  * the number of all the lattices
  */

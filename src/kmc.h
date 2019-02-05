@@ -54,6 +54,11 @@ protected:
 
 private:
     Box *box = nullptr; // todo init box pointer
+    /**
+     * \brief it returns the rate of defect generation.
+     * \return
+     */
+    _type_rate defectGenRate();
 };
 
 
