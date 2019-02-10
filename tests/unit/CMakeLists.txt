@@ -43,7 +43,7 @@ add_test(NAME kmc-test COMMAND ${KMC_UINT_TEST_NAME}) # set  environment variabl
 ##########################
 ##### install binary files
 ##########################
-install(TARGETS ${PNOHS_UINT_TEST_NAME}
+install(TARGETS ${KMC_UINT_TEST_NAME}
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib
