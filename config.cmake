@@ -7,6 +7,14 @@ option(KMC_TEST_MPI_ENABLE_FLAG "Enable MPI in test" ON) # enable mpi in test, i
 option(KMC_TOOLS_BUILD_ENABLE_FLAG "Enable tools building" ON) # building tools directory.
 option(KMC_DEBUG_ENABLE_FLAG "Enable debuging" OFF) # enable debug mode building.
 
+set(KMC_RAND "MT" CACHE STRING "random number generating algorithm") # random number generating
+# options are:
+#   LCG: linear congruential
+#   MT: mersenne twister
+#   STC: subtract with carry
+#   xoshiro: http://xoshiro.di.unimi.it
+#   REAL: real random number privided by linux OS.
+
 if (KMC_DEBUG_ENABLE_FLAG)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 endif ()
