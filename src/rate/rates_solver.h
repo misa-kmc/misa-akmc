@@ -39,7 +39,7 @@ protected:
      * k=Ae^{ frac{ -E_a }{ K_bT } }
      * see https://en.wikipedia.org/wiki/Arrhenius_equation for more details.
      *
-     * \param v attempt rate
+     * \param v attempt frequencies
      * \param T temperature
      * \param Ea activation energy for the reaction (in the same units as kB*T)
      * \return the transition rate

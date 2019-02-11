@@ -2,6 +2,7 @@
 // Created by genshen on 2019-01-19.
 //
 
+#include <env.h>
 #include "rate/bonds/bonds_counter.h"
 #include "itl_rates_solver.h"
 #include "rate/bonds/energy_dumbbell.h"
@@ -53,7 +54,7 @@ _type_rate ItlRatesSolver::rate(Lattice &source_lattice, Lattice &target_lattice
         bonds::_type_pair_ia e_des = bonds::BondsCounter::count(box.lattice_list,
                                                                 target_lattice.getId(),
                                                                 target_lattice.type);
-        // the count of dumbbells does not change, so we does not count this term.
+        // the count of dumbbells does not change, so we does not count the term: sum_itl *Ef110.
         double e_dumbbell = bond::Edumb(*box.lattice_list, *box.itl_list);
         e_before = e_src + e_des + e_dumbbell;
     }
@@ -72,7 +73,7 @@ _type_rate ItlRatesSolver::rate(Lattice &source_lattice, Lattice &target_lattice
         bonds::_type_pair_ia e_des = bonds::BondsCounter::count(box.lattice_list,
                                                                 target_lattice.getId(),
                                                                 LatticeTypes{trans_atom});
-        // the count of dumbbells does not change, so we does not count this term.
+        // the count of dumbbells does not change, so we does not count the term: sum_itl *Ef110.
         double e_dumbbell = bond::Edumb(*box.lattice_list, *box.itl_list);
         e_after = e_src + e_des + e_dumbbell;
     }
@@ -80,8 +81,8 @@ _type_rate ItlRatesSolver::rate(Lattice &source_lattice, Lattice &target_lattice
     // exchange atoms back.
     source_lattice.type = cached_source_type;
     target_lattice.type = cached_target_type;
-// fixme 间隙总数目*Ef110 不变?
+
     double active_energy = e0 + (e_after - e_before) / 2;
-    return arrhenius(box.v, box.T, active_energy);
+    return arrhenius(env::global_env.attempt_freq, env::global_env.temperature, active_energy);
 #endif
 }

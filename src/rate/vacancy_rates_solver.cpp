@@ -2,6 +2,7 @@
 // Created by genshen on 2019-01-24.
 //
 
+#include <env.h>
 #include "vacancy_rates_solver.h"
 #include "rate/bonds/bonds_counter.h"
 
@@ -77,6 +78,6 @@ _type_rate VacRatesSolver::rate(Lattice &source_lattice,
     source_lattice.type = LatticeTypes{trans_atom};
 
     double active_energy = e0 + (e_after - e_before) / 2;
-    return arrhenius(box.v, box.T, active_energy);
+    return arrhenius(env::global_env.attempt_freq, env::global_env.temperature, active_energy);
 #endif
 }

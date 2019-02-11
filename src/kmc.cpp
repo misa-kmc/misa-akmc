@@ -6,6 +6,7 @@
 #include "rate/itl_rates_solver.h"
 #include "rate/vacancy_rates_solver.h"
 #include "recombine.h"
+#include "env.h"
 
 _type_rate kmc::updateRates(double v, double T) {
     _type_rate sum_rates = 0;
@@ -54,10 +55,14 @@ _type_rate kmc::updateRates(double v, double T) {
                                 });
         }
         // there is no transition rate for single atom.
-        // todo rate for defect generation.
         return true;
     });
+    sum_rates += defectGenRate();
     return sum_rates;
+}
+
+_type_rate kmc::defectGenRate() {
+    return env::global_env.defect_gen_rate;
 }
 
 event::SelectedEvent kmc::select(const double random, const _type_rate sum_rates) {

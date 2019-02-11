@@ -8,6 +8,7 @@
 #include "recombine.h"
 #include "rate/bonds/bonds_counter.h"
 #include "rate/bonds/energy_dumbbell.h"
+#include "env.h"
 
 void rec::Rec::recombine(LatticesList *lat_list, VacancyList *vac_list, ItlList *itl_list) {
     lat_list->getLat(lat_vac).type = tp_vac;
@@ -124,7 +125,7 @@ void rec::RecList::stageCombination(LatticesList *lat_list, ItlList *itl_list,
         bonds::_type_pair_ia e_inter = bonds::BondsCounter::count(lat_list, lat_inter->getId(), lat_inter->type);
         double e_dumbbell = bond::Edumb(*lat_list, *itl_list);
         // -1*Ef110 means: delta(dumbbell count) = -1.
-        double delta_e_h = (-1 * Ef110) + (e_vac + e_inter + e_dumbbell) - e_before_h;
+        double delta_e_h = (-1 * env::global_env.ef110) + (e_vac + e_inter + e_dumbbell) - e_before_h;
         rec_list.emplace_back(lat_vac->getId(), lat_inter->getId(), lat_vac->type, lat_inter->type, delta_e_h);
     }
 
@@ -135,8 +136,8 @@ void rec::RecList::stageCombination(LatticesList *lat_list, ItlList *itl_list,
         bonds::_type_pair_ia e_vac = bonds::BondsCounter::count(lat_list, lat_vac->getId(), lat_vac->type);
         bonds::_type_pair_ia e_inter = bonds::BondsCounter::count(lat_list, lat_inter->getId(), lat_inter->type);
         double e_dumbbell = bond::Edumb(*lat_list, *itl_list);
-        // -1*Ef110 means: delta(dumbbell count) = -1.
-        double delta_e_l = (-1 * Ef110) + (e_vac + e_inter + e_dumbbell) - e_before_l;
+        // -1* Ef110 means: delta(dumbbell count) = -1.
+        double delta_e_l = (-1 * env::global_env.ef110) + (e_vac + e_inter + e_dumbbell) - e_before_l;
         rec_list.emplace_back(lat_vac->getId(), lat_inter->getId(), lat_vac->type, lat_inter->type, delta_e_l);
     }
 
