@@ -138,11 +138,12 @@ struct LatticeTypes {
 
     /**
      * \brief just random atom type,like Fe,Cu,Ni,Mn.
+     * \param source_type the atom types to be select, randomly
      * \param ratio the ratio of mixed alloy to except.
-     * \param len the length of array \param ratio
+     * \param len the length of array \param ratio and array \param source_type
      * \return the created lattice type.
      */
-    static lat_type randomAtomsType(int ratio[], int len);
+    static lat_type randomAtomsType(const lat_type source_type[], const int ratio[], const int len);
 
     /**
      * \brief combine current type with another atom type.

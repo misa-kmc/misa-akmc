@@ -75,6 +75,9 @@ protected:
     // we can only create a Box object by using BoxBuilder.
     Box(_type_box_size size_x, _type_box_size size_y, _type_box_size size_z);
 
+    // destroy lattice list, vacancy list and itl list.
+    ~Box();
+
     /*!
      * \brief in this method, the member \var lattice_list,itl_list,va_list will be created
      * from box size parameter.

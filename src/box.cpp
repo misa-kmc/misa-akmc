@@ -16,7 +16,15 @@ Box::Box(_type_box_size size_x, _type_box_size size_y, _type_box_size size_z)
           lattice_list(nullptr), va_list(nullptr), itl_list(nullptr) {
 }
 
+Box::~Box() {
+    delete lattice_list; // todo non-virtual destructor
+    delete va_list;
+    delete itl_list;
+}
+
 void Box::createBox() {
     // todo other type of boundary.
     lattice_list = new NormalLatticeList(size_x, size_y, size_z); // new Lattice array and set lattice id.
+    va_list = new VacancyList();
+    itl_list = new ItlList();
 }
