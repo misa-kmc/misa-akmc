@@ -3,3 +3,10 @@
 #cmakedefine EAM_POT_ENABLED
 
 #cmakedefine DEBUG_MODE
+
+// random number generating
+#cmakedefine RAND_LCG
+#cmakedefine RAND_MT
+#cmakedefine RAND_STC
+#cmakedefine RAND_XOSHIRO
+#cmakedefine RAND_LINUX_REAL

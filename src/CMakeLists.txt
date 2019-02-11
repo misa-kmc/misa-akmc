@@ -15,6 +15,8 @@ set(HEADER_FILES
         rate/rates_types.h
         rate/rates_solver.h
         rate/vacancy_rates_solver.h
+        utils/random/rand_generators.h
+        utils/random/random.h
         box.h
         kmc.h
         macros.h
@@ -36,6 +38,8 @@ set(SOURCE_FILES
         rate/itl_rates_solver.cpp
         rate/rates_solver.cpp
         rate/vacancy_rates_solver.cpp
+        utils/random/rand_generators.cpp
+        utils/random/random.cpp
         box.cpp
         event.h
         kmc.cpp
@@ -55,6 +59,7 @@ target_include_directories(
         ${KMC_LIB_NAME}
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
 )
+target_link_libraries(${KMC_LIB_NAME} xoshiro::xoshiro)
 
 # make binary
 add_executable(${KMC_EXECUTE_BIN_NAME} main.cpp)
