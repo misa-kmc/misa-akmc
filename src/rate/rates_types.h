@@ -8,7 +8,7 @@
 #include "type_define.h"
 #include "../orientation.h"
 
-const double BoltzmannConstant = 1.3806485279; // unit: 10^{-23} J/K
+const double BoltzmannConstant = 1.3806485279e-23; // unit: J/K
 
 /**
  * \brief callback interface to get transition rate of inter lattice or vacancy lattice.

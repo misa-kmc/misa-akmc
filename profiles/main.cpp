@@ -15,8 +15,8 @@ int main() {
 
     // set configuration
     env::global_env = env::environment{
-            0.25, // attempt_freq
-            900,  // temperature, K
+            6E12, // attempt_freq 6*10^12 // todo too big
+            773,  // temperature, K
             1.25, // ef110
             0.2,  // defect_gen_rate
             env::energy{
@@ -40,7 +40,7 @@ int main() {
         // set lattice types randomly.
         const LatticeTypes::lat_type src_types[] = {LatticeTypes::Fe, LatticeTypes::Cu,
                                                     LatticeTypes::Ni, LatticeTypes::Mn};
-        const int ratio[] = {98, 1, 1, 0};
+        const unsigned int ratio[] = {9866, 134, 0, 0}; // Fe 98.66% ,Cu 1.34%
         lattice.type._type = LatticeTypes::randomAtomsType(src_types, ratio, 4);
         return true;
     });
@@ -75,12 +75,13 @@ int main() {
     // start simulation
     double current_time = 0;
     const double total_time = 100;
-    kmc kmc; // todo init pointer
+    kmc kmc{sim_box}; // fixme init box pointer
     while (current_time < total_time) {
         const _type_rate total_rates = kmc.updateRates(0, 0); // todo remove v,T
         const event::SelectedEvent event = kmc.select(r::random() * total_rates, total_rates);
         kmc.execute(event);
-        current_time += 0.15; // todo increase time.
+        std::cout << total_rates << std::endl;
+        current_time += 1 / total_rates; // todo increase time with rand.
     }
     return 0;
 }

@@ -143,7 +143,7 @@ struct LatticeTypes {
      * \param len the length of array \param ratio and array \param source_type
      * \return the created lattice type.
      */
-    static lat_type randomAtomsType(const lat_type source_type[], const int ratio[], const int len);
+    static lat_type randomAtomsType(const lat_type source_type[], const unsigned int ratio[], const int len);
 
     /**
      * \brief combine current type with another atom type.

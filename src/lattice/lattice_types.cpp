@@ -6,7 +6,8 @@
 #include <utils/random/random.h>
 #include "lattice_types.h"
 
-LatticeTypes::lat_type LatticeTypes::randomAtomsType(const lat_type source_type[], const int ratio[], const int len) {
+LatticeTypes::lat_type
+LatticeTypes::randomAtomsType(const lat_type source_type[], const unsigned int ratio[], const int len) {
     int ratio_total = 0;
     for (int i = 0; i < len; i++) {
         ratio_total += ratio[i];
@@ -15,9 +16,9 @@ LatticeTypes::lat_type LatticeTypes::randomAtomsType(const lat_type source_type[
     const int rand_ = r::rand32(0, static_cast<const uint32_t>(ratio_total));
 
     int rank_local = 0;
-    for (int i = 1; i <= len; i++) {
+    for (int i = 0; i < len; i++) {
         rank_local += ratio[i];
-        if (rand_ < rank_local) {
+        if (rank_local >= rand_) {
             return static_cast<lat_type>(source_type[i]);
         }
     }
