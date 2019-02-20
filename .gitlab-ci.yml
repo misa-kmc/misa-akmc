@@ -44,6 +44,8 @@ test:
     - GTEST_OUTPUT=xml:report.xml GTEST_COLOR=yes ./cmake-build/bin/misa-kmc-unit-tests
     # - cd cmake-build
     # - GTEST_COLOR=yes make test ARGS=-V
+    - gcovr --exclude tests --exclude vendor
+    - echo "saving code coverage reports to html files."
     - mkdir -p coverage # save coverage report html files.
     - gcovr --html-details --exclude tests --exclude vendor -o coverage/index.html --print-summary
   dependencies:
