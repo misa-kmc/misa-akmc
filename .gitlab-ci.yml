@@ -1,5 +1,5 @@
 # image:
-image: genshen/mpich-pkg:0.2.0-beta
+image: hpcer/hpcdev:latest
 
 cache:
   key: "$CI_COMMIT_REF_SLUG"
@@ -28,7 +28,7 @@ build:
     - cpp
     - pkg
   script:
-    - cmake -Bcmake-build -H.
+    - cmake -Bcmake-build -DCMAKE_BUILD_TYPE=Debug -H.
     - make -Ccmake-build
   artifacts:
     untracked: true
@@ -42,11 +42,15 @@ test:
     - pkg
   script:
     - GTEST_OUTPUT=xml:report.xml GTEST_COLOR=yes ./cmake-build/bin/misa-kmc-unit-tests
-#    - cd cmake-build
-#    - GTEST_COLOR=yes make test ARGS=-V
+    # - cd cmake-build
+    # - GTEST_COLOR=yes make test ARGS=-V
+    - mkdir -p coverage # save coverage report html files.
+    - gcovr --html-details --exclude tests --exclude vendor -o coverage/index.html --print-summary
   dependencies:
     - build
   artifacts:
+    paths:
+      - coverage/  # save coverage report html files.
     reports:
       junit: report.xml
 
