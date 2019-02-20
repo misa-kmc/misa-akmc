@@ -2,6 +2,8 @@
 // Created by genshen on 2018-12-12.
 //
 
+#include <cassert>
+
 #include "itl_list.h"
 
 _type_dirs_status Itl::availTranDirs(_type_neighbour_status nei_status,

@@ -2,7 +2,9 @@
 // Created by genshen on 2019-01-24.
 //
 
-#include <env.h>
+#include <cassert>
+
+#include "env.h"
 #include "vacancy_rates_solver.h"
 #include "rate/bonds/bonds_counter.h"
 

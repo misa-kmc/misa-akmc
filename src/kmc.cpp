@@ -2,6 +2,8 @@
 // Created by genshen on 2018-12-12.
 //
 
+#include <cassert>
+
 #include "kmc.h"
 #include "rate/itl_rates_solver.h"
 #include "rate/vacancy_rates_solver.h"
