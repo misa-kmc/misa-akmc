@@ -5,7 +5,6 @@ option(KMC_MPI_ENABLE_FLAG "Use MPI library" OFF) #change this flag to false to 
 option(KMC_TEST_BUILD_ENABLE_FLAG "Enable test" ON) # enable test
 option(KMC_TEST_MPI_ENABLE_FLAG "Enable MPI in test" ON) # enable mpi in test, its value depends on option MPI_ENABLE_FLAG.
 option(KMC_TOOLS_BUILD_ENABLE_FLAG "Enable tools building" ON) # building tools directory.
-option(KMC_DEBUG_ENABLE_FLAG "Enable debuging" OFF) # enable debug mode building.
 
 set(KMC_RAND "MT" CACHE STRING "random number generating algorithm") # random number generating
 # options are:
@@ -15,10 +14,13 @@ set(KMC_RAND "MT" CACHE STRING "random number generating algorithm") # random nu
 #   xoshiro: http://xoshiro.di.unimi.it
 #   REAL: real random number privided by linux OS.
 
-if (KMC_DEBUG_ENABLE_FLAG)
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall --coverage")
+
+if (CMAKE_BUILD_TYPE MATCHES "^(Debug|DEBUG|debug)$")
+    set(KMC_DEBUG_ENABLE_FLAG ON)
 endif ()
 
+# features
 option(EAM_POT_EBNABLE_FLAG "Enable using eam potential to calculate system energy" OFF)
 
 ## architecture ralated values.
