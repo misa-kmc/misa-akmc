@@ -66,14 +66,6 @@ public:
 
     ~LatticesList();
 
-    /*!
-     * \brief generate the lattices type, and orientation if a lattice is inter lattice.
-     * \param ratio the ratio of mixed alloy to except.
-     * \param alloy_types the length of array \param ratio
-     * \param va_rate the rate of vacancy
-     */
-    void randomInit(int ratio[], int alloy_types, double va_rate);
-
     /**
      * \brief iterate all lattice in this list, each lattice will be passed to callback function.
      * if the callback return false, iteration will break.
