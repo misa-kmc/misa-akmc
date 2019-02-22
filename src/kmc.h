@@ -15,10 +15,9 @@
 class kmc {
 public:
     /*!
-     * \brief
-     * \return
+     * \brief initialize kmc with simulation box.
      */
-    double random();
+    explicit kmc(Box *box);
 
     /**
      * \brief calculate the transition rates of each lattice.

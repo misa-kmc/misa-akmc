@@ -17,9 +17,9 @@ namespace env {
      * \brief configuration of kmc simulation
      */
     struct environment {
-        double attempt_freq;
+        double attempt_freq; // unit: 1/s
         double temperature; // temperature, unit: K.
-        double ef110; // unit ev
+        double ef110; // <110> dumbbell formation energy in pure Fe, unit ev
         double defect_gen_rate; // rate of defect generation
         struct energy energy;
     };

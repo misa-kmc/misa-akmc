@@ -10,6 +10,8 @@
 #include "recombine.h"
 #include "env.h"
 
+kmc::kmc(Box *box) : box(box) {}
+
 _type_rate kmc::updateRates(double v, double T) {
     _type_rate sum_rates = 0;
     ItlRatesSolver itl_rate(*box, v, T);
