@@ -10,6 +10,7 @@ stages:
   - fetch
   - build
   - test
+  - deploy
 
 fetch:
   stage: fetch
@@ -57,3 +58,18 @@ test:
       junit: report.xml
 
 # code_quality: https://docs.gitlab.com/ee/ci/examples/code_quality.html#previous-job-definitions
+
+pages:
+  stage: deploy
+  tags:
+    - pages
+  dependencies:
+    - test
+  script:
+    - mv coverage/ public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
+    - dev
