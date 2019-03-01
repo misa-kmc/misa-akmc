@@ -24,6 +24,8 @@ namespace bonds {
         /**
          * \brief calculate the bonds energy contribution of the atom(specified by \param src_atom_type) in lattice
          * specified by \param source_id
+         * \note We do not consider the contribution of dumbbell to this \param src_atom_type atom, which is considered in EDumb().
+         * Only vacancy and single atom contributions are considered.
          *
          * \param lat_list lattices list, we can get 1nn/2nn neighbour lattices from this list
          * \param source_id the id of source lattice

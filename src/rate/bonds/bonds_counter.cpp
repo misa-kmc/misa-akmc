@@ -62,15 +62,8 @@ bonds::BondsCounter::count(LatticesList *lat_list, _type_lattice_id source_id, L
     for (int b = 0; b < LatticesList::MAX_NEI_BITS; b++) {
         if ((_1nn_status >> b) & 0x1) {
             // we assume that src_atom_type is single atom or vacancy.
-            if (_1nn_neighbour[b]->type.isDumbbell()) {
-                const PairBond::bond_type bond_high = PairBond::makeBond(
-                        _1nn_neighbour[b]->type.getHighEnd(), src_atom_type._type); // get one atom of dumbbell
-                const PairBond::bond_type bond_low = PairBond::makeBond(
-                        _1nn_neighbour[b]->type.getLowEnd(), src_atom_type._type); // get another atom of dumbbell
-                energy += _1nn_bonds.at(bond_high);
-                energy += _1nn_bonds.at(bond_low);
-            } else {
-                // is vacancy or single atom.
+            if (_1nn_neighbour[b]->type.isAtom() || _1nn_neighbour[b]->type.isVacancy()) {
+                // it is vacancy or single atom.
                 const PairBond::bond_type bond = PairBond::makeBond(_1nn_neighbour[b]->type, src_atom_type);
                 energy += _1nn_bonds.at(bond);
             }
@@ -84,15 +77,8 @@ bonds::BondsCounter::count(LatticesList *lat_list, _type_lattice_id source_id, L
     for (int b = 0; b < LatticesList::MAX_NEI_BITS; b++) {
         if ((_2nn_status >> b) & 0x1) {
             // we assume that src_atom_type is single atom or vacancy.
-            if (_2nn_neighbour[b]->type.isDumbbell()) {
-                const PairBond::bond_type bond_high = PairBond::makeBond(
-                        _2nn_neighbour[b]->type.getHighEnd(), src_atom_type._type); // get one atom of dumbbell
-                const PairBond::bond_type bond_low = PairBond::makeBond(
-                        _2nn_neighbour[b]->type.getLowEnd(), src_atom_type._type); // get another atom of dumbbell
-                energy += _2nn_bonds.at(bond_high);
-                energy += _2nn_bonds.at(bond_low);
-            } else {
-                // is vacancy or single atom.
+            if (_2nn_neighbour[b]->type.isAtom() || _2nn_neighbour[b]->type.isVacancy()) {
+                // it is vacancy or single atom.
                 const PairBond::bond_type bond = PairBond::makeBond(_2nn_neighbour[b]->type, src_atom_type);
                 energy += _2nn_bonds.at(bond);
             }
