@@ -82,6 +82,7 @@ template<unsigned int SIZE>
 void Defect<SIZE>::beforeRatesUpdate(Lattice *list_1nn[LatticesList::MAX_1NN],
                                      _type_neighbour_status status_1nn) {
     // zero rates array
+    // todo set zero using memset function
     for (_type_rate &rate:rates) {
         rate = 0;
     }
