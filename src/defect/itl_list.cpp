@@ -48,8 +48,10 @@ void Itl::updateRates(Lattice &lattice, Lattice *list_1nn[LatticesList::MAX_1NN]
             const LatticeTypes trans_atom = orient.tranAtom(lattice.type, b);
             // calculate the rate from itl_ref to lat_nei.
             _type_rate rate = callback(lat_nei, trans_atom._type, b); // compute rate
-            rates[ratesIndex(b, trans_dirs, false)] = rate;
-            rates[ratesIndex(b, trans_dirs, true)] = rate;
+            // it is equivalent that we calculate 4 transition rates of 4 possible transition directions.
+            // and choose one rotate angle (up or down) from two possible angles randomly.
+            rates[ratesIndex(b, trans_dirs, false)] = rate / 2;
+            rates[ratesIndex(b, trans_dirs, true)] = rate / 2;
         }
     }
 }
