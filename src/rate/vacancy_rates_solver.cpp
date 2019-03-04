@@ -8,9 +8,7 @@
 #include "vacancy_rates_solver.h"
 #include "rate/bonds/bonds_counter.h"
 
-VacRatesSolver::VacRatesSolver(Box &box) : RatesSolver(box) {
-
-}
+VacRatesSolver::VacRatesSolver(LatticesList &lat_list) : RatesSolver(lat_list) {}
 
 _type_rate VacRatesSolver::rate(Lattice &source_lattice,
                                 Lattice &target_lattice,
@@ -49,11 +47,11 @@ _type_rate VacRatesSolver::rate(Lattice &source_lattice,
     double e_before = 0;
     {
         // bonds energy of src lattice (trans_atom is always vacancy) contributed by its 1nn/2nn neighbour lattice.
-        bonds::_type_pair_ia e_src = bonds::BondsCounter::count(box.lattice_list,
+        bonds::_type_pair_ia e_src = bonds::BondsCounter::count(&lattice_list,
                                                                 source_lattice.getId(),
                                                                 source_lattice.type);
         // bonds energy of des lattice contributed by its 1nn/2nn neighbour lattice(it is an atom).
-        bonds::_type_pair_ia e_des = bonds::BondsCounter::count(box.lattice_list,
+        bonds::_type_pair_ia e_des = bonds::BondsCounter::count(&lattice_list,
                                                                 target_lattice.getId(),
                                                                 target_lattice.type);
         e_before = e_src + e_des;
@@ -66,10 +64,10 @@ _type_rate VacRatesSolver::rate(Lattice &source_lattice,
     // calculate system energy after transition.
     double e_after = 0;
     {
-        bonds::_type_pair_ia e_src = bonds::BondsCounter::count(box.lattice_list,
+        bonds::_type_pair_ia e_src = bonds::BondsCounter::count(&lattice_list,
                                                                 source_lattice.getId(),
                                                                 source_lattice.type);
-        bonds::_type_pair_ia e_des = bonds::BondsCounter::count(box.lattice_list,
+        bonds::_type_pair_ia e_des = bonds::BondsCounter::count(&lattice_list,
                                                                 target_lattice.getId(),
                                                                 target_lattice.type);
         e_after = e_src + e_des;

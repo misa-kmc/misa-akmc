@@ -5,7 +5,7 @@
 #include <cmath>
 #include "rates_solver.h"
 
-RatesSolver::RatesSolver(Box &box) : box(box) {}
+RatesSolver::RatesSolver(LatticesList &lat_list):lattice_list(lat_list) {}
 
 double RatesSolver::activeEnergy() {
     // todo

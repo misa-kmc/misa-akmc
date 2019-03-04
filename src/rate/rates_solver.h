@@ -12,9 +12,13 @@
  */
 class RatesSolver {
 public:
-    _type_rate rate_sum;
 
-    explicit RatesSolver(Box &box);
+    /**
+     * \brief initialize solver with lattice lists.
+     * \param lat_list reference of all lattice points
+     *  (we need to known the status of neighbours when calculating rate).
+     */
+    explicit RatesSolver(LatticesList &lat_list);
 
     /**
      * \brief return the transition rate from source lattice specified by @param source_lattice
@@ -30,7 +34,10 @@ public:
                             const _type_dir_id _1nn_offset) = 0;
 
 protected:
-    const Box &box;
+    /**
+     * \brief reference of all lattice points.
+     */
+    LatticesList &lattice_list;
 
     /**
      * \brief calculate the rate based on delta e.

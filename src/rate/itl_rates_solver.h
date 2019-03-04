@@ -10,7 +10,18 @@
 
 class ItlRatesSolver : public RatesSolver {
 public:
-    explicit ItlRatesSolver(Box &box, const double v, const double T);
+    /**
+     * \brief initialize itl rates solver with lattice list, vacancy list and itl list.
+     * \param lat_list lattice list
+     * \param va_list vacancy list
+     * \param itl_list itl list
+     * \param v
+     * \param T
+     */
+    explicit ItlRatesSolver(LatticesList &lat_list,
+                            VacancyList &va_list,
+                            ItlList &itl_list,
+                            double v, const double T);
 
     /**
      * // todo tests
@@ -25,6 +36,17 @@ public:
     _type_rate rate(Lattice &source_lattice, Lattice &target_lattice,
                     const LatticeTypes::lat_type trans_atom,
                     const _type_dir_id _1nn_offset) override;
+
+private:
+    /*!
+    * \brief reference of list of vacancy indexed by lattice id.
+    */
+    VacancyList &va_list;
+
+    /*!
+     * \brief reference of list of interval lattice (dumbbell) indexed by lattice id.
+     */
+    ItlList &itl_list;
 };
 
 

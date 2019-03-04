@@ -9,7 +9,11 @@
 #include "itl_rates_solver.h"
 #include "rate/bonds/energy_dumbbell.h"
 
-ItlRatesSolver::ItlRatesSolver(Box &box, const double v, const double T) : RatesSolver(box) {
+ItlRatesSolver::ItlRatesSolver(LatticesList &lat_list,
+                               VacancyList &va_list,
+                               ItlList &itl_list,
+                               double v, const double T) :
+        RatesSolver(lat_list), va_list(va_list), itl_list(itl_list) {
     // todo save T,v
 }
 
@@ -49,15 +53,15 @@ _type_rate ItlRatesSolver::rate(Lattice &source_lattice, Lattice &target_lattice
     double e_before = 0;
     {
         // bonds energy of src lattice contributed by its 1nn/2nn neighbour lattice.
-        bonds::_type_pair_ia e_src = bonds::BondsCounter::count(box.lattice_list,
+        bonds::_type_pair_ia e_src = bonds::BondsCounter::count(&lattice_list,
                                                                 source_lattice.getId(),
                                                                 LatticeTypes{trans_atom});
         // bonds energy of des lattice contributed by its 1nn/2nn neighbour lattice(it is an atom).
-        bonds::_type_pair_ia e_des = bonds::BondsCounter::count(box.lattice_list,
+        bonds::_type_pair_ia e_des = bonds::BondsCounter::count(&lattice_list,
                                                                 target_lattice.getId(),
                                                                 target_lattice.type);
         // the count of dumbbells does not change, so we does not count the term: sum_itl *Ef110.
-        double e_dumbbell = bond::Edumb(*box.lattice_list, *box.itl_list);
+        double e_dumbbell = bond::Edumb(lattice_list, itl_list);
         e_before = e_src + e_des + e_dumbbell;
     }
 
@@ -69,14 +73,14 @@ _type_rate ItlRatesSolver::rate(Lattice &source_lattice, Lattice &target_lattice
 
     double e_after = 0;
     {
-        bonds::_type_pair_ia e_src = bonds::BondsCounter::count(box.lattice_list,
+        bonds::_type_pair_ia e_src = bonds::BondsCounter::count(&lattice_list,
                                                                 source_lattice.getId(),
                                                                 source_lattice.type);
-        bonds::_type_pair_ia e_des = bonds::BondsCounter::count(box.lattice_list,
+        bonds::_type_pair_ia e_des = bonds::BondsCounter::count(&lattice_list,
                                                                 target_lattice.getId(),
                                                                 LatticeTypes{trans_atom});
         // the count of dumbbells does not change, so we does not count the term: sum_itl *Ef110.
-        double e_dumbbell = bond::Edumb(*box.lattice_list, *box.itl_list);
+        double e_dumbbell = bond::Edumb(lattice_list, itl_list);
         e_after = e_src + e_des + e_dumbbell;
     }
 
