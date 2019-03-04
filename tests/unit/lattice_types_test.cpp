@@ -33,6 +33,26 @@ TEST(lattice_type_combineToInter_test, lattice_type_test) {
     EXPECT_EQ(tp_new4, LatticeTypes::CuMn);
 }
 
+// tests for special cases of combineToInter: combine v
+TEST(lattice_type_combineToInter_V_test, lattice_type_test) {
+    auto tp_new = LatticeTypes::combineToInter(LatticeTypes::V, LatticeTypes::Cu);
+    EXPECT_EQ(tp_new, LatticeTypes::Cu);
+
+    auto tp_new2 = LatticeTypes::combineToInter(LatticeTypes::V, LatticeTypes::V);
+    EXPECT_EQ(tp_new2, LatticeTypes::V);
+
+    auto tp_new3 = LatticeTypes::combineToInter(LatticeTypes::Fe, LatticeTypes::V);
+    EXPECT_EQ(tp_new3, LatticeTypes::Fe);
+}
+
+// tests for special cases of diff: diff v
+TEST(lattice_type_diff_V_test, lattice_type_test) {
+    EXPECT_EQ(LatticeTypes{LatticeTypes::V}.diff(LatticeTypes{LatticeTypes::V}), LatticeTypes::V);
+    EXPECT_EQ(LatticeTypes{LatticeTypes::FeCu}.diff(LatticeTypes{LatticeTypes::V}), LatticeTypes::FeCu);
+    EXPECT_EQ(LatticeTypes{LatticeTypes::Fe}.diff(LatticeTypes{LatticeTypes::Cu}), LatticeTypes::Fe); // not change
+    EXPECT_EQ(LatticeTypes{LatticeTypes::V}.diff(LatticeTypes{LatticeTypes::Cu}), LatticeTypes::V);
+}
+
 TEST(lattice_type_getHighLowEnd_test, lattice_type_test) {
     LatticeTypes type1(LatticeTypes::FeCu);
     EXPECT_EQ(type1.getHighEnd(), LatticeTypes::Fe);
