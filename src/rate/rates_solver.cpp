@@ -14,7 +14,7 @@ const _type_rate RatesSolver::rate(Lattice &source_lattice, Lattice &target_latt
     // calculate active energy first.
     // fixme bug: in e0(), trans atom is vacancy not target atom in transition atom.
     const double active_energy = e0(ghost_atom) + deltaE(source_lattice, target_lattice, ghost_atom) / 2;
-    return arrhenius(env::global_env.attempt_freq, env::global_env.temperature, active_energy);;
+    return arrhenius(env::global_env.attempt_freq, env::global_env.temperature, active_energy);
 }
 
 double RatesSolver::arrhenius(const double v, const double T, const double Ea) {
