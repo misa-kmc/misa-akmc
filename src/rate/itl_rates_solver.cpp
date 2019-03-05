@@ -17,9 +17,25 @@ ItlRatesSolver::ItlRatesSolver(LatticesList &lat_list,
     // todo save T,v
 }
 
-_type_rate ItlRatesSolver::rate(Lattice &source_lattice, Lattice &target_lattice,
-                                const LatticeTypes::lat_type trans_atom,
-                                const _type_dir_id _1nn_offset) {
+double ItlRatesSolver::e0(const LatticeTypes::lat_type ghost_atom) const {
+
+    switch (ghost_atom) {
+        case LatticeTypes::Fe:
+            return 0.32;
+        case LatticeTypes::Cu:
+            return 0.36;
+        case LatticeTypes::Ni:
+            return 0.45;
+        case LatticeTypes::Mn:
+            return 0.31;
+        default:
+            return 0;
+    }
+}
+
+double ItlRatesSolver::deltaE(Lattice &source_lattice, Lattice &target_lattice,
+                              const LatticeTypes::lat_type trans_atom) {
+
 #ifdef DEBUG_MODE
     {
         const bool debug_bool = target_lattice.type.isAtom();
@@ -30,24 +46,7 @@ _type_rate ItlRatesSolver::rate(Lattice &source_lattice, Lattice &target_lattice
 #ifdef EAM_POT_ENABLED
     return 0; // todo eam
 #else
-    double e0 = 0;
-    switch (trans_atom) {
-        case LatticeTypes::Fe:
-            e0 = 0.32;
-            break;
-        case LatticeTypes::Cu:
-            e0 = 0.36;
-            break;
-        case LatticeTypes::Ni:
-            e0 = 0.45;
-            break;
-        case LatticeTypes::Mn:
-            e0 = 0.31;
-            break;
-        default:
-            e0 = 0;
-            break;
-    }
+
 
     //calculate system energy before transition.
     double e_before = 0;
@@ -88,7 +87,6 @@ _type_rate ItlRatesSolver::rate(Lattice &source_lattice, Lattice &target_lattice
     source_lattice.type = cached_source_type;
     target_lattice.type = cached_target_type;
 
-    double active_energy = e0 + (e_after - e_before) / 2;
-    return arrhenius(env::global_env.attempt_freq, env::global_env.temperature, active_energy);
+    return e_after - e_before;
 #endif
 }

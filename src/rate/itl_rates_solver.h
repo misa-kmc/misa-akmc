@@ -8,6 +8,9 @@
 
 #include "rates_solver.h"
 
+/**
+ * \brief calculating transition rate for vacancy transition.
+ */
 class ItlRatesSolver : public RatesSolver {
 public:
     /**
@@ -24,23 +27,29 @@ public:
                             double v, const double T);
 
     /**
-     * // todo tests
-     * \brief return the transition rate from source lattice specified by @param source_lattice
-     * to its neighbour lattice specified by @param target_lattice.
-     * \param source_lattice reference of source lattice, witch is a dumbbell.
-     * \param target_lattice reference of target lattice, which is an atom.
-     * \param trans_atom transition atom for dumbbell.
-     * \param _1nn_offset offset of target lattice .
-     * \return the transition rate.
+     * \brief get e0 in formula: E_a = e0+ (e_after - e_before) / 2
+     * \param ghost_atom atom type exchanged with vacancy in vacancy transition,
+     *     or atom type moving in dumbbell in dumbbell transition (this case in this class).
+     *     \see base class for more details.
+     *     It will equal to the transition atom type of source lattice in dumbbell transition.
+     * \return e0
      */
-    _type_rate rate(Lattice &source_lattice, Lattice &target_lattice,
-                    const LatticeTypes::lat_type trans_atom,
-                    const _type_dir_id _1nn_offset) override;
+    double e0(const LatticeTypes::lat_type ghost_atom) const override;
+
+    /**
+     * \brief calculate the difference of system energy after and before transition.
+     * \param source_lattice ref of source lattice
+     * \param target_lattice ref of target lattice
+     * \param trans_atom the type of transition atom/vacancy
+     * \return the difference of system energy after and before transition.
+     */
+    double deltaE(Lattice &source_lattice, Lattice &target_lattice,
+                  const LatticeTypes::lat_type trans_atom) override;
 
 private:
     /*!
-    * \brief reference of list of vacancy indexed by lattice id.
-    */
+     * \brief reference of list of vacancy indexed by lattice id.
+     */
     VacancyList &va_list;
 
     /*!

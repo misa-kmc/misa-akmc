@@ -10,39 +10,35 @@
 
 VacRatesSolver::VacRatesSolver(LatticesList &lat_list) : RatesSolver(lat_list) {}
 
-_type_rate VacRatesSolver::rate(Lattice &source_lattice,
-                                Lattice &target_lattice,
-                                const LatticeTypes::lat_type trans_atom,
-                                const _type_dir_id _1nn_offset) {
+double VacRatesSolver::e0(const LatticeTypes::lat_type ghost_atom) const {
+    switch (ghost_atom) {
+        case LatticeTypes::Fe:
+            return 0.62;
+        case LatticeTypes::Cu:
+            return 0.54;
+        case LatticeTypes::Ni:
+            return 0.68;
+        case LatticeTypes::Mn:
+            return 1.03;
+        default:
+            return 0;
+    }
+}
+
+double VacRatesSolver::deltaE(Lattice &source_lattice, Lattice &target_lattice,
+                              const LatticeTypes::lat_type trans_atom) {
 #ifdef DEBUG_MODE
     {
-        const bool debug_bool = target_lattice.type.isDumbbell(); // always be false.
-        assert(!debug_bool);
+        const bool debug_bool_1 = target_lattice.type.isDumbbell(); // always be false.
+        assert(!debug_bool_1);
+        const bool debug_bool_2 = source_lattice.type.isVacancy(); // always be true.
+        assert(debug_bool_2);
     };
 #endif
 
 #ifdef EAM_POT_ENABLED
     return 0; // todo eam
 #else
-    double e0 = 0;
-    switch (trans_atom) {
-        case LatticeTypes::Fe:
-            e0 = 0.62;
-            break;
-        case LatticeTypes::Cu:
-            e0 = 0.54;
-            break;
-        case LatticeTypes::Ni:
-            e0 = 0.68;
-            break;
-        case LatticeTypes::Mn:
-            e0 = 1.03;
-            break;
-        default:
-            e0 = 0;
-            break;
-    }
-
     //calculate system energy before transition.
     double e_before = 0;
     {
@@ -77,7 +73,7 @@ _type_rate VacRatesSolver::rate(Lattice &source_lattice,
     target_lattice.type = source_lattice.type;
     source_lattice.type = LatticeTypes{trans_atom};
 
-    double active_energy = e0 + (e_after - e_before) / 2;
-    return arrhenius(env::global_env.attempt_freq, env::global_env.temperature, active_energy);
+    return e_after - e_before;
 #endif
+    return 0;
 }

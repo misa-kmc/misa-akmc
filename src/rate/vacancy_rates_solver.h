@@ -10,28 +10,32 @@
 
 /**
  * \brief solve the transition rate from a vacancy to its neighbour whose type is a single atom.
- * (in this model neighbour type of dumbbell and vacancy is not allowed)
- * \note api caller should exclude the case of dumbbell and vacancy type of neighbour by itself.
+ * (in this model, neighbour type of dumbbell and vacancy is not allowed)
+ * \note api caller should exclude the case of dumbbell and vacancy type of neighbour.
  */
 class VacRatesSolver : public RatesSolver {
 public:
     explicit VacRatesSolver(LatticesList &lat_list);
 
     /**
-     * \brief return the transition rate from source lattice specified by @param source_lattice
-     * to its neighbour lattice specified by @param target_lattice.
-     * \note api caller should exclude the case of dumbbell and vacancy type of neighbour by itself.
-     *
-     * \param source_lattice reference of source lattice whose type is vacancy.
-     * \param target_lattice reference of target lattice whose type can be a single atom.
-     * \param trans_atom type of transition lattice, always be vacancy in this case.
-     * \param _1nn_offset offset of target lattice.
-     * \return the transition rate.
+     * \brief get e0 in formula: E_a = e0+ (e_after - e_before) / 2
+     * \param ghost_atom atom type exchanged with vacancy in vacancy transition (this case in this class),
+     *     or atom type moving in dumbbell in dumbbell transition.
+     *     \see base class for more details.
+     *     It will equal to the type of target lattice(target lattice will be a single atom) in vacancy transition.
+     * \return e0
      */
-    _type_rate rate(Lattice &source_lattice,
-                    Lattice &target_lattice,
-                    const LatticeTypes::lat_type trans_atom,
-                    const _type_dir_id _1nn_offset) override;
+    double e0(const LatticeTypes::lat_type ghost_atom) const override;
+
+    /**
+     * \brief calculate the difference of system energy after and before transition.
+     * \param source_lattice ref of source lattice
+     * \param target_lattice ref of target lattice
+     * \param trans_atom the type of transition atom/vacancy
+     * \return the difference of system energy after and before transition.
+     */
+    double deltaE(Lattice &source_lattice, Lattice &target_lattice,
+                  const LatticeTypes::lat_type trans_atom) override;
 };
 
 
