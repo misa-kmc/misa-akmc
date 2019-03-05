@@ -29,7 +29,8 @@ public:
     }
 
     /*!
-     * \brief build the simulation box, initialize lattice information.
+     * \brief build the simulation box, and initialize lattice information,
+     *        including lattice list, vacancy list and itl list.
      * \return the pointer to new box.
      */
     Box *build();
