@@ -18,13 +18,13 @@ public:
      * \param lat_list lattice list
      * \param va_list vacancy list
      * \param itl_list itl list
-     * \param v
-     * \param T
+     * \param v attempt frequency
+     * \param T temperature in K unit.
      */
     explicit ItlRatesSolver(LatticesList &lat_list,
                             VacancyList &va_list,
                             ItlList &itl_list,
-                            double v, const double T);
+                            const double v, const double T);
 
     /**
      * \brief get e0 in formula: E_a = e0+ (e_after - e_before) / 2

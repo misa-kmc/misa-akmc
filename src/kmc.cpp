@@ -15,7 +15,7 @@ kmc::kmc(Box *box) : box(box) {}
 _type_rate kmc::updateRates(double v, double T) {
     _type_rate sum_rates = 0;
     ItlRatesSolver itl_rate(*(box->lattice_list), *(box->va_list), *(box->itl_list), v, T);
-    VacRatesSolver vac_rate(*(box->lattice_list));
+    VacRatesSolver vac_rate(*(box->lattice_list), v, T);
 
     box->lattice_list->forAllLattices([&](const _type_lattice_coord x,
                                           const _type_lattice_coord y,

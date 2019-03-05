@@ -12,9 +12,8 @@
 ItlRatesSolver::ItlRatesSolver(LatticesList &lat_list,
                                VacancyList &va_list,
                                ItlList &itl_list,
-                               double v, const double T) :
-        RatesSolver(lat_list), va_list(va_list), itl_list(itl_list) {
-    // todo save T,v
+                               const double v, const double T) :
+        RatesSolver(lat_list, v, T), va_list(va_list), itl_list(itl_list) {
 }
 
 double ItlRatesSolver::e0(const LatticeTypes::lat_type ghost_atom) const {

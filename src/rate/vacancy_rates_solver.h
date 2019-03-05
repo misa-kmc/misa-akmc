@@ -15,7 +15,13 @@
  */
 class VacRatesSolver : public RatesSolver {
 public:
-    explicit VacRatesSolver(LatticesList &lat_list);
+    /**
+     * \brief \see base class for more details.
+     * \param lat_list lattice list.
+     * \param v attempt frequency.
+     * \param T temperature in K unit.
+     */
+    explicit VacRatesSolver(LatticesList &lat_list, const double v, const double T);
 
     /**
      * \brief get e0 in formula: E_a = e0+ (e_after - e_before) / 2
