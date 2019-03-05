@@ -16,6 +16,7 @@ set(TEST_SOURCE_FILES
         lattice_list_status_test.cpp
         itl_test.cpp
         rate/bonds/bonds_counter_test.cpp
+        rate/vac_rates_solver_test.cpp
         defect/itl_rates_test.cpp
         orientation_test.cpp
         )

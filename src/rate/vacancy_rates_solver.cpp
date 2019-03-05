@@ -8,7 +8,8 @@
 #include "vacancy_rates_solver.h"
 #include "rate/bonds/bonds_counter.h"
 
-VacRatesSolver::VacRatesSolver(LatticesList &lat_list) : RatesSolver(lat_list) {}
+VacRatesSolver::VacRatesSolver(LatticesList &lat_list, const double v, const double T)
+        : RatesSolver(lat_list, v, T) {}
 
 double VacRatesSolver::e0(const LatticeTypes::lat_type ghost_atom) const {
     switch (ghost_atom) {

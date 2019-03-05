@@ -77,7 +77,7 @@ int main() {
     const double total_time = 100;
     kmc kmc{sim_box}; // fixme init box pointer
     while (current_time < total_time) {
-        const _type_rate total_rates = kmc.updateRates(0, 0); // todo remove v,T
+        const _type_rate total_rates = kmc.updateRates(env::global_env.attempt_freq, env::global_env.temperature);
         const event::SelectedEvent event = kmc.select(r::random() * total_rates, total_rates);
         kmc.execute(event);
         std::cout << total_rates << std::endl;

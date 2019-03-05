@@ -20,8 +20,10 @@ public:
      * \brief initialize solver with lattice lists.
      * \param lat_list reference of all lattice points
      *  (we need to known the status of neighbours when calculating rate).
+     * \param v attempt frequency
+     * \param T temperature in K unit.
      */
-    explicit RatesSolver(LatticesList &lat_list);
+    explicit RatesSolver(LatticesList &lat_list, const double v, const double T);
 
     /**
      * \brief return the transition rate from source lattice specified by @param source_lattice
@@ -37,14 +39,24 @@ public:
      * \return the transition rate.
      */
     virtual const _type_rate rate(Lattice &source_lattice, Lattice &target_lattice,
-                            const LatticeTypes::lat_type ghost_atom,
-                            const _type_dir_id _1nn_offset);
+                                  const LatticeTypes::lat_type ghost_atom,
+                                  const _type_dir_id _1nn_offset);
 
 protected:
     /**
      * \brief reference of all lattice points.
      */
     LatticesList &lattice_list;
+
+    /**
+     * \brief attempt frequency, unit: 1/s
+     */
+    const double attempt_freq = 0;
+
+    /**
+     * \brief system temperature.
+     */
+    const double temperature = 0;
 
     /**
      * \brief return e0 in formula: E_a = e0+ (e_after - e_before) / 2
