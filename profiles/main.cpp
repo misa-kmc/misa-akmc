@@ -17,8 +17,8 @@ int main() {
     env::global_env = env::environment{
             6E12, // attempt_freq 6*10^12 // todo too big
             773,  // temperature, K
-            1.25, // ef110
-            0.2,  // defect_gen_rate
+            3.53, // ef110
+            500,  // defect_gen_rate: 10^2 to 10^3
             env::energy{
                     // h
             }

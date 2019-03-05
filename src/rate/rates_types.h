@@ -8,7 +8,12 @@
 #include "type_define.h"
 #include "../orientation.h"
 
-const double BoltzmannConstant = 1.3806485279e-23; // unit: J/K
+/**
+ * \brief Boltzmann constant in unit eV/k.
+ *  unit: eV/K, also equals to 1.3806485279e-23 with unit J/K
+ *  Boltzmann Constant in LAKIMOCA is 8.625E-5
+ */
+const double BoltzmannConstant = 8.617330350E-5;
 
 /**
  * \brief callback interface to get transition rate of inter lattice or vacancy lattice.
