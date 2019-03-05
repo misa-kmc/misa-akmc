@@ -28,7 +28,8 @@ public:
 
     /**
      * \brief get e0 in formula: E_a = e0+ (e_after - e_before) / 2
-     * \param ghost_atom atom type exchanged with vacancy in vacancy transition,
+     * \param ghost_atom nature of atom exchanged with vacancy or moving in dumbbell.
+     *     More detailed, it is the atom type exchanged with vacancy in vacancy transition,
      *     or atom type moving in dumbbell in dumbbell transition (this case in this class).
      *     \see base class for more details.
      *     It will equal to the transition atom type of source lattice in dumbbell transition.
@@ -40,11 +41,11 @@ public:
      * \brief calculate the difference of system energy after and before transition.
      * \param source_lattice ref of source lattice
      * \param target_lattice ref of target lattice
-     * \param trans_atom the type of transition atom/vacancy
+     * \param ghost_atom nature of atom exchanged with vacancy or moving in dumbbell.
      * \return the difference of system energy after and before transition.
      */
     double deltaE(Lattice &source_lattice, Lattice &target_lattice,
-                  const LatticeTypes::lat_type trans_atom) override;
+                  const LatticeTypes::lat_type ghost_atom) override;
 
 private:
     /*!

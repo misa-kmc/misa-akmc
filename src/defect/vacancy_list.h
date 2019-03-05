@@ -17,10 +17,7 @@ public:
      * \brief calculate available transition direction based on neighbour lattice's status and types.
      */
     inline _type_neighbour_status availTranDirs(_type_neighbour_status nei_status,
-                                                Lattice *_1nn_lats[LatticesList::MAX_1NN]) override {
-        // todo 空位只能跃迁到原子
-        return nei_status;
-    }
+                                                Lattice *_1nn_lats[LatticesList::MAX_1NN]) override;
 
     /**
      * \brief be called before calling updateRates.

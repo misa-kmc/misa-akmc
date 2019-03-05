@@ -26,7 +26,7 @@ TEST(itl_updateRates_with_beforeRatesUpdate_test, itl_rates_update_test) {
     const _type_neighbour_status _1nn_status = 0xFF;
     // callback function to update transition rate.
     auto test_rates_updater = [](Lattice *lat_nei,
-                                 const LatticeTypes::lat_type trans_atom,
+                                 const LatticeTypes::lat_type ghost_atom,
                                  const _type_dir_id _1nn_offset) -> _type_rate {
         return _1nn_offset + 1;
     };
@@ -67,7 +67,7 @@ TEST(itl_updateRates_test, itl_rates_update_test) {
     Lattice *_1nn[8];
     // callback function to update transition rate.
     auto test_rates_updater = [](Lattice *lat_nei, // lat_nei is not used.
-                                 const LatticeTypes::lat_type trans_atom,
+                                 const LatticeTypes::lat_type ghost_atom,
                                  const _type_dir_id _1nn_offset) -> _type_rate {
         return _1nn_offset;
     };

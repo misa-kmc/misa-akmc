@@ -34,27 +34,27 @@ double ItlRatesSolver::e0(const LatticeTypes::lat_type ghost_atom) const {
 }
 
 double ItlRatesSolver::deltaE(Lattice &source_lattice, Lattice &target_lattice,
-                              const LatticeTypes::lat_type trans_atom) {
+                              const LatticeTypes::lat_type ghost_atom) {
 
 #ifdef DEBUG_MODE
     {
-        const bool debug_bool = target_lattice.type.isAtom();
-        assert(debug_bool);
+        const bool debug_bool_1 = source_lattice.type.isDumbbell();
+        assert(debug_bool_1);
+        const bool debug_bool_2 = target_lattice.type.isAtom();
+        assert(debug_bool_2);
     };
 #endif
 
 #ifdef EAM_POT_ENABLED
     return 0; // todo eam
 #else
-
-
     //calculate system energy before transition.
     double e_before = 0;
     {
         // bonds energy of src lattice contributed by its 1nn/2nn neighbour lattice.
         bonds::_type_pair_ia e_src = bonds::BondsCounter::count(&lattice_list,
                                                                 source_lattice.getId(),
-                                                                LatticeTypes{trans_atom});
+                                                                LatticeTypes{ghost_atom});
         // bonds energy of des lattice contributed by its 1nn/2nn neighbour lattice(it is an atom).
         bonds::_type_pair_ia e_des = bonds::BondsCounter::count(&lattice_list,
                                                                 target_lattice.getId(),
@@ -67,8 +67,9 @@ double ItlRatesSolver::deltaE(Lattice &source_lattice, Lattice &target_lattice,
     // exchange atoms of jump atom and neighbour lattice atom.
     const LatticeTypes cached_source_type = source_lattice.type;
     const LatticeTypes cached_target_type = target_lattice.type;
-    source_lattice.type._type = source_lattice.type.diff(LatticeTypes{trans_atom});
-    target_lattice.type._type = target_lattice.type.combineToInter(trans_atom);
+    source_lattice.type._type = source_lattice.type.diff(LatticeTypes{ghost_atom});
+    target_lattice.type._type = target_lattice.type.combineToInter(ghost_atom);
+    // todo update orientation and dumbbell list?
 
     double e_after = 0;
     {
@@ -77,7 +78,7 @@ double ItlRatesSolver::deltaE(Lattice &source_lattice, Lattice &target_lattice,
                                                                 source_lattice.type);
         bonds::_type_pair_ia e_des = bonds::BondsCounter::count(&lattice_list,
                                                                 target_lattice.getId(),
-                                                                LatticeTypes{trans_atom});
+                                                                LatticeTypes{ghost_atom});
         // the count of dumbbells does not change, so we does not count the term: sum_itl *Ef110.
         double e_dumbbell = bond::Edumb(lattice_list, itl_list);
         e_after = e_src + e_des + e_dumbbell;

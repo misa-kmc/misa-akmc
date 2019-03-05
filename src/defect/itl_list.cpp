@@ -8,7 +8,7 @@
 
 _type_dirs_status Itl::availTranDirs(_type_neighbour_status nei_status,
                                      Lattice *_1nn_lats[LatticesList::MAX_1NN]) {
-    _type_dirs_status dir_status = orient.availTransDirs();
+    const _type_dirs_status dir_status = orient.availTransDirs();
     // search all neighbour lattices, if the neighbour lattice is a destination that the source lattice can jump to
     // (it is available and it is atom),
     // then set the destination as available transition direction.
@@ -44,10 +44,10 @@ void Itl::updateRates(Lattice &lattice, Lattice *list_1nn[LatticesList::MAX_1NN]
         if ((avail_trans_dir >> b) & 1) { // the neighbour lattice is available, and can trans.
             // the neighbour lattice is list_1nn[b]
             Lattice *lat_nei = list_1nn[b];
-            // get the transition atom
-            const LatticeTypes trans_atom = orient.tranAtom(lattice.type, b);
+            // get the transition/moving/ghost atom
+            const LatticeTypes ghost_atom = orient.tranAtom(lattice.type, b);
             // calculate the rate from itl_ref to lat_nei.
-            _type_rate rate = callback(lat_nei, trans_atom._type, b); // compute rate
+            _type_rate rate = callback(lat_nei, ghost_atom._type, b); // compute rate
             // it is equivalent that we calculate 4 transition rates of 4 possible transition directions.
             // and choose one rotate angle (up or down) from two possible angles randomly.
             rates[ratesIndex(b, trans_dirs, false)] = rate / 2;

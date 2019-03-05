@@ -30,12 +30,14 @@ public:
      *
      * \param source_lattice reference of source lattice
      * \param target_lattice reference of target lattice
-     * \param trans_atom transition atom for dumbbell or vacancy.
+     * \param ghost_atom nature of atom exchanged with vacancy or moving in dumbbell.
+     *     More detailed, it is the atom type exchanged with vacancy in vacancy transition,
+     *     or atom type moving in dumbbell in dumbbell transition
      * \param _1nn_offset offset of target lattice .
      * \return the transition rate.
      */
     virtual const _type_rate rate(Lattice &source_lattice, Lattice &target_lattice,
-                            const LatticeTypes::lat_type trans_atom,
+                            const LatticeTypes::lat_type ghost_atom,
                             const _type_dir_id _1nn_offset);
 
 protected:
@@ -55,11 +57,11 @@ protected:
      * \brief calculate the difference of system energy after and before transition.
      * \param source_lattice ref of source lattice
      * \param target_lattice ref of target lattice
-     * \param trans_atom the type of transition atom/vacancy
+     * \param ghost_atom nature of atom exchanged with vacancy or moving in dumbbell.
      * \return the difference of system energy after and before transition.
      */
     virtual double deltaE(Lattice &source_lattice, Lattice &target_lattice,
-                          const LatticeTypes::lat_type trans_atom) = 0;
+                          const LatticeTypes::lat_type ghost_atom) = 0;
 
     /**
      * \brief calculate the rate based on delta e.

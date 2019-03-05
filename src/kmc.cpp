@@ -32,11 +32,11 @@ _type_rate kmc::updateRates(double v, double T) {
             itl_ref.updateRates(lattice, lat_list, nei_status,
                                 [&lattice, &itl_rate, &sum_rates]
                                         (Lattice *lat_nei,
-                                         const LatticeTypes::lat_type trans_atom,
+                                         const LatticeTypes::lat_type ghost_atom,
                                          const _type_dir_id _1nn_offset) -> _type_rate {
                                     // in lambda, it returns the rate of transition
                                     // from current lattice to lat_nei neighbour lattice.
-                                    _type_rate rate = itl_rate.rate(lattice, *lat_nei, trans_atom, _1nn_offset);
+                                    _type_rate rate = itl_rate.rate(lattice, *lat_nei, ghost_atom, _1nn_offset);
                                     sum_rates += rate; // add this rate to sum
                                     return rate;
                                 });
@@ -51,9 +51,9 @@ _type_rate kmc::updateRates(double v, double T) {
             vacancy.updateRates(lattice, lat_list, nei_status,
                                 [&lattice, &vac_rate, &sum_rates]
                                         (Lattice *lat_nei,
-                                         const LatticeTypes::lat_type trans_atom,
+                                         const LatticeTypes::lat_type ghost_atom,
                                          const _type_dir_id _1nn_offset) -> _type_rate {
-                                    _type_rate rate = vac_rate.rate(lattice, *lat_nei, trans_atom, _1nn_offset);
+                                    _type_rate rate = vac_rate.rate(lattice, *lat_nei, ghost_atom, _1nn_offset);
                                     sum_rates += rate; // add this rate to sum
                                     return rate;
                                 });
