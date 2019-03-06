@@ -3,6 +3,8 @@
 //
 
 #include <gtest/gtest.h>
+#include <cmath>
+
 #include <lattice/normal_lattice_list.h>
 #include <rate/vacancy_rates_solver.h>
 #include <rate/bonds/bonds_counter.h>
@@ -16,6 +18,9 @@ public:
 
 // test vacancy rates calculation using bonds counting.
 TEST(vac_deltaE_test_null, vac_rates_solver_deltaE_tests) {
+    const double attempt_freq = 6E12;
+    const double temperature = 700;
+
     NormalLatticeList lattice_list(4, 4, 4);
     for (unsigned int id = 0; id < 2 * 4 * 4 * 4; id++) {
         lattice_list.getLat(id).type._type = LatticeTypes::Fe;
@@ -25,12 +30,16 @@ TEST(vac_deltaE_test_null, vac_rates_solver_deltaE_tests) {
     Lattice &tar_lat = lattice_list.getLat(5, 1, 1);
     src_lat.type._type = LatticeTypes::V;
 
-    VacRatesSolver vac_rate(lattice_list, 6E12, 700);
+    VacRatesSolver vac_rate(lattice_list, attempt_freq, temperature);
     // test delta e and rate.
     const auto delta_e = vac_rate.deltaE(src_lat, tar_lat, tar_lat.type._type);
     ASSERT_NEAR(delta_e, 0.0, 1e-10);
+    // delta E is 0, but rate may not be 0.
     const auto rate = vac_rate.rate(src_lat, tar_lat, tar_lat.type._type, 1);
-    ASSERT_NEAR(rate, 0.0, 1e-10);
+    const double expected_rate = attempt_freq *
+                                 exp(-vac_rate.e0(tar_lat.type._type) / (BoltzmannConstant * temperature));
+    // we use relative error here, because the absolute numerical error is too big(can be 1e-6).
+    ASSERT_NEAR(rate / expected_rate, 1.0, 1e-10);
 }
 
 // todo more tests: src:4,3,3, target:5,3,3
