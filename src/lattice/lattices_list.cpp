@@ -107,3 +107,31 @@ Lattice &LatticesList::getLat(_type_lattice_id id) {
     _type_lattice_coord z = id / size_y;
     return _lattices[z][y][x];
 }
+
+Lattice *LatticesList::walk(_type_lattice_id id, const _type_lattice_offset offset_x,
+                            const _type_lattice_offset offset_y, const _type_lattice_offset offset_z) {
+    _type_lattice_coord sx = id % size_x;
+    id = id / size_x;
+    // use half lattice const coord.
+    _type_lattice_coord sy = sx % 2 == 0 ? 2 * (id % size_y) : 2 * (id % size_y) + 1;
+    _type_lattice_coord sz = sx % 2 == 0 ? 2 * (id / size_y) : 2 * (id / size_y) + 1;
+
+    // add offset
+    sx += offset_x;
+    sy += offset_y;
+    sz += offset_z;
+
+    //if out of index
+    if (sx >= size_x || sy >= 2 * size_y || sz >= 2 * size_z) {
+        return nullptr;
+    }
+    // if sx is even, sy and sz should also be even.
+    if (sx % 2 == 0 && sy % 2 == 0 && sz % 2 == 0) {
+        return &_lattices[sz / 2][sy / 2][sx];
+    }
+    // if sx is odd, sy and sz should also be odd.
+    if (sx % 2 == 1 && sy % 2 == 1 && sz % 2 == 1) {
+        return &_lattices[sz / 2][sy / 2][sx];
+    }
+    return nullptr;
+}

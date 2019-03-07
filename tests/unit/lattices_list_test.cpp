@@ -169,3 +169,31 @@ TEST(lattice_list_MaxId_test, lattice_list_test) {
     auto id = lattice_list.getId(2 * 3 + 1, 3, 3);
     EXPECT_EQ(id, lattice_list.maxId());
 }
+
+TEST(lattice_list_walk_test, lattice_list_test) {
+    NormalLatticeList lattice_list(4, 4, 4);
+    // case 1
+    Lattice *lat = lattice_list.walk(ID_BOX_4_4_4(4, 1, 1), 1, 1, 1);
+    EXPECT_NE(lat, nullptr);
+    EXPECT_EQ(lat->getId(), ID_BOX_4_4_4(5, 1, 1));
+
+    Lattice *lat2 = lattice_list.walk(ID_BOX_4_4_4(5, 1, 1), 2, 2, 2);
+    EXPECT_NE(lat2, nullptr);
+    EXPECT_EQ(lat2->getId(), ID_BOX_4_4_4(7, 2, 2));
+
+    // invalid input
+    Lattice *lat3 = lattice_list.walk(ID_BOX_4_4_4(4, 1, 1), 1, 1, 2);
+    EXPECT_EQ(lat3, nullptr);
+
+    // invalid input
+    Lattice *lat4 = lattice_list.walk(ID_BOX_4_4_4(4, 1, 1), 2, 1, 2);
+    EXPECT_EQ(lat4, nullptr);
+
+    // test out of boundary(down).
+    Lattice *lat5 = lattice_list.walk(ID_BOX_4_4_4(4, 1, 1), -1, -3, -3);
+    EXPECT_EQ(lat5, nullptr);
+
+    // test out of boundary(down).
+    Lattice *lat6 = lattice_list.walk(ID_BOX_4_4_4(5, 3, 3), -1, 1, 1);
+    EXPECT_EQ(lat6, nullptr);
+}

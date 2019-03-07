@@ -8,6 +8,7 @@
 #include "rate/itl_rates_solver.h"
 #include "rate/vacancy_rates_solver.h"
 #include "recombine.h"
+#include "utils/random/random.h"
 #include "env.h"
 
 kmc::kmc(Box *box) : box(box) {}
@@ -157,8 +158,8 @@ void kmc::execute(const event::SelectedEvent selected) {
                                                              jump_atom._type); // N -> NX or N -> XN
             // update orientation
             Itl itl;
-            itl.orient = ori.trans(_1nn_tag, lat_to.type.isHighEnd(jump_atom._type), _1nn_tag % 2 != 0);
-            // todo update avail tran dirs.
+            itl.orient = ori.trans(_1nn_tag, lat_to.type.isHighEnd(jump_atom._type), selected.rate_index % 2 != 0);
+            // todo update avail tran dirs, not in beforeRatesUpdate.
             box->itl_list->replace(lat_from.getId(), lat_to.getId(), itl);
             // recombination
             rec::RecList rec_list;
@@ -170,7 +171,77 @@ void kmc::execute(const event::SelectedEvent selected) {
         }
             break;
         case event::DefectGen: {
-// todo
+            const uint32_t it_start = r::rand32(0, static_cast<const uint32_t>(box->lattice_list->getLatCount()));
+            static const uint32_t dfp = 4;
+            // search over all lattice to find the first lattice that satisfies the condition.
+            Lattice *lat_1 = nullptr, *lat_2 = nullptr;
+            for (_type_lattice_id local_id = it_start;
+                 local_id < it_start + box->lattice_list->getLatCount(); local_id++) {
+                // the lattice type must be Fe, and its neighbour (with distance dfp) can be Fe,Cu,Mn,Ni
+                // note: the distance is Manhattan distance, not Euclidean distance。
+                Lattice &lat = box->lattice_list->getLat(local_id); // todo use global id.
+                lat_1 = &lat;
+                if (lat.type._type == LatticeTypes::Fe) {
+                    // traversing it neighbour with Manhattan distance dfp.
+                    for (int32_t x = 0; x <= dfp; x++) {
+                        for (int32_t y = 0; y <= dfp - x; y++) {
+                            const int32_t z = dfp - x - y;
+                            lat_2 = box->lattice_list->walk(local_id, x, y, z);
+                            if (lat_2 != nullptr && lat_2->type.isAtom()) {
+                                goto BK_SEARCH;
+                            }
+                            lat_2 = box->lattice_list->walk(local_id, x, y, -z);
+                            if (lat_2 != nullptr && lat_2->type.isAtom()) {
+                                goto BK_SEARCH;
+                            }
+                            lat_2 = box->lattice_list->walk(local_id, x, -y, z);
+                            if (lat_2 != nullptr && lat_2->type.isAtom()) {
+                                goto BK_SEARCH;
+                            }
+                            lat_2 = box->lattice_list->walk(local_id, x, -y, -z);
+                            if (lat_2 != nullptr && lat_2->type.isAtom()) {
+                                goto BK_SEARCH;
+                            }
+                            lat_2 = box->lattice_list->walk(local_id, -x, y, z);
+                            if (lat_2 != nullptr && lat_2->type.isAtom()) {
+                                goto BK_SEARCH;
+                            }
+                            lat_2 = box->lattice_list->walk(local_id, -x, y, -z);
+                            if (lat_2 != nullptr && lat_2->type.isAtom()) {
+                                goto BK_SEARCH;
+                            }
+                            lat_2 = box->lattice_list->walk(local_id, -x, -y, z);
+                            if (lat_2 != nullptr && lat_2->type.isAtom()) {
+                                goto BK_SEARCH;
+                            }
+                            lat_2 = box->lattice_list->walk(local_id, -x, -y, -z);
+                            if (lat_2 != nullptr && lat_2->type.isAtom()) {
+                                goto BK_SEARCH;
+                            }
+                        }
+                    }
+                }
+            }
+            BK_SEARCH:
+            if (lat_1 == nullptr || lat_2 == nullptr) {
+                // error: not searched. todo
+            }
+            // randomly select one lattice to be vacancy, another to be dumbbell.
+            const uint32_t rand = r::rand32(0, 1);
+            if (rand == 1) {
+                Lattice *temp = lat_1;
+                lat_1 = lat_2;
+                lat_2 = temp;
+            }
+            lat_1->setType(LatticeTypes::combineToInter(lat_1->type._type, lat_2->type._type));
+            lat_2->setType(LatticeTypes::V);
+
+            // update orientation
+            Itl itl;
+            itl.orient = orientation{orientation::r_110};
+            // todo update avail tran dirs, not in beforeRatesUpdate.
+            box->itl_list->mp.insert(std::make_pair(lat_1->getId(), itl));
+            box->va_list->mp.insert(std::make_pair(lat_2->getId(), Vacancy{}));
         }
             break;
     }
