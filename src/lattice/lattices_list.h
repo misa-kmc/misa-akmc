@@ -244,6 +244,24 @@ public:
      */
     Lattice &getLat(_type_lattice_id id);
 
+    /**
+     * \brief get a lattice point with offset(x,y,z) to the lattice specified by \param id.
+     * \param id the lattice id start from.
+     * \param x,y,z the offset in each dimension x,y,z.
+     *      \note the \param x,y,z is based on the half lattice constance: offset = real distance/lattice constance/2.
+     * \return a lattice pointer with offset(x,y,z) to the lattice specified by \param id.
+     */
+    Lattice *walk(_type_lattice_id id, const _type_lattice_offset offset_x,
+                  const _type_lattice_offset offset_y, const _type_lattice_offset offset_z);
+
+    /**
+     * \brief get the lattices count in current box.
+     * \return lattices count
+     */
+    inline _type_lattice_count getLatCount() {
+        return size_x * size_y * size_z;
+    }
+
 protected:
     /*!
      * \brief the size of lattice lists array in each dimension.
