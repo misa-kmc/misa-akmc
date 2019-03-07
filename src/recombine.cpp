@@ -60,7 +60,7 @@ void rec::RecList::create(LatticesList *lat_list, ItlList *itl_list, const _type
             }
         }
         for (unsigned int b = 0; b < LatticesList::MAX_NEI_BITS; b++) {
-            if (((_1nn_status >> b) & 0x01) && _2nn_list[b]->type.isDumbbell()) {
+            if (((_2nn_status >> b) & 0x01) && _2nn_list[b]->type.isDumbbell()) {
                 // center_lat is vacancy and _2nn_list[b] is interstitial.
                 stageCombination(lat_list, itl_list, &center_lat, _2nn_list[b]);
             }
@@ -74,7 +74,7 @@ void rec::RecList::create(LatticesList *lat_list, ItlList *itl_list, const _type
             }
         }
         for (unsigned int b = 0; b < LatticesList::MAX_NEI_BITS; b++) {
-            if (((_1nn_status >> b) & 0x01) && _2nn_list[b]->type.isVacancy()) {
+            if (((_2nn_status >> b) & 0x01) && _2nn_list[b]->type.isVacancy()) {
                 // center_lat is interstitial and _2nn_list[b] is vacancy.
                 stageCombination(lat_list, itl_list, _2nn_list[b], &center_lat);
             }
