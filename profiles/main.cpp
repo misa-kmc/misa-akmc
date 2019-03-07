@@ -79,6 +79,9 @@ int main() {
     while (current_time < total_time) {
         const _type_rate total_rates = kmc.updateRates(env::global_env.attempt_freq, env::global_env.temperature);
         const event::SelectedEvent event = kmc.select(r::random() * total_rates, total_rates);
+        if (event.event_type == event::DefectGen) {
+            std::cout << "Defect generation." << std::endl;
+        }
         kmc.execute(event);
         std::cout << total_rates << std::endl;
         current_time += 1 / total_rates; // todo increase time with rand.

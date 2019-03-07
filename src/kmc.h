@@ -36,11 +36,11 @@ public:
     /**
      * \brief select an event randomly.
      *
-     * \param random random number between 0-1.
+     * \param excepted_rate which equals to total rate* random number between 0-1.
      * \param total_rates the sum rates
      * \return the selected event.
      */
-    event::SelectedEvent select(const double random, const _type_rate sum_rates);
+    event::SelectedEvent select(const double excepted_rate, const _type_rate sum_rates);
 
     /**
      * \brief  execute the selected KMC event.

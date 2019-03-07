@@ -70,8 +70,7 @@ _type_rate kmc::defectGenRate() {
     return env::global_env.defect_gen_rate;
 }
 
-event::SelectedEvent kmc::select(const double random, const _type_rate sum_rates) {
-    const _type_rate excepted_rate = sum_rates * random;
+event::SelectedEvent kmc::select(const double excepted_rate, const _type_rate sum_rates) {
     _type_rate rate_accumulator = 0.0;
     event::SelectedEvent selected_event{event::DefectGen, 0, 0}; // default event is defect generation.
     box->lattice_list->forAllLattices([&](const _type_lattice_coord x,
