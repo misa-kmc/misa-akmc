@@ -6,6 +6,7 @@
 #define MISA_KMC_ORIENTATION_H
 
 
+#include <utils/random/random.h>
 #include "lattice/lattice_types.h"
 #include "lattice/lattices_list.h"
 
@@ -37,6 +38,15 @@ struct orientation {
 
     _type_dire _ori;
 
+    /**
+     * \brief generate a orientation randomly (not including 'unknown').
+     * \return random orientation
+     */
+    static _type_dire random() {
+        uint32_t r = r::rand32(0, 2 * single_orient_count); // from 0 to 11
+        // if it is odd, return negative orientation, else return positive orientation
+        return r % 2 == 0 ? static_cast<_type_dire>(r / 2) : static_cast<_type_dire>(-r / 2);
+    }
 
     /**
      * \brief get available transition directions of two atoms in dumbbell under this orientation.

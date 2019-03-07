@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <cmath>
 
 #include <env.h>
 #include <box.h>
@@ -65,10 +66,10 @@ int main() {
             sim_box->va_list->mp.insert(std::make_pair(lat.getId(), Vacancy{}));
         } else if (def.type.isDumbbell()) {
             Itl itl; // todo set orientation in constructor.
-            itl.orient = {orientation::r_110};
+            itl.orient = {orientation::random()};
             sim_box->itl_list->mp.insert(std::make_pair(lat.getId(), itl));
         }
-        // todo update avail_trans_dir
+        // todo update avail_trans_dir, not in beforeRatesUpdate.
     }
     // todo update statistics values
 

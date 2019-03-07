@@ -237,7 +237,7 @@ void kmc::execute(const event::SelectedEvent selected) {
 
             // update orientation
             Itl itl;
-            itl.orient = orientation{orientation::r_110};
+            itl.orient = orientation{orientation::random()};
             // todo update avail tran dirs, not in beforeRatesUpdate.
             box->itl_list->mp.insert(std::make_pair(lat_1->getId(), itl));
             box->va_list->mp.insert(std::make_pair(lat_2->getId(), Vacancy{}));
