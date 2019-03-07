@@ -84,8 +84,8 @@ int main() {
             std::cout << "Defect generation." << std::endl;
         }
         kmc.execute(event);
-        std::cout << total_rates << std::endl;
-        current_time += 1 / total_rates; // todo increase time with rand.
+        current_time += -log(r::random()) / total_rates;
+        std::cout << "rate: " << total_rates << "; time: " << current_time << std::endl;
     }
     return 0;
 }
