@@ -10,6 +10,9 @@
 #include <utils/random/random.h>
 #include <kmc.h>
 
+void placeDumbbells(LatticesList *lattice_list, ItlList *itl_list,
+                    const LatticeTypes::lat_type types[],
+                    unsigned long count[], const int len);
 
 int main() {
     r::initSeed(); // initialize random number seed // todo generate seed here
@@ -41,10 +44,15 @@ int main() {
         // set lattice types randomly.
         const LatticeTypes::lat_type src_types[] = {LatticeTypes::Fe, LatticeTypes::Cu,
                                                     LatticeTypes::Ni, LatticeTypes::Mn};
-        const unsigned int ratio[] = {9866, 134, 0, 0}; // Fe 98.66% ,Cu 1.34%
+        const unsigned int ratio[] = {100, 0, 0, 0}; // Fe bassed lattice
         lattice.type._type = LatticeTypes::randomAtomsType(src_types, ratio, 4);
         return true;
     });
+
+    // place atoms into lattice.
+    const LatticeTypes::lat_type types[] = {LatticeTypes::Cu, LatticeTypes::Ni, LatticeTypes::Mn};
+    unsigned long counts[] = {sim_box->lattice_list->getLatCount() * 150 / 10000, 0, 0}; // Cu 1.5%
+    placeDumbbells(sim_box->lattice_list, sim_box->itl_list, types, counts, 3);
 
     // set defects type and defect list.
     struct DefectPosition {
@@ -52,11 +60,6 @@ int main() {
         LatticeTypes type;
     };
     std::vector<DefectPosition> defects = {
-            DefectPosition{1, 1, 1, LatticeTypes{LatticeTypes::FeCu}},
-            DefectPosition{20, 10, 10, LatticeTypes{LatticeTypes::FeCu}},
-            DefectPosition{50, 25, 25, LatticeTypes{LatticeTypes::FeCu}},
-            DefectPosition{5, 5, 5, LatticeTypes{LatticeTypes::V}},
-            DefectPosition{12, 12, 12, LatticeTypes{LatticeTypes::V}},
             DefectPosition{50, 27, 23, LatticeTypes{LatticeTypes::V}},
     };
     for (DefectPosition def :defects) {
@@ -88,4 +91,30 @@ int main() {
         std::cout << "rate: " << total_rates << "; time: " << current_time << std::endl;
     }
     return 0;
+}
+
+void placeDumbbells(LatticesList *lattice_list, ItlList *itl_list,
+                    const LatticeTypes::lat_type types[],
+                    unsigned long count[], const int len) {
+    const _type_lattice_count lattices_count = lattice_list->getLatCount();
+    // for each type
+    for (int tp = 0; tp < len; tp++) {
+        _type_lattice_count unplaced_count = 0;
+        // for each in count of corresponding type.
+        for (int con = 0; con < count[tp]; con++) {
+            const uint32_t id = r::rand32(0, static_cast<const uint32_t>(lattices_count));
+            Lattice &lat = lattice_list->getLat(id);
+            if (lat.type.isAtom()) {
+                lat.setType(lat.type.combineToInter(types[tp]));
+                Itl itl;
+                itl.orient = orientation{orientation::random()};
+                // todo update avail tran dirs, not in beforeRatesUpdate.
+                itl_list->mp.insert(std::make_pair(lat.getId(), itl));
+            } else {
+                unplaced_count++;
+            }
+        }
+        // set unplaced count
+        count[tp] = unplaced_count;
+    }
 }
