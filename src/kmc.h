@@ -48,6 +48,12 @@ public:
      */
     void execute(const event::SelectedEvent selected);
 
+    /**
+     * \brief set kmc event listener.
+     * \param p_listener pointer to the event listener.
+     */
+    void setEventListener(EventListener *p_listener);
+
 protected:
     double time = 0;
 

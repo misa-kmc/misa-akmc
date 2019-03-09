@@ -9,10 +9,32 @@
 #include <box.h>
 #include <utils/random/random.h>
 #include <kmc.h>
+#include <counter.h>
 
-void placeDumbbells(LatticesList *lattice_list, ItlList *itl_list,
+#include "m_event_listener.h"
+
+void placeDumbbells(LatticesList *lattice_list, ItlList *itl_list, counter &m_counter,
                     const LatticeTypes::lat_type types[],
                     unsigned long count[], const int len);
+
+void logCounter(counter &m_counter) {
+    std::cout << "| type\t| count" << std::endl
+              << "| V \t|" << m_counter.get(LatticeTypes::V) << std::endl
+              << "| Fe\t|" << m_counter.get(LatticeTypes::Fe) << std::endl
+              << "| Cu\t|" << m_counter.get(LatticeTypes::Cu) << std::endl
+              << "| Ni\t|" << m_counter.get(LatticeTypes::Ni) << std::endl
+              << "| Mn\t|" << m_counter.get(LatticeTypes::Mn) << std::endl
+              << "| FeFe\t|" << m_counter.get(LatticeTypes::FeFe) << std::endl
+              << "| FeCu\t|" << m_counter.get(LatticeTypes::FeCu) << std::endl
+              << "| FeNi\t|" << m_counter.get(LatticeTypes::FeNi) << std::endl
+              << "| FeMn\t|" << m_counter.get(LatticeTypes::FeMn) << std::endl
+              << "| CuCu\t|" << m_counter.get(LatticeTypes::CuCu) << std::endl
+              << "| CuNi\t|" << m_counter.get(LatticeTypes::CuNi) << std::endl
+              << "| CuMn\t|" << m_counter.get(LatticeTypes::CuMn) << std::endl
+              << "| NiNi\t|" << m_counter.get(LatticeTypes::NiNi) << std::endl
+              << "| NiMn\t|" << m_counter.get(LatticeTypes::NiMn) << std::endl
+              << "| MnMn\t|" << m_counter.get(LatticeTypes::MnMn) << std::endl << std::endl;
+}
 
 int main() {
     r::initSeed(); // initialize random number seed // todo generate seed here
@@ -37,22 +59,24 @@ int main() {
     Box *sim_box = builder.build();
 
     // generate lattice type
-    sim_box->lattice_list->forAllLattices([](const _type_lattice_coord x,
-                                             const _type_lattice_coord y,
-                                             const _type_lattice_coord z,
-                                             Lattice &lattice) {
+    counter m_counter;
+    sim_box->lattice_list->forAllLattices([&](const _type_lattice_coord x,
+                                              const _type_lattice_coord y,
+                                              const _type_lattice_coord z,
+                                              Lattice &lattice) {
         // set lattice types randomly.
         const LatticeTypes::lat_type src_types[] = {LatticeTypes::Fe, LatticeTypes::Cu,
                                                     LatticeTypes::Ni, LatticeTypes::Mn};
         const unsigned int ratio[] = {100, 0, 0, 0}; // Fe bassed lattice
         lattice.type._type = LatticeTypes::randomAtomsType(src_types, ratio, 4);
+        m_counter.add(lattice.type._type); // add 1 for this type lattice.
         return true;
     });
 
     // place atoms into lattice.
     const LatticeTypes::lat_type types[] = {LatticeTypes::Cu, LatticeTypes::Ni, LatticeTypes::Mn};
     unsigned long counts[] = {sim_box->lattice_list->getLatCount() * 150 / 10000, 0, 0}; // Cu 1.5%
-    placeDumbbells(sim_box->lattice_list, sim_box->itl_list, types, counts, 3);
+    placeDumbbells(sim_box->lattice_list, sim_box->itl_list, m_counter, types, counts, 3);
 
     // set defects type and defect list.
     struct DefectPosition {
@@ -64,6 +88,8 @@ int main() {
     };
     for (DefectPosition def :defects) {
         Lattice &lat = sim_box->lattice_list->getLat(def.x, def.y, def.z);
+        m_counter.subtract(lat.type._type);
+        m_counter.add(def.type._type);
         lat.type = def.type;
         if (def.type.isVacancy()) {
             sim_box->va_list->mp.insert(std::make_pair(lat.getId(), Vacancy{}));
@@ -74,12 +100,21 @@ int main() {
         }
         // todo update avail_trans_dir, not in beforeRatesUpdate.
     }
-    // todo update statistics values
+
+    // log update statistics values
+    std::cout << "==== KMC initialized with:" << std::endl;
+    logCounter(m_counter);
+
+    MEventListener m_listener(m_counter);
 
     // start simulation
-    double current_time = 0;
-    const double total_time = 100;
     kmc kmc{sim_box}; // fixme init box pointer
+    kmc.setEventListener(&m_listener);
+
+    double current_time = 0;
+    const double total_time = 0.1;
+    unsigned long step = 0;
+    const clock_t app_start_time = clock();
     while (current_time < total_time) {
         const _type_rate total_rates = kmc.updateRates(env::global_env.attempt_freq, env::global_env.temperature);
         const event::SelectedEvent event = kmc.select(r::random() * total_rates, total_rates);
@@ -88,12 +123,20 @@ int main() {
         }
         kmc.execute(event);
         current_time += -log(r::random()) / total_rates;
-        std::cout << "rate: " << total_rates << "; time: " << current_time << std::endl;
+
+        step++;
+        std::cout << "total rate: " << total_rates << "; time: " << current_time << std::endl;
+        if (step % 10 == 0) {
+            const double app_time = static_cast<double>(clock() - app_start_time) / CLOCKS_PER_SEC;
+            std::cout << "program execution time (s):" << app_time << std::endl;
+            std::cout << "==== KMC lattice count at time step " << step << ":" << std::endl;
+            logCounter(m_counter);
+        }
     }
     return 0;
 }
 
-void placeDumbbells(LatticesList *lattice_list, ItlList *itl_list,
+void placeDumbbells(LatticesList *lattice_list, ItlList *itl_list, counter &m_counter,
                     const LatticeTypes::lat_type types[],
                     unsigned long count[], const int len) {
     const _type_lattice_count lattices_count = lattice_list->getLatCount();
@@ -105,7 +148,9 @@ void placeDumbbells(LatticesList *lattice_list, ItlList *itl_list,
             const uint32_t id = r::rand32(0, static_cast<const uint32_t>(lattices_count));
             Lattice &lat = lattice_list->getLat(id);
             if (lat.type.isAtom()) {
+                m_counter.subtract(lat.type._type);
                 lat.setType(lat.type.combineToInter(types[tp]));
+                m_counter.add(lat.type._type);
                 Itl itl;
                 itl.orient = orientation{orientation::random()};
                 // todo update avail tran dirs, not in beforeRatesUpdate.

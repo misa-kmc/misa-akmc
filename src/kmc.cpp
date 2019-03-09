@@ -273,3 +273,7 @@ void kmc::execute(const event::SelectedEvent selected) {
             break;
     }
 }
+
+void kmc::setEventListener(EventListener *p_listener) {
+    p_event_listener = p_listener;
+}
