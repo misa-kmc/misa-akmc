@@ -139,11 +139,17 @@ void kmc::execute(const event::SelectedEvent selected) {
             lat_to.type = tp_temp;
             // update vacancies list: remove lat_from, add lat_to.
             box->va_list->replace(lat_from.getId(), lat_to.getId());
+            if (p_event_listener) {
+                p_event_listener->onVacancyTrans(0, lat_from.type);
+            }
             // recombination
             rec::RecList rec_list;
             rec_list.create(box->lattice_list, box->itl_list, lat_to.getId());
             if (!rec_list.rec_list.empty()) {
                 rec::Rec picked_rec = rec_list.pickMinimum();
+                if (p_event_listener) {
+                    p_event_listener->onRecombine(0, picked_rec);
+                }
                 picked_rec.recombine(box->lattice_list, box->va_list, box->itl_list);
             }
         }
@@ -157,6 +163,8 @@ void kmc::execute(const event::SelectedEvent selected) {
             assert(lat_to.type.isAtom());
 #endif
             // find jump atom and exchange atoms.
+            const LatticeTypes old_from_type = lat_from.type;
+            const LatticeTypes old_to_type = lat_to.type;
             LatticeTypes jump_atom = itl_copy.orient.tranAtom(lat_from.type,
                                                               selected.target_tag); // for example: jump_atom = X
             lat_from.type._type = lat_from.type.diff(LatticeTypes{jump_atom});  // XY -> Y
@@ -168,11 +176,17 @@ void kmc::execute(const event::SelectedEvent selected) {
                                                selected.rotate_direction);
             // todo update avail tran dirs, not in beforeRatesUpdate.
             box->itl_list->replace(lat_from.getId(), lat_to.getId(), itl);
+            if (p_event_listener) {
+                p_event_listener->onDumbbellTrans(0, old_from_type, old_to_type, lat_from.type, lat_to.type);
+            }
             // recombination
             rec::RecList rec_list;
             rec_list.create(box->lattice_list, box->itl_list, lat_to.getId());
             if (!rec_list.rec_list.empty()) {
                 rec::Rec picked_rec = rec_list.pickMinimum();
+                if (p_event_listener) {
+                    p_event_listener->onRecombine(0, picked_rec);
+                }
                 picked_rec.recombine(box->lattice_list, box->va_list, box->itl_list);
             }
         }
@@ -240,8 +254,14 @@ void kmc::execute(const event::SelectedEvent selected) {
                 lat_1 = lat_2;
                 lat_2 = temp;
             }
-            lat_1->setType(LatticeTypes::combineToInter(lat_1->type._type, lat_2->type._type));
+            const LatticeTypes::lat_type combined_type =
+                    LatticeTypes::combineToInter(lat_1->type._type, lat_2->type._type);
+            if (p_event_listener) {
+                p_event_listener->onDefectGenerate(0, lat_1->type, lat_2->type, combined_type);
+            }
+            lat_1->setType(combined_type);
             lat_2->setType(LatticeTypes::V);
+            // todo: consider its neighbour, and recombine.
 
             // update orientation
             Itl itl;

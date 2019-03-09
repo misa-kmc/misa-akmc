@@ -8,6 +8,7 @@ set(HEADER_FILES
         lattice/lattices_list.h
         lattice/lattice_types.h
         lattice/normal_lattice_list.h
+        plugin/event_listener.h
         rate/bonds/bonds_counter.h
         rate/bonds/energy_dumbbell.h
         rate/bonds/pair_bond.hpp
