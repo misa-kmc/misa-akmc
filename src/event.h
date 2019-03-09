@@ -19,8 +19,10 @@ namespace event {
      */
     struct SelectedEvent {
         event::EventType event_type;
-        _type_lattice_id id;
-        int rate_index; // the selected event index in rate array.
+        _type_lattice_id from_id;
+        _type_lattice_id to_id;
+        _type_dir_id target_tag; // the tag of target lattice of transition(available value from 0 to 7.).
+        bool rotate_direction; // the rotate tag of dumbbell transition (used only fro dumbbell transition).
     };
 }
 #endif //MISA_KMC_EVENT_H

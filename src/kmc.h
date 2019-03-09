@@ -8,6 +8,7 @@
 #include "type_define.h"
 #include "box.h"
 #include "event.h"
+#include "plugin/event_listener.h"
 
 /*!
  * \brief the main routine of KMC simulation.
@@ -32,7 +33,6 @@ public:
      */
     _type_rate updateRates(double v, double T);
 
-
     /**
      * \brief select an event randomly.
      *
@@ -53,6 +53,13 @@ protected:
 
 private:
     Box *box = nullptr; // todo init box pointer
+
+    /**
+     * \brief pointer to event listener.
+     * event callback function will be called when executing a kmc event.
+     */
+    EventListener *p_event_listener = nullptr;
+
     /**
      * \brief it returns the rate of defect generation.
      * \return

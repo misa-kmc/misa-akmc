@@ -79,23 +79,39 @@ event::SelectedEvent kmc::select(const double excepted_rate, const _type_rate su
                                           Lattice &lattice) {
         if (lattice.type.isDumbbell()) { // dumbbell
             const Itl &itl_ref = box->itl_list->mp.at(lattice.getId());
-            for (int i = 0; i < Itl::RATES_SIZE; i++) {
-                rate_accumulator += itl_ref.rates[i];
+            for (int rate_index = 0; rate_index < Itl::RATES_SIZE; rate_index++) {
+                rate_accumulator += itl_ref.rates[rate_index];
                 if (rate_accumulator > excepted_rate) {
-                    selected_event.id = lattice.getId();
+                    Lattice *_1nn_list[LatticesList::MAX_1NN] = {nullptr};
+                    box->lattice_list->get1nn(lattice.getId(), _1nn_list);
+                    // convert rate index to 1nn list array index.
+                    const orientation ori = box->itl_list->mp[lattice.getId()].orient;
+                    const _type_dir_id _1nn_tag = Itl::get1nnIdByRatesIndex(rate_index, ori.availTransDirs());
+#ifdef DEBUG_MODE
+                    assert(_1nn_list[_1nn_tag] != nullptr);
+#endif
                     selected_event.event_type = event::DumbbellTrans;
-                    selected_event.rate_index = i;
+                    selected_event.from_id = lattice.getId();
+                    selected_event.to_id = _1nn_list[_1nn_tag]->getId();
+                    selected_event.target_tag = _1nn_tag;
+                    selected_event.rotate_direction = rate_index % 2 != 0;
                     return false;
                 }
             }
         } else if (lattice.type.isVacancy()) {
             const Vacancy &vacancy = box->va_list->mp.at(lattice.getId());
-            for (int i = 0; i < Vacancy::RATES_SIZE; i++) {
-                rate_accumulator += vacancy.rates[i];
+            for (int rate_index = 0; rate_index < Vacancy::RATES_SIZE; rate_index++) {
+                rate_accumulator += vacancy.rates[rate_index];
                 if (rate_accumulator > excepted_rate) {
-                    selected_event.id = lattice.getId();
+                    Lattice *_1nn_list[LatticesList::MAX_1NN] = {nullptr};
+                    box->lattice_list->get1nn(lattice.getId(), _1nn_list);
+#ifdef DEBUG_MODE
+                    assert(_1nn_list[rate_index] != nullptr);
+#endif
                     selected_event.event_type = event::VacancyTrans;
-                    selected_event.rate_index = i;
+                    selected_event.from_id = lattice.getId();
+                    selected_event.to_id = _1nn_list[rate_index]->getId();
+                    selected_event.target_tag = static_cast<_type_dir_id>(rate_index);
                     return false;
                 }
             }
@@ -111,12 +127,9 @@ event::SelectedEvent kmc::select(const double excepted_rate, const _type_rate su
 void kmc::execute(const event::SelectedEvent selected) {
     switch (selected.event_type) {
         case event::VacancyTrans: {
-            Lattice &lat_from = box->lattice_list->getLat(selected.id);
-            Lattice *_1nn_list[LatticesList::MAX_1NN] = {nullptr};
-            box->lattice_list->get1nn(selected.id, _1nn_list); // todo make sure it is not null.
-            Lattice &lat_to = *(_1nn_list[selected.rate_index]);
+            Lattice &lat_from = box->lattice_list->getLat(selected.from_id);
+            Lattice &lat_to = box->lattice_list->getLat(selected.to_id);
 #ifdef DEBUG_MODE
-            assert(_1nn_list[selected.rate_index]);
             assert(lat_from.type.isVacancy());
             assert(lat_to.type.isAtom());
 #endif
@@ -126,45 +139,54 @@ void kmc::execute(const event::SelectedEvent selected) {
             lat_to.type = tp_temp;
             // update vacancies list: remove lat_from, add lat_to.
             box->va_list->replace(lat_from.getId(), lat_to.getId());
+            if (p_event_listener) {
+                p_event_listener->onVacancyTrans(0, lat_from.type);
+            }
             // recombination
             rec::RecList rec_list;
             rec_list.create(box->lattice_list, box->itl_list, lat_to.getId());
             if (!rec_list.rec_list.empty()) {
                 rec::Rec picked_rec = rec_list.pickMinimum();
+                if (p_event_listener) {
+                    p_event_listener->onRecombine(0, picked_rec);
+                }
                 picked_rec.recombine(box->lattice_list, box->va_list, box->itl_list);
             }
         }
             break;
         case event::DumbbellTrans: {
-            Lattice &lat_from = box->lattice_list->getLat(selected.id);
-            Lattice *_1nn_list[LatticesList::MAX_1NN] = {nullptr};
-            box->lattice_list->get1nn(selected.id, _1nn_list);
-            // convert rate index to 1nn list array index.
-            const orientation ori = box->itl_list->mp[selected.id].orient;
-            const _type_dir_id _1nn_tag = Itl::get1nnIdByRatesIndex(
-                    selected.rate_index,
-                    ori.availTransDirs());
-            Lattice &lat_to = *(_1nn_list[_1nn_tag]); // todo make sure it is not null.
+            Lattice &lat_from = box->lattice_list->getLat(selected.from_id);
+            Lattice &lat_to = box->lattice_list->getLat(selected.to_id);
+            Itl itl_copy = box->itl_list->mp.at(selected.from_id);
 #ifdef DEBUG_MODE
-            assert(_1nn_list[_1nn_tag]);
             assert(lat_from.type.isDumbbell());
             assert(lat_to.type.isAtom());
 #endif
             // find jump atom and exchange atoms.
-            LatticeTypes jump_atom = ori.tranAtom(lat_from.type, _1nn_tag); // for example: jump_atom = X
+            const LatticeTypes old_from_type = lat_from.type;
+            const LatticeTypes old_to_type = lat_to.type;
+            LatticeTypes jump_atom = itl_copy.orient.tranAtom(lat_from.type,
+                                                              selected.target_tag); // for example: jump_atom = X
             lat_from.type._type = lat_from.type.diff(LatticeTypes{jump_atom});  // XY -> Y
-            lat_to.type._type = LatticeTypes::combineToInter(lat_to.type._type,
-                                                             jump_atom._type); // N -> NX or N -> XN
+            lat_to.type._type = LatticeTypes::combineToInter(lat_to.type._type, jump_atom._type); // N -> NX or N -> XN
             // update orientation
             Itl itl;
-            itl.orient = ori.trans(_1nn_tag, lat_to.type.isHighEnd(jump_atom._type), selected.rate_index % 2 != 0);
+            itl.orient = itl_copy.orient.trans(selected.target_tag,
+                                               lat_to.type.isHighEnd(jump_atom._type),
+                                               selected.rotate_direction);
             // todo update avail tran dirs, not in beforeRatesUpdate.
             box->itl_list->replace(lat_from.getId(), lat_to.getId(), itl);
+            if (p_event_listener) {
+                p_event_listener->onDumbbellTrans(0, old_from_type, old_to_type, lat_from.type, lat_to.type);
+            }
             // recombination
             rec::RecList rec_list;
             rec_list.create(box->lattice_list, box->itl_list, lat_to.getId());
             if (!rec_list.rec_list.empty()) {
                 rec::Rec picked_rec = rec_list.pickMinimum();
+                if (p_event_listener) {
+                    p_event_listener->onRecombine(0, picked_rec);
+                }
                 picked_rec.recombine(box->lattice_list, box->va_list, box->itl_list);
             }
         }
@@ -232,8 +254,14 @@ void kmc::execute(const event::SelectedEvent selected) {
                 lat_1 = lat_2;
                 lat_2 = temp;
             }
-            lat_1->setType(LatticeTypes::combineToInter(lat_1->type._type, lat_2->type._type));
+            const LatticeTypes::lat_type combined_type =
+                    LatticeTypes::combineToInter(lat_1->type._type, lat_2->type._type);
+            if (p_event_listener) {
+                p_event_listener->onDefectGenerate(0, lat_1->type, lat_2->type, combined_type);
+            }
+            lat_1->setType(combined_type);
             lat_2->setType(LatticeTypes::V);
+            // todo: consider its neighbour, and recombine.
 
             // update orientation
             Itl itl;
