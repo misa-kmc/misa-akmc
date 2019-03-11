@@ -8,17 +8,24 @@ set(HEADER_FILES
         lattice/lattices_list.h
         lattice/lattice_types.h
         lattice/normal_lattice_list.h
+        plugin/event_listener.h
         rate/bonds/bonds_counter.h
+        rate/bonds/energy_dumbbell.h
         rate/bonds/pair_bond.hpp
         rate/itl_rates_solver.h
         rate/rates_types.h
         rate/rates_solver.h
         rate/vacancy_rates_solver.h
+        utils/random/rand_generators.h
+        utils/random/random.h
         box.h
-        macros.h
+        counter.h
+        env.h
         kmc.h
+        macros.h
         orientation.h
         type_define.h
+        recombine.h
         )
 
 
@@ -30,12 +37,19 @@ set(SOURCE_FILES
         lattice/lattice_types.cpp
         lattice/normal_lattice_list.cpp
         rate/bonds/bonds_counter.cpp
+        rate/bonds/energy_dumbbell.cpp
         rate/itl_rates_solver.cpp
         rate/rates_solver.cpp
         rate/vacancy_rates_solver.cpp
+        utils/random/rand_generators.cpp
+        utils/random/random.cpp
         box.cpp
-        orientation.cc
+        counter.cpp
+        env.cpp
+        event.h
         kmc.cpp
+        orientation.cc
+        recombine.cpp
         )
 
 
@@ -50,12 +64,7 @@ target_include_directories(
         ${KMC_LIB_NAME}
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
 )
-
-# make binary
-add_executable(${KMC_EXECUTE_BIN_NAME} main.cpp)
-
-target_link_libraries(${KMC_EXECUTE_BIN_NAME} PRIVATE ${KMC_LIB_NAME} ${EXTRA_LIBS})
-
+target_link_libraries(${KMC_LIB_NAME} xoshiro::xoshiro)
 
 ##########################
 ##### install files

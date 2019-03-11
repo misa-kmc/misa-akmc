@@ -44,6 +44,9 @@ public:
 
     /**
      * \brief this method will be call before calling updateRates.
+     * by default(in this base class), this method would clear rates array
+     * (set each element's value in rates array to 0.0).
+     *
      * \param list_1nn 1nn lattices of this lattice.
      * \param status_1nn 1nn status of this lattice.
      */
@@ -77,7 +80,13 @@ public:
 
 template<unsigned int SIZE>
 void Defect<SIZE>::beforeRatesUpdate(Lattice *list_1nn[LatticesList::MAX_1NN],
-                                     _type_neighbour_status status_1nn) {}
+                                     _type_neighbour_status status_1nn) {
+    // zero rates array
+    // todo set zero using memset function
+    for (_type_rate &rate:rates) {
+        rate = 0;
+    }
+}
 
 
 #endif //MISA_KMC_DEFECT_JLIST_H

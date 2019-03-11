@@ -3,24 +3,23 @@
 //
 
 #include <cstdlib>
+#include <utils/random/random.h>
 #include "lattice_types.h"
 
-LatticeTypes::lat_type LatticeTypes::randomAtomsType(int ratio[], int len) {
+LatticeTypes::lat_type
+LatticeTypes::randomAtomsType(const lat_type source_type[], const unsigned int ratio[], const int len) {
     int ratio_total = 0;
-    for (int i = 0; i < c; i++) {
+    for (int i = 0; i < len; i++) {
         ratio_total += ratio[i];
     }
-#ifdef DEV_MODE
-    int rand_ = rand() % ratio_total;
-#else
-    int rand_ = rand() % ratio_total; // todo srank. Rand() has limited randomness; use C++ lib instead.
-#endif
+
+    const int rand_ = r::rand32(0, static_cast<const uint32_t>(ratio_total));
 
     int rank_local = 0;
-    for (int i = 1; i <= c; i++) {
+    for (int i = 0; i < len; i++) {
         rank_local += ratio[i];
-        if (rand_ < rank_local) {
-            return static_cast<lat_type>(i);
+        if (rank_local >= rand_) {
+            return static_cast<lat_type>(source_type[i]);
         }
     }
     return Fe;

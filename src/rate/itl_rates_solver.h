@@ -8,45 +8,55 @@
 
 #include "rates_solver.h"
 
+/**
+ * \brief calculating transition rate for vacancy transition.
+ */
 class ItlRatesSolver : public RatesSolver {
 public:
-    explicit ItlRatesSolver(Box &box, const double v, const double T);
+    /**
+     * \brief initialize itl rates solver with lattice list, vacancy list and itl list.
+     * \param lat_list lattice list
+     * \param va_list vacancy list
+     * \param itl_list itl list
+     * \param v attempt frequency
+     * \param T temperature in K unit.
+     */
+    explicit ItlRatesSolver(LatticesList &lat_list,
+                            VacancyList &va_list,
+                            ItlList &itl_list,
+                            const double v, const double T);
 
     /**
-     * // todo tests
-     * \brief return the transition rate from source lattice specified by @param source_lattice
-     * to its neighbour lattice specified by @param target_lattice.
-     * \param source_lattice reference of source lattice, witch is a dumbbell.
-     * \param target_lattice reference of target lattice, which is an atom.
-     * \param trans_atom transition atom for dumbbell.
-     * \param _1nn_offset offset of target lattice .
-     * \return the transition rate.
+     * \brief get e0 in formula: E_a = e0+ (e_after - e_before) / 2
+     * \param ghost_atom nature of atom exchanged with vacancy or moving in dumbbell.
+     *     More detailed, it is the atom type exchanged with vacancy in vacancy transition,
+     *     or atom type moving in dumbbell in dumbbell transition (this case in this class).
+     *     \see base class for more details.
+     *     It will equal to the transition atom type of source lattice in dumbbell transition.
+     * \return e0
      */
-    _type_rate rate(Lattice &source_lattice, Lattice &target_lattice,
-                    const LatticeTypes::lat_type trans_atom,
-                    const _type_dir_id _1nn_offset) override;
+    double e0(const LatticeTypes::lat_type ghost_atom) const override;
 
-    // todo tests
-    double Edumb();
-
-    /** // todo tests
-     * \brief calculate compsol of dumbbell of FeX type (X can be Cu,Ni,Mn)
-     * \param id id of lattice
-     * \param type type of dumbbell lattice
-     * \param itl the inter/dumbbell instance.
-     * \param _1nns the 1nn neighbour lattices list.
-     * \param _2nns the 2nn neighbour lattices list.
-     * \param _1nn_status lattice status of 1nn neighbour lattices
-     * \param _2nn_status lattice status of 2nn neighbour lattices
-     * \return
+    /**
+     * \brief calculate the difference of system energy after and before transition.
+     * \param source_lattice ref of source lattice
+     * \param target_lattice ref of target lattice
+     * \param ghost_atom nature of atom exchanged with vacancy or moving in dumbbell.
+     * \return the difference of system energy after and before transition.
      */
-    double FeX_comp(const _type_lattice_id id,
-                    const LatticeTypes type, const Itl &itl,
-                    Lattice *_1nns[LatticesList::MAX_1NN],
-                    Lattice *_2nns[LatticesList::MAX_2NN],
-                    const _type_neighbour_status _1nn_status,
-                    const _type_neighbour_status _2nn_status);
+    double deltaE(Lattice &source_lattice, Lattice &target_lattice,
+                  const LatticeTypes::lat_type ghost_atom) override;
 
+private:
+    /*!
+     * \brief reference of list of vacancy indexed by lattice id.
+     */
+    VacancyList &va_list;
+
+    /*!
+     * \brief reference of list of interval lattice (dumbbell) indexed by lattice id.
+     */
+    ItlList &itl_list;
 };
 
 

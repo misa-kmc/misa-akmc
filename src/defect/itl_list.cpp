@@ -2,11 +2,13 @@
 // Created by genshen on 2018-12-12.
 //
 
+#include <cassert>
+
 #include "itl_list.h"
 
 _type_dirs_status Itl::availTranDirs(_type_neighbour_status nei_status,
                                      Lattice *_1nn_lats[LatticesList::MAX_1NN]) {
-    _type_dirs_status dir_status = orientation.orient.availTransDirections();
+    const _type_dirs_status dir_status = orient.availTransDirs();
     // search all neighbour lattices, if the neighbour lattice is a destination that the source lattice can jump to
     // (it is available and it is atom),
     // then set the destination as available transition direction.
@@ -23,6 +25,8 @@ _type_dirs_status Itl::availTranDirs(_type_neighbour_status nei_status,
 
 void Itl::beforeRatesUpdate(Lattice *list_1nn[LatticesList::MAX_1NN],
                             _type_neighbour_status status_1nn) {
+    // zero rates array
+    Defect::beforeRatesUpdate(list_1nn, status_1nn);
     // compute and set "which neighbour lattices can jump to"
     avail_trans_dir = availTranDirs(status_1nn, list_1nn);
 }
@@ -33,31 +37,28 @@ void Itl::updateRates(Lattice &lattice, Lattice *list_1nn[LatticesList::MAX_1NN]
 #ifdef DEBUG_MODE
     assert(lattice.type.isDumbbell());
 #endif
-    _type_dirs_status trans_dirs = orientation.orient.availTransDirections();
+    _type_dirs_status trans_dirs = orient.availTransDirs();
     // search all neighbour lattices, if the neighbour lattice is a destination that the source lattice can jump to,
     // then calculate the transition rate from source lattice to the neighbour lattice.
     for (unsigned char b = 0; b < LatticesList::MAX_NEI_BITS; b++) {
         if ((avail_trans_dir >> b) & 1) { // the neighbour lattice is available, and can trans.
             // the neighbour lattice is list_1nn[b]
             Lattice *lat_nei = list_1nn[b];
-            // get the transition atom
-            LatticeTypes::lat_type trans_atom;
-            if (b < LatticesList::MAX_NEI_BITS / 2) {
-                trans_atom = lattice.type.getFirst(orientation.reversed);
-            } else {
-                trans_atom = lattice.type.getSecond(orientation.reversed);
-            }
+            // get the transition/moving/ghost atom
+            const LatticeTypes ghost_atom = orient.tranAtom(lattice.type, b);
             // calculate the rate from itl_ref to lat_nei.
-            _type_rate rate = callback(lat_nei, trans_atom, b); // compute rate
-            rates[ratesIndex(b, trans_dirs, false)] = rate;
-            rates[ratesIndex(b, trans_dirs, true)] = rate;
+            _type_rate rate = callback(lat_nei, ghost_atom._type, b); // compute rate
+            // it is equivalent that we calculate 4 transition rates of 4 possible transition directions.
+            // and choose one rotate angle (up or down) from two possible angles randomly.
+            rates[ratesIndex(b, trans_dirs, false)] = rate / 2;
+            rates[ratesIndex(b, trans_dirs, true)] = rate / 2;
         }
     }
 }
 
 _type_rates_status Itl::getRatesStatus() {
     _type_rates_status status = 0;
-    _type_dirs_status trans_dirs = orientation.orient.availTransDirections();
+    _type_dirs_status trans_dirs = orient.availTransDirs();
     int i = 0;
     for (unsigned char b = 0; b < TRANS_DIRS_BITS_SIZE; b++) {
         if ((trans_dirs >> b) & 0x01) {
@@ -99,4 +100,9 @@ _type_dir_id Itl::get1nnIdByRatesIndex(int rate_index, _type_dirs_status trans_d
 
 Itl ItlList::getItlnum(_type_lattice_id id) {
     return mp[id];
+}
+
+void ItlList::replace(const _type_lattice_id old_lat_id, const _type_lattice_id new_lat_id, const Itl &new_itl) {
+    mp.erase(old_lat_id);
+    mp.insert(std::make_pair(new_lat_id, new_itl));
 }

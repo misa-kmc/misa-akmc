@@ -89,6 +89,23 @@ struct LatticeTypes {
     }
 
     /**
+     * \brief check whether an atom is the higher part of a dumbbell lattice type.
+     * \return true for is higher part, false for otherwise.
+     */
+    inline bool isHighEnd(const lat_type atom) {
+        return getHighEnd() == atom;
+    }
+
+    /**
+     * \brief check whether an atom is the lower part of a dumbbell lattice type.
+     * \return true for is lower part, false for otherwise.
+     */
+    inline bool isLowEnd(const lat_type atom) {
+        return getLowEnd() == atom;
+    }
+
+    /**
+     * \deprecated
      * \brief get the first atom based on lattice type and orientation(\param is_reversed).
      * \param is_reversed whether the type of inter/dumbbell is reversed.
      * \return first atom type
@@ -104,6 +121,7 @@ struct LatticeTypes {
     }
 
     /**
+     * \deprecated
      * \brief get the second atom based on lattice type and orientation(\param is_reversed).
      * \param is_reversed whether the type of inter/dumbbell is reversed.
      * \return second atom type
@@ -120,11 +138,12 @@ struct LatticeTypes {
 
     /**
      * \brief just random atom type,like Fe,Cu,Ni,Mn.
+     * \param source_type the atom types to be select, randomly
      * \param ratio the ratio of mixed alloy to except.
-     * \param len the length of array \param ratio
+     * \param len the length of array \param ratio and array \param source_type
      * \return the created lattice type.
      */
-    static lat_type randomAtomsType(int ratio[], int len);
+    static lat_type randomAtomsType(const lat_type source_type[], const unsigned int ratio[], const int len);
 
     /**
      * \brief combine current type with another atom type.

@@ -3,13 +3,19 @@
 //
 
 #include <cmath>
+#include "env.h"
 #include "rates_solver.h"
 
-RatesSolver::RatesSolver(Box &box) : box(box) {}
+RatesSolver::RatesSolver(LatticesList &lat_list, const double v, const double T)
+        : lattice_list(lat_list), attempt_freq(v), temperature(T) {}
 
-double RatesSolver::activeEnergy() {
-    // todo
-    return 0;
+const _type_rate RatesSolver::rate(Lattice &source_lattice, Lattice &target_lattice,
+                                   const LatticeTypes::lat_type ghost_atom,
+                                   const _type_dir_id _1nn_offset) {
+    // calculate active energy first.
+    // fixme bug: in e0(), trans atom is vacancy not target atom in transition atom.
+    const double active_energy = e0(ghost_atom) + deltaE(source_lattice, target_lattice, ghost_atom) / 2;
+    return arrhenius(attempt_freq, temperature, active_energy);
 }
 
 double RatesSolver::arrhenius(const double v, const double T, const double Ea) {

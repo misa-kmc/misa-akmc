@@ -16,7 +16,10 @@ set(TEST_SOURCE_FILES
         lattice_list_status_test.cpp
         itl_test.cpp
         rate/bonds/bonds_counter_test.cpp
+        rate/vac_rates_solver_test.cpp
         defect/itl_rates_test.cpp
+        orientation_test.cpp
+        counter_test.cpp
         )
 
 
@@ -42,7 +45,7 @@ add_test(NAME kmc-test COMMAND ${KMC_UINT_TEST_NAME}) # set  environment variabl
 ##########################
 ##### install binary files
 ##########################
-install(TARGETS ${PNOHS_UINT_TEST_NAME}
+install(TARGETS ${KMC_UINT_TEST_NAME}
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib

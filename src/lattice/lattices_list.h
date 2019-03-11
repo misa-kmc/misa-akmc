@@ -66,14 +66,6 @@ public:
 
     ~LatticesList();
 
-    /*!
-     * \brief generate the lattices type, and orientation if a lattice is inter lattice.
-     * \param ratio the ratio of mixed alloy to except.
-     * \param alloy_types the length of array \param ratio
-     * \param va_rate the rate of vacancy
-     */
-    void randomInit(int ratio[], int alloy_types, double va_rate);
-
     /**
      * \brief iterate all lattice in this list, each lattice will be passed to callback function.
      * if the callback return false, iteration will break.
@@ -193,7 +185,7 @@ public:
      * \param id global lattice id to specific lattice position.
      * \return the lattice pointers count in 1nn list.
      */
-    _type_neighbour_status get1nn(_type_lattice_id id, Lattice *_1nn_list[MAX_1NN]) {
+    int get1nn(_type_lattice_id id, Lattice *_1nn_list[MAX_1NN]) {
         ID_TO_XYZ(id, return get1nn(x, y, z, _1nn_list));
     }
 
@@ -204,14 +196,15 @@ public:
      * \note note that the coordinate specified by [x,y,z] must be in the lattice box, or "index out of bounds" may happen.
      * \return the lattice pointers count in 2nn list.
      */
-    virtual int get2nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_2nn_list[MAX_2NN]) = 0;
+    virtual int
+    get2nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_2nn_list[MAX_2NN]) = 0;
 
     /**
     * \brief similar as above one (use x,y,z to specific a lattice), but it receives a lattice id.
     * \param id global lattice id to specific lattice position.
     * \return the lattice pointers count in 2nn list.
     */
-    _type_neighbour_status get2nn(_type_lattice_id id, Lattice *_2nn_list[MAX_2NN]) {
+    int get2nn(_type_lattice_id id, Lattice *_2nn_list[MAX_2NN]) {
         ID_TO_XYZ(id, return get2nn(x, y, z, _2nn_list));
     }
 
@@ -250,6 +243,24 @@ public:
      * \return the reference of the matched lattice.
      */
     Lattice &getLat(_type_lattice_id id);
+
+    /**
+     * \brief get a lattice point with offset(x,y,z) to the lattice specified by \param id.
+     * \param id the lattice id start from.
+     * \param x,y,z the offset in each dimension x,y,z.
+     *      \note the \param x,y,z is based on the half lattice constance: offset = real distance/lattice constance/2.
+     * \return a lattice pointer with offset(x,y,z) to the lattice specified by \param id.
+     */
+    Lattice *walk(_type_lattice_id id, const _type_lattice_offset offset_x,
+                  const _type_lattice_offset offset_y, const _type_lattice_offset offset_z);
+
+    /**
+     * \brief get the lattices count in current box.
+     * \return lattices count
+     */
+    inline _type_lattice_count getLatCount() {
+        return size_x * size_y * size_z;
+    }
 
 protected:
     /*!

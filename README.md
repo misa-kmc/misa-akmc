@@ -17,6 +17,6 @@ Make sure **cmake** is installed on your system.
 ```bash
 $ mkdir build
 $ cd build
-$ cmake ../
+$ cmake ../ -DCMAKE_BUILD_TYPE=Release
 $ make
 ```

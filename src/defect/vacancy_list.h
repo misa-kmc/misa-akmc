@@ -17,9 +17,7 @@ public:
      * \brief calculate available transition direction based on neighbour lattice's status and types.
      */
     inline _type_neighbour_status availTranDirs(_type_neighbour_status nei_status,
-                                                Lattice *_1nn_lats[LatticesList::MAX_1NN]) override {
-        return nei_status;
-    }
+                                                Lattice *_1nn_lats[LatticesList::MAX_1NN]) override;
 
     /**
      * \brief be called before calling updateRates.
@@ -47,6 +45,15 @@ public:
      * \brief  a map to correspond the id and the Itl sequence number.
      */
     std::map<_type_lattice_id, Vacancy> mp;
+
+    /**
+     * \brief replace an existed old vacancy with new vacancy.
+     *  remove the old one and add the new one.
+     * \param old_lat_id the lattice id of the old vacancy
+     * \param new_lat_id the lattice id of the new vacancy
+     */
+    void replace(const _type_lattice_id old_lat_id, const _type_lattice_id new_lat_id);
+
 };
 
 

@@ -12,8 +12,10 @@
  */
 typedef unsigned long _type_box_size;
 typedef unsigned long _type_lattice_coord;
+typedef long _type_lattice_offset;
 typedef _type_lattice_coord _type_lattice_size;
 typedef unsigned long _type_lattice_id;
+typedef unsigned long _type_lattice_count;
 
 /*!
  * \brief the type of transition rate

@@ -36,38 +36,6 @@ LatticesList::~LatticesList() {
     delete[] _lattices;
 }
 
-void LatticesList::randomInit(int ratio[], int alloy_types, double va_rate) {
-    // random types
-    for (_type_lattice_size z = 0; z < size_z; z++) {
-        for (_type_lattice_size y = 0; y < size_y; y++) {
-            for (_type_lattice_size x = 0; x < size_x; x++) {
-                _lattices[z][y][x].setType(LatticeTypes::randomAtomsType(ratio, alloy_types));
-            }
-        }
-    }
-    // make some lattices vacancy
-    // todo generating rule?
-    // todo update statistics values.
-    const _type_lattice_size va_count = static_cast<_type_lattice_size >(
-            static_cast<double>(_max_id) * va_rate);
-    _type_lattice_size i = 0;
-
-    while (i != va_count) {
-        _type_lattice_id id_a = rand() * _max_id;
-        Lattice &rand_lattice_a = getLat(id_a);
-        _type_lattice_id id_b = rand() * _max_id;
-        Lattice &rand_lattice_b = getLat(id_b);
-        if (rand_lattice_a.type.isAtom() && rand_lattice_b.type.isAtom()) {
-            // set type of lattice A to inter, and lattice B to vacancy
-            rand_lattice_a.type._type = LatticeTypes::combineToInter(rand_lattice_a.type._type,
-                                                                     rand_lattice_b.type._type);
-            rand_lattice_b.type._type = LatticeTypes::V;
-            i++;
-        }
-    }
-
-}
-
 void LatticesList::forAllLattices(const func_lattices_callback callback) {
     for (_type_lattice_size z = 0; z < size_z; z++) {
         for (_type_lattice_size y = 0; y < size_y; y++) {
@@ -138,4 +106,32 @@ Lattice &LatticesList::getLat(_type_lattice_id id) {
     _type_lattice_coord y = id % size_y;
     _type_lattice_coord z = id / size_y;
     return _lattices[z][y][x];
+}
+
+Lattice *LatticesList::walk(_type_lattice_id id, const _type_lattice_offset offset_x,
+                            const _type_lattice_offset offset_y, const _type_lattice_offset offset_z) {
+    _type_lattice_coord sx = id % size_x;
+    id = id / size_x;
+    // use half lattice const coord.
+    _type_lattice_coord sy = sx % 2 == 0 ? 2 * (id % size_y) : 2 * (id % size_y) + 1;
+    _type_lattice_coord sz = sx % 2 == 0 ? 2 * (id / size_y) : 2 * (id / size_y) + 1;
+
+    // add offset
+    sx += offset_x;
+    sy += offset_y;
+    sz += offset_z;
+
+    //if out of index
+    if (sx >= size_x || sy >= 2 * size_y || sz >= 2 * size_z) {
+        return nullptr;
+    }
+    // if sx is even, sy and sz should also be even.
+    if (sx % 2 == 0 && sy % 2 == 0 && sz % 2 == 0) {
+        return &_lattices[sz / 2][sy / 2][sx];
+    }
+    // if sx is odd, sy and sz should also be odd.
+    if (sx % 2 == 1 && sy % 2 == 1 && sz % 2 == 1) {
+        return &_lattices[sz / 2][sy / 2][sx];
+    }
+    return nullptr;
 }
