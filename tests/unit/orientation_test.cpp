@@ -52,4 +52,19 @@ TEST(orientation_trans_test, orientation_test) {
     const orientation ori = orientation{orientation::s_110};
     EXPECT_EQ(ori.trans(0, true, true)._ori, orientation::r_011);
     EXPECT_EQ(ori.trans(1, true, true)._ori, orientation::r_01_1);
+
+    const orientation ori2 = orientation{orientation::s_011}; // s_011 = 2
+    // it will find TransHashTable[s_011-1][1nn_tag][!new_higher][!rotate] = TransHashTable[2][3][0][1]
+    EXPECT_EQ(ori2.trans(3, true, false)._ori, orientation::r_1_10);
+}
+
+// test random orientation generation
+TEST(orientation_random_test, orientation_test) {
+    for (int i = 0; i < 100; i++) {
+        orientation orient = orientation{orientation::random()};
+        // all orients are belongs to [r_10_1,s_10_1] but not equal unknown.
+        EXPECT_NE(orient._ori, orientation::unknown);
+        EXPECT_LE(orient._ori, orientation::s_10_1);
+        EXPECT_GE(orient._ori, orientation::r_10_1);
+    }
 }
