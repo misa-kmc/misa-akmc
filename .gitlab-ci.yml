@@ -1,5 +1,5 @@
 # image:
-image: hpcer/hpcdev:latest
+image: hpcer/hpcdev:pkg-0.2.0
 
 cache:
   key: "$CI_COMMIT_REF_SLUG"
