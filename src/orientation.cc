@@ -22,7 +22,7 @@ const char orientation::JumpAtomHashTable[orientation::orientation_count][Lattic
 
 const orientation::_type_dire orientation::TransHashTable[single_orient_count][LatticesList::MAX_1NN][2][2]{
 // we only handle a half transition table,
-// because the negative part is similar as positive part.
+// because the negative part is the same as positive part.
         // 1: <110>
         {
                 // 1nn 0
@@ -38,9 +38,9 @@ const orientation::_type_dire orientation::TransHashTable[single_orient_count][L
                 // 1nn 5
                 {},
                 // 1nn 6
-                {{s_01_1},         {s_10_1}},
+                {{s_01_1, s_10_1}, {r_01_1, r_10_1}},
                 // 1nn 7
-                {{r_01_1},       {r_10_1}}
+                {{s_011, s_101}, {r_011, r_101}}
         },
 
         // 2: <1-10>

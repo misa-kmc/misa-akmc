@@ -43,9 +43,9 @@ struct orientation {
      * \return random orientation
      */
     static _type_dire random() {
-        uint32_t r = r::rand32(0, 2 * single_orient_count); // from 0 to 11
+        uint32_t r = r::rand32(0, 2 * single_orient_count) + 1; // value of r is from 1 to 12
         // if it is odd, return negative orientation, else return positive orientation
-        return r % 2 == 0 ? static_cast<_type_dire>(r / 2) : static_cast<_type_dire>(-r / 2);
+        return r % 2 == 0 ? static_cast<_type_dire>(r / 2) : static_cast<_type_dire>(-((r + 1) / 2));
     }
 
     /**

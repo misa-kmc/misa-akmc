@@ -36,6 +36,7 @@ void Itl::updateRates(Lattice &lattice, Lattice *list_1nn[LatticesList::MAX_1NN]
                       rateCallback callback) {
 #ifdef DEBUG_MODE
     assert(lattice.type.isDumbbell());
+    assert(orient._ori != orientation::unknown);
 #endif
     _type_dirs_status trans_dirs = orient.availTransDirs();
     // search all neighbour lattices, if the neighbour lattice is a destination that the source lattice can jump to,
