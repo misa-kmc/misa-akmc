@@ -35,3 +35,4 @@ set(KMC_EXECUTE_BIN_NAME ${PROJECT_NAME})
 
 # test
 set(KMC_UINT_TEST_NAME "misa-kmc-unit-tests")
+set(PKMC_UINT_TEST_NAME "pkmc-unit-tests")
