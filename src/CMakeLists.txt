@@ -1,11 +1,21 @@
 include(configure.cmake)
 set(HEADER_FILES
+        lattice/lattice.h
+        lattice/lattices_list.h
+        lattice/lattice_types.h
+        lattice/normal_lattice_list.h
         utils/random/rand_generators.h
         utils/random/random.h
+        utils/macros.h
+        type_define.h
         )
 
 
 set(SOURCE_FILES
+        lattice/lattice.cpp
+        lattice/lattices_list.cpp
+        lattice/lattice_types.cpp
+        lattice/normal_lattice_list.cpp
         utils/random/rand_generators.cpp
         utils/random/random.cpp
         )

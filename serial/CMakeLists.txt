@@ -3,10 +3,6 @@ set(HEADER_FILES
         defect/defect.hpp
         defect/itl_list.h
         defect/vacancy_list.h
-        lattice/lattice.h
-        lattice/lattices_list.h
-        lattice/lattice_types.h
-        lattice/normal_lattice_list.h
         plugin/event_listener.h
         rate/bonds/bonds_counter.h
         rate/bonds/energy_dumbbell.h
@@ -19,9 +15,7 @@ set(HEADER_FILES
         counter.h
         env.h
         kmc.h
-        macros.h
         orientation.h
-        type_define.h
         recombine.h
         )
 
@@ -29,10 +23,6 @@ set(HEADER_FILES
 set(SOURCE_FILES
         defect/itl_list.cpp
         defect/vacancy_list.cpp
-        lattice/lattice.cpp
-        lattice/lattices_list.cpp
-        lattice/lattice_types.cpp
-        lattice/normal_lattice_list.cpp
         rate/bonds/bonds_counter.cpp
         rate/bonds/energy_dumbbell.cpp
         rate/itl_rates_solver.cpp
