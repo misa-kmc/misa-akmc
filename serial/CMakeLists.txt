@@ -1,4 +1,3 @@
-include(configure.cmake)
 set(HEADER_FILES
         defect/def_types.h
         defect/defect.hpp
@@ -16,8 +15,6 @@ set(HEADER_FILES
         rate/rates_types.h
         rate/rates_solver.h
         rate/vacancy_rates_solver.h
-        utils/random/rand_generators.h
-        utils/random/random.h
         box.h
         counter.h
         env.h
@@ -41,8 +38,6 @@ set(SOURCE_FILES
         rate/itl_rates_solver.cpp
         rate/rates_solver.cpp
         rate/vacancy_rates_solver.cpp
-        utils/random/rand_generators.cpp
-        utils/random/random.cpp
         box.cpp
         counter.cpp
         env.cpp
@@ -64,7 +59,7 @@ target_include_directories(
         ${KMC_LIB_NAME}
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
 )
-target_link_libraries(${KMC_LIB_NAME} xoshiro::xoshiro)
+target_link_libraries(${KMC_LIB_NAME} ${PKMC_LIB_NAME} xoshiro::xoshiro)
 
 ##########################
 ##### install files

@@ -30,6 +30,7 @@ option(EAM_POT_EBNABLE_FLAG "Enable using eam potential to calculate system ener
 ## const ##
 #############
 set(KMC_LIB_NAME kmc)
+set(PKMC_LIB_NAME pkmc)
 set(KMC_EXECUTE_BIN_NAME ${PROJECT_NAME})
 
 # test
