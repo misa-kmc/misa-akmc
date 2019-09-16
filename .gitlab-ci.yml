@@ -1,8 +1,8 @@
 # image:
-image: hpcer/hpcdev:pkg-0.2.0
+image: hpcer/hpcdev:pkg-0.3.0
 
 cache:
-  key: "$CI_COMMIT_REF_SLUG"
+  key: vendor_version_1   # change this key if vendor changed.
   paths:
     - vendor/
 
@@ -17,9 +17,11 @@ fetch:
   tags:
     - cpp
     - pkg
+  variables:
+    PKG_AUTH: 'gitlab-ci-token?${CI_JOB_TOKEN}@git.hpcer.dev'
   script:
     - pkg fetch
-    - pkg install
+    - pkg install --verbose
   artifacts:
     untracked: true
 
