@@ -3,4 +3,4 @@ if (NOT (KMC_MPI_ENABLE_FLAG))
 endif ()
 MESSAGE(STATUS "MPI in test: ${KMC_TEST_MPI_ENABLE_FLAG}")
 
-add_subdirectory(unit)
+add_subdirectory(unit-serial)
