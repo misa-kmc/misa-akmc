@@ -18,6 +18,9 @@ packages:
         - RUN {{.CACHE}} cmake {{.SRC_DIR}} -DCMAKE_INSTALL_PREFIX={{.PKG_DIR}}; make -j {{.CORES}}; make install
       cmake_lib: |
         find_package(GTest PATHS {{.CMAKE_VENDOR_PATH_PKG}})
+    libcomm:
+      path: https://git.hpcer.dev/HPCer/CrystalMD/libcomm.git
+      tag: v0.3.0
 
     xoshiro:
       path: https://github.com/misa-kmc/xoshiro
