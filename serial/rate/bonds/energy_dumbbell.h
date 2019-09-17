@@ -5,9 +5,9 @@
 #ifndef MISA_KMC_ENERGY_DUMBBELL_H
 #define MISA_KMC_ENERGY_DUMBBELL_H
 
-#include "../../type_define.h"
-#include "../../lattice/lattices_list.h"
-#include "../../lattice/lattice_types.h"
+#include "type_define.h"
+#include "lattice/lattices_list.h"
+#include "lattice/lattice_types.h"
 #include "../../defect/itl_list.h"
 
 namespace bond {

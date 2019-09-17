@@ -6,8 +6,8 @@
 #define MISA_KMC_DEFECT_JLIST_H
 
 #include <array>
-#include "../lattice/lattices_list.h"
-#include "../type_define.h"
+#include "lattice/lattices_list.h"
+#include "type_define.h"
 #include "../orientation.h"
 #include "def_types.h"
 #include "rate/rates_types.h"

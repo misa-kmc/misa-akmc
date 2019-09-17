@@ -2,7 +2,7 @@
 // Created by genshen on 2019-01-10.
 //
 
-#include <macros.h>
+#include "../utils/macros.h"
 #include "normal_lattice_list.h"
 
 NormalLatticeList::NormalLatticeList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z)
