@@ -36,6 +36,13 @@ packages:
       branch: master
       cmake_lib: |
         find_package(xoshiro REQUIRED PATHS {{.CMAKE_VENDOR_PATH_PKG}})
+  files:
+    args:
+      path: https://raw.githubusercontent.com/Taywee/args/master   # version 6.2.0 has less features.
+      files:
+        args.hxx: args.hpp
+      build:
+        - CP args.hpp {{.INCLUDE}}/args.hpp
 
 build:
   linux:

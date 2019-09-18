@@ -4,6 +4,7 @@ project(misa-kmc)
 
 set(CMAKE_CXX_STANDARD 11)
 
+include(version.cmake)
 include(config.cmake)
 include(dependency.cmake)
 
