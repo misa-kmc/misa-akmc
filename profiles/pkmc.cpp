@@ -4,7 +4,10 @@
 
 #include <iostream>
 #include <args.hpp>
+#include <logs/logs.h>
+#include <utils/mpi_utils.h>
 #include "profile_config.h"
+#include "config_parsing.h"
 #include "pkmc.h"
 
 bool PKMC::beforeCreate(int argc, char **argv) {
@@ -50,7 +53,27 @@ bool PKMC::beforeCreate(int argc, char **argv) {
 }
 
 void PKMC::onCreate() {
-    kiwiApp::onCreate();
+    ConfigParsing *p_config;
+    if (kiwi::mpiUtils::global_process.own_rank == MASTER_PROCESSOR) {
+        kiwi::logs::s("env", "mpi env is initialized.\n");
+        // initial config Obj, then read and resolve config file.
+        p_config = ConfigParsing::newInstance(configFilePath); // todo config file from argv.
+        if (p_config->hasError) {
+            kiwi::logs::e("config", "{0}\n", p_config->errorMessage);
+            this->abort(2);
+        }
+    } else {
+        // just initial a empty config Obj.
+        p_config = ConfigParsing::getInstance();
+    }
+    p_config->sync(); // sync config data to other processors from master processor.
+
+#ifdef KMC_DEV_MODE
+    // print configure.
+    if (kiwi::mpiUtils::global_process.own_rank == MASTER_PROCESSOR) {
+        std::cout << p_config->configValues;
+    }
+#endif
 }
 
 bool PKMC::prepare() {
