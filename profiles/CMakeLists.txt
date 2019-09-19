@@ -25,10 +25,15 @@ add_executable(${P_KMC_EXECUTE_BIN_NAME}
         profile.cpp
         pkmc.h
         pkmc.cpp
+        config_parsing.cpp
+        config_parsing.h
+        config_values.cpp
+        config_values.h
         )
 
 target_link_libraries(${P_KMC_EXECUTE_BIN_NAME} PRIVATE
         kiwi::kiwi
+        yaml-cpp
         ${PKMC_LIB_NAME}
         ${KMC_EXTRA_LIBS})
 

@@ -18,6 +18,7 @@ packages:
         - RUN {{.CACHE}} cmake {{.SRC_DIR}} -DCMAKE_INSTALL_PREFIX={{.PKG_DIR}}; make -j {{.CORES}}; make install
       cmake_lib: |
         find_package(yaml-cpp PATHS {{.CMAKE_VENDOR_PATH_PKG}})
+        include_directories(${YAML_CPP_INCLUDE_DIR})
     googletest:
       path: https://github.com/google/googletest.git
       tag: release-1.8.1
