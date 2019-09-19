@@ -29,6 +29,8 @@ add_executable(${P_KMC_EXECUTE_BIN_NAME}
         config_parsing.h
         config_values.cpp
         config_values.h
+        lattice_types_string.cpp
+        lattice_types_string.h
         )
 
 target_link_libraries(${P_KMC_EXECUTE_BIN_NAME} PRIVATE
