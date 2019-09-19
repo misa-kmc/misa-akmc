@@ -65,6 +65,20 @@ private:
      * @param bundle
      */
     void getConfigData(kiwi::Bundle &bundle) override;
+
+    /**
+     * \brief
+     * \param config_file
+     */
+    void parse(const std::string config_file);
+
+    bool parseBox(const YAML::Node &yaml_box);
+
+    bool parseSim(const YAML::Node &yaml_sim);
+
+    bool parseCreate(const YAML::Node &yaml_create);
+
+    bool parseOutput(const YAML::Node &output);
 };
 
 

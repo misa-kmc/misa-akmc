@@ -13,11 +13,11 @@ box:
 create: # how the simulation box is created.
   random:
     enable: true
+    va_count: 1   # vacancy number, not percent.
     alloy:
       Cu: 1.34
       Mn: 1.34
       Ni: 1.34
-      Va: 1   # vacancy number, not percent.
       FeFe: 0 # pair number of [110] dumbbell.
       FeCu: 0
       FeMn: 0
@@ -30,7 +30,7 @@ create: # how the simulation box is created.
       MnMn: 0
   pipe: # if create_box is set to false or not set, then pipe will be used.
     enable: false
-    inputbox: last_frame.xyz # pipe from MD.
+    input_box: last_frame.xyz # pipe from MD.
   restart:
     enable: false
     file_path: 1072.xyz
@@ -43,7 +43,7 @@ simulation:
   dpasm1: 3e-9 # unit: dpa/s
 
 output:
-  log_interval: 0 # if zero is set, it means no log.
+  log_interval: 10 # if zero is set, it means no log.
   dump:
     interval: 100 # dump system lattice information.
     file_path: "kmc.{}.out"

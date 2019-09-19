@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <args.hpp>
+#include <logs/logs.h>
+#include <utils/mpi_utils.h>
 #include "profile_config.h"
 #include "config_parsing.h"
 #include "pkmc.h"
@@ -65,6 +67,13 @@ void PKMC::onCreate() {
         p_config = ConfigParsing::getInstance();
     }
     p_config->sync(); // sync config data to other processors from master processor.
+
+#ifdef KMC_DEV_MODE
+    // print configure.
+    if (kiwi::mpiUtils::global_process.own_rank == MASTER_PROCESSOR) {
+        std::cout << p_config->configValues;
+    }
+#endif
 }
 
 bool PKMC::prepare() {
