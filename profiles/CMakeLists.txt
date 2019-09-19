@@ -2,18 +2,6 @@
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
-# make binary
-add_executable(${KMC_EXECUTE_BIN_NAME}
-        m_event_listener.h
-        m_event_listener.cpp
-        main.cpp
-        )
-
-# link google perftools
-#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lprofiler")
-
-target_link_libraries(${KMC_EXECUTE_BIN_NAME} PRIVATE ${KMC_LIB_NAME} ${KMC_EXTRA_LIBS})
-
 # configure a header file to pass some of the CMake settings to the source code
 configure_file(
         "${CMAKE_CURRENT_SOURCE_DIR}/profile_config.h.in"
@@ -33,7 +21,7 @@ target_link_libraries(${P_KMC_EXECUTE_BIN_NAME} PRIVATE
         ${KMC_EXTRA_LIBS})
 
 # install bin and libs
-install(TARGETS ${KMC_EXECUTE_BIN_NAME} ${P_KMC_EXECUTE_BIN_NAME}
+install(TARGETS ${P_KMC_EXECUTE_BIN_NAME}
         RUNTIME DESTINATION bin
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib
