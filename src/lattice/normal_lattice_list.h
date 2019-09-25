@@ -19,7 +19,7 @@ public:
      * \param box_y box size/lattice count in y direction.
      * \param box_z box size/lattice count in z direction.
      */
-    NormalLatticeList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z);
+    NormalLatticeList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z, _type_box_size ghost_size=0);
 
     /**
      * \brief get bit status of 1nn neighbour lattice.

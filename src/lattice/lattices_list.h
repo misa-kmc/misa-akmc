@@ -62,7 +62,7 @@ public:
      * \param box_y box size/lattice count in y direction.
      * \param box_z box size/lattice count in z direction.
      */
-    LatticesList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z);
+    LatticesList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z, _type_box_size ghost_size=0);
 
     ~LatticesList();
 

@@ -6,10 +6,13 @@
 #include <args.hpp>
 #include <logs/logs.h>
 #include <utils/mpi_utils.h>
+#include <lattice/lattices_list.h>
+#include <lattice/normal_lattice_list.h>
 #include "building_config.h"
 #include "profile_config.h"
 #include "config_parsing.h"
 #include "pkmc.h"
+#include "simulation.h"
 
 bool PKMC::beforeCreate(int argc, char **argv) {
     // parser arguments
@@ -76,7 +79,18 @@ void PKMC::onCreate() {
 }
 
 bool PKMC::prepare() {
-    return kiwiApp::prepare();
+
+    simulation simulation1;
+
+    ConfigParsing *p_config;
+    p_config = ConfigParsing::getInstance();
+    simulation1.createDomain(p_config->configValues.box_size, p_config->configValues.lattice_const,
+                             p_config->configValues.cutoff_radius);
+
+    auto a = NormalLatticeList(simulation1._p_domain->sub_box_lattice_size[0], simulation1._p_domain->sub_box_lattice_size[1],
+                 simulation1._p_domain->sub_box_lattice_size[0], simulation1._p_domain->lattice_size_ghost[0]);
+
+    return true;
 }
 
 void PKMC::onStart() {

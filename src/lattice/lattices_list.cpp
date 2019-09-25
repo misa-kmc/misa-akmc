@@ -6,20 +6,20 @@
 #include "lattices_list.h"
 #include "type_define.h"
 
-LatticesList::LatticesList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z)
+LatticesList::LatticesList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z, _type_box_size ghost_size)
         : size_x(2 * box_x), size_y(box_y), size_z(box_z), _max_id(size_z * size_y * size_x - 1) {
     _lattices = new Lattice **[size_z];
-    for (_type_lattice_size z = 0; z < size_z; z++) {
-        _lattices[z] = new Lattice *[size_y];
-        for (_type_lattice_size y = 0; y < size_y; y++) {
-            _lattices[z][y] = new Lattice[size_x];
+    for (_type_lattice_size z = 0; z < size_z + 2*ghost_size; z++) {
+        _lattices[z] = new Lattice *[size_y + 2*ghost_size];
+        for (_type_lattice_size y = 0; y < size_y + 2*ghost_size; y++) {
+            _lattices[z][y] = new Lattice[size_x + 2*ghost_size];
         }
     }
     // set id
     _type_lattice_id id = 0;
-    for (_type_lattice_size z = 0; z < size_z; z++) {
-        for (_type_lattice_size y = 0; y < size_y; y++) {
-            for (_type_lattice_size x = 0; x < size_x; x++) {
+    for (_type_lattice_size z = ghost_size; z < size_z + ghost_size; z++) {
+        for (_type_lattice_size y = ghost_size; y < size_y + ghost_size; y++) {
+            for (_type_lattice_size x = ghost_size; x < size_x + ghost_size; x++) {
                 _lattices[z][y][x].id = id++;
             }
         }
