@@ -131,7 +131,7 @@ bool ConfigParsing::parseCreate(const YAML::Node &yaml_create) {
             if (alloy.IsMap()) {
                 for (YAML::const_iterator it = alloy.begin(); it != alloy.end(); ++it) {
                     configValues.create.types.emplace_back(lat::LatTypes(it->first.as<std::string>()));
-                    configValues.create.types_ratio.emplace_back(it->second.as<double>(0.0));
+                    configValues.create.types_ratio.emplace_back(it->second.as<unsigned int>(0));
                 }
             } else {
                 setError("alloy must be a map in config.");

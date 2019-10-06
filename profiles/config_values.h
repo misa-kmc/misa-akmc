@@ -19,7 +19,7 @@ struct Create {
     // random
     unsigned long va_count = 0;
     std::vector<LatticeTypes::lat_type> types;
-    std::vector<double> types_ratio;
+    std::vector<unsigned int> types_ratio;
     // pipe
     std::string pipe_input_box = "";
     // restart
