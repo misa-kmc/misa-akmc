@@ -125,7 +125,7 @@ bool ConfigParsing::parseCreate(const YAML::Node &yaml_create) {
     if (yaml_random) {
         const bool random_enabled = yaml_random["enable"].as<bool>(false);
         if (random_enabled) {
-            configValues.create.create_option = CreateOption::Random;
+            configValues.create.create_option = conf::CreateOption::Random;
             configValues.create.va_count = yaml_random["va_count"].as<unsigned long>(0);
             YAML::Node alloy = yaml_random["alloy"];
             if (alloy.IsMap()) {
@@ -145,7 +145,7 @@ bool ConfigParsing::parseCreate(const YAML::Node &yaml_create) {
     if (yaml_pipe) {
         const bool pipe_enabled = yaml_pipe["enable"].as<bool>(false);
         if (pipe_enabled) {
-            configValues.create.create_option = CreateOption::Pipe;
+            configValues.create.create_option = conf::CreateOption::Pipe;
             configValues.create.pipe_input_box = yaml_pipe["input_box"].as<std::string>("");
             return true;
         }
@@ -155,13 +155,13 @@ bool ConfigParsing::parseCreate(const YAML::Node &yaml_create) {
     if (yaml_restart) {
         const bool restart_enabled = yaml_restart["enable"].as<bool>(false);
         if (restart_enabled) {
-            configValues.create.create_option = CreateOption::Restart;
+            configValues.create.create_option = conf::CreateOption::Restart;
             configValues.create.restart_file = yaml_restart["file_path"].as<std::string>("");
             return true;
         }
     }
 
-    if (configValues.create.create_option == CreateOption::None) {
+    if (configValues.create.create_option == conf::CreateOption::None) {
         setError("no create option in config.");
         return false;
     }

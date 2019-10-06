@@ -82,10 +82,9 @@ void PKMC::onCreate() {
 bool PKMC::prepare() {
     simulation simulation;
 
-    ConfigParsing *p_config;
-    p_config = ConfigParsing::getInstance();
-    simulation.createDomain(p_config->configValues.box_size, p_config->configValues.lattice_const,
-                            p_config->configValues.cutoff_radius);
+    conf::ConfigValues config_v = ConfigParsing::getInstance()->configValues;
+    simulation.createDomain(config_v.box_size, config_v.lattice_const,
+                            config_v.cutoff_radius);
 
     // create empty lattice list.
     // todo type conversion.

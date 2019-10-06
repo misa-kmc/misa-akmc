@@ -7,7 +7,7 @@
 #include "config_values.h"
 #include "lattice_types_string.h"
 
-void ConfigValues::packData(kiwi::Bundle &bundle) {
+void conf::ConfigValues::packData(kiwi::Bundle &bundle) {
     // box
     bundle.put(comm::DIMENSION_SIZE, box_size);
     bundle.put(lattice_const);
@@ -35,7 +35,7 @@ void ConfigValues::packData(kiwi::Bundle &bundle) {
     bundle.put(output.dump_file_path);
 }
 
-void ConfigValues::unpackData(kiwi::Bundle &bundle) {
+void conf::ConfigValues::unpackData(kiwi::Bundle &bundle) {
     int cursor = 0;
     bundle.get(cursor, comm::DIMENSION_SIZE, box_size);
     bundle.get(cursor, lattice_const);
@@ -64,7 +64,7 @@ void ConfigValues::unpackData(kiwi::Bundle &bundle) {
     bundle.get(cursor, output.dump_file_path);
 }
 
-std::ostream &operator<<(std::ostream &os, const ConfigValues &cv) {
+std::ostream &conf::operator<<(std::ostream &os, const conf::ConfigValues &cv) {
     os << "===========config of simulation=============" << std::endl;
     os << "size: " << cv.box_size[0] << " " << cv.box_size[1] << " " << cv.box_size[2] << std::endl;
     os << "lattice const: " << cv.lattice_const << std::endl;
@@ -73,7 +73,7 @@ std::ostream &operator<<(std::ostream &os, const ConfigValues &cv) {
        << cv.temperature << "\t" << cv.physics_time << "\t" << cv.steps_limit << "\t"
        << (cv.is_def_gen ? "true" : "false") << "\t" << cv.dpa_ps << std::endl;
 
-    if (cv.create.create_option == CreateOption::Random) {
+    if (cv.create.create_option == conf::CreateOption::Random) {
         os << "create by: random" << std::endl;
         os << "va:" << cv.create.va_count << std::endl;
         assert(cv.create.types.size() == cv.create.types_ratio.size());
@@ -83,12 +83,12 @@ std::ostream &operator<<(std::ostream &os, const ConfigValues &cv) {
         os << std::endl;
     }
 
-    if (cv.create.create_option == CreateOption::Pipe) {
+    if (cv.create.create_option == conf::CreateOption::Pipe) {
         os << "create by: pipe" << std::endl;
         os << "pipe input box:" << cv.create.pipe_input_box << std::endl;
     }
 
-    if (cv.create.create_option == CreateOption::Restart) {
+    if (cv.create.create_option == conf::CreateOption::Restart) {
         os << "create by: restart" << std::endl;
         os << "restart file:" << cv.create.restart_file << std::endl;
     }
