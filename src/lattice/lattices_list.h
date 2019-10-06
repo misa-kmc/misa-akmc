@@ -58,11 +58,16 @@ public:
     /*!
      * \brief initialize the lattice_lists array(allocate memory) with box size in x,y,z direction.
      * besides, the lattice id will be set in this constructor.
-     * \param box_x box size/lattice count in x direction.
-     * \param box_y box size/lattice count in y direction.
-     * \param box_z box size/lattice count in z direction.
+     * \param box_x box size/lattice count in x direction without ghost area.
+     * \param box_y box size/lattice count in y direction without ghost area.
+     * \param box_z box size/lattice count in z direction without ghost area.
+     * \param ghost_x ghost size/lattice at x dimension.
+     * \param ghost_y ghost size/lattice at y dimension.
+     * \param ghost_z ghost size/lattice at z dimension.
      */
-    LatticesList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z, _type_box_size ghost_size=0);
+    LatticesList(const _type_box_size box_x, const _type_box_size box_y, const _type_box_size box_z,
+                 const _type_box_size ghost_x, const _type_box_size ghost_y,
+                 const _type_box_size ghost_z);
 
     ~LatticesList();
 

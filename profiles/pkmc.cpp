@@ -8,6 +8,7 @@
 #include <utils/mpi_utils.h>
 #include <lattice/lattices_list.h>
 #include <lattice/normal_lattice_list.h>
+#include "creation.h"
 #include "building_config.h"
 #include "profile_config.h"
 #include "config_parsing.h"
@@ -79,17 +80,23 @@ void PKMC::onCreate() {
 }
 
 bool PKMC::prepare() {
-
-    simulation simulation1;
+    simulation simulation;
 
     ConfigParsing *p_config;
     p_config = ConfigParsing::getInstance();
-    simulation1.createDomain(p_config->configValues.box_size, p_config->configValues.lattice_const,
-                             p_config->configValues.cutoff_radius);
+    simulation.createDomain(p_config->configValues.box_size, p_config->configValues.lattice_const,
+                            p_config->configValues.cutoff_radius);
 
-    auto a = NormalLatticeList(simulation1._p_domain->sub_box_lattice_size[0], simulation1._p_domain->sub_box_lattice_size[1],
-                 simulation1._p_domain->sub_box_lattice_size[0], simulation1._p_domain->lattice_size_ghost[0]);
-
+    // create empty lattice list.
+    // todo type conversion.
+    NormalLatticeList lattice_list = {static_cast<_type_box_size>(simulation._p_domain->sub_box_lattice_size[0]),
+                                      static_cast<_type_box_size>(simulation._p_domain->sub_box_lattice_size[1]),
+                                      static_cast<_type_box_size>(simulation._p_domain->sub_box_lattice_size[0]),
+                                      static_cast<_type_box_size>(simulation._p_domain->lattice_size_ghost[0]),
+                                      static_cast<_type_box_size>(simulation._p_domain->lattice_size_ghost[1]),
+                                      static_cast<_type_box_size>(simulation._p_domain->lattice_size_ghost[2])
+    };
+    creation::create(&lattice_list, simulation._p_domain);
     return true;
 }
 

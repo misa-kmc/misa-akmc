@@ -18,8 +18,22 @@ public:
      * \param box_x box size/lattice count in x direction.
      * \param box_y box size/lattice count in y direction.
      * \param box_z box size/lattice count in z direction.
+     * \deprecated this is for serial code.
      */
-    NormalLatticeList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z, _type_box_size ghost_size=0);
+    NormalLatticeList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z)
+            : NormalLatticeList(box_x, box_y, box_z, 0, 0, 0) {}
+
+    /**
+     * \brief create the lattice list of non-boundary with box size: box_x*box_y*box_z.
+     * \param box_x box size/lattice count in x direction.
+     * \param box_y box size/lattice count in y direction.
+     * \param box_z box size/lattice count in z direction.
+     * \param ghost_x ghost size/lattice at x dimension
+     * \param ghost_y ghost size/lattice at y dimension
+     * \param ghost_z ghost size/lattice at z dimension
+     */
+    NormalLatticeList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z,
+                      _type_box_size ghost_x, _type_box_size ghost_y, _type_box_size ghost_z);
 
     /**
      * \brief get bit status of 1nn neighbour lattice.
