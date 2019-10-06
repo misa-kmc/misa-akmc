@@ -95,7 +95,21 @@ bool PKMC::prepare() {
                                       static_cast<_type_box_size>(simulation._p_domain->lattice_size_ghost[1]),
                                       static_cast<_type_box_size>(simulation._p_domain->lattice_size_ghost[2])
     };
-    creation::create(&lattice_list, simulation._p_domain);
+    // initialize lattice id and types.
+    switch (config_v.create.create_option) {
+        case conf::None:
+            // todo log error
+            return false;
+        case conf::Random:
+            creation::createRandom(&lattice_list, config_v.create.types,
+                                   config_v.create.types_ratio, config_v.create.va_count,
+                                   simulation._p_domain);
+            break;
+        case conf::Pipe:
+            break;
+        case conf::Restart:
+            break;
+    }
     return true;
 }
 

@@ -6,23 +6,17 @@
 #include "creation.h"
 #include "type_define.h"
 
-void creation::create(LatticesList *lats, const comm::ColoredDomain *p_domain) {
-    // init
+void creation::createRandom(LatticesList *lats, const std::vector<LatticeTypes::lat_type> types,
+                            const std::vector<unsigned int> types_ratio, const unsigned long va_count,
+                            const comm::ColoredDomain *p_domain) {
     r::initSeed(); // initialize random number seed // todo generate seed here
-
+    // todo skip ghost lattices.
     lats->forAllLattices([&](const _type_lattice_coord x,
                              const _type_lattice_coord y,
                              const _type_lattice_coord z,
                              Lattice &lattice) {
         // set lattice types randomly.
-        //  todo p_config->configValues.create.types;
-        //  todo p_config->configValues.create.types;
-        //  todo  p_config->configValues.create.types_ratio
-        const LatticeTypes::lat_type src_types[] = {LatticeTypes::Fe, LatticeTypes::Cu,
-                                                    LatticeTypes::Ni, LatticeTypes::Mn};
-        const unsigned int ratio[] = {100, 0, 0, 0}; // Fe based lattice
-
-        lattice.type._type = LatticeTypes::randomAtomsType(src_types, ratio, 4);
+        lattice.type._type = LatticeTypes::randomAtomsType(types.data(), types_ratio.data(), types.size());
         return true;
     });
 }
