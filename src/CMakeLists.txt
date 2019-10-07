@@ -1,5 +1,7 @@
 include(configure.cmake)
 set(HEADER_FILES
+        algorithms/parallel_interface.h
+        algorithms/sl/sublattice.h
         lattice/lattice.h
         lattice/lattices_list.h
         lattice/lattice_types.h
@@ -13,6 +15,8 @@ set(HEADER_FILES
 
 
 set(SOURCE_FILES
+        algorithms/parallel_interface.cpp
+        algorithms/sl/sublattice.cpp
         lattice/lattice.cpp
         lattice/lattices_list.cpp
         lattice/lattice_types.cpp
