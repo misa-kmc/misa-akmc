@@ -8,6 +8,7 @@ set(HEADER_FILES
         utils/random/random.h
         utils/macros.h
         type_define.h
+        creation.h
         )
 
 
@@ -18,6 +19,7 @@ set(SOURCE_FILES
         lattice/normal_lattice_list.cpp
         utils/random/rand_generators.cpp
         utils/random/random.cpp
+        creation.cpp
         )
 
 

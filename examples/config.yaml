@@ -15,9 +15,10 @@ create: # how the simulation box is created.
     enable: true
     va_count: 1   # vacancy number, not percent.
     alloy:
-      Cu: 1.34
-      Mn: 1.34
-      Ni: 1.34
+      Fe: 9598
+      Cu: 134
+      Mn: 134
+      Ni: 134
       FeFe: 0 # pair number of [110] dumbbell.
       FeCu: 0
       FeMn: 0

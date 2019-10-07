@@ -20,7 +20,7 @@ public:
     /**
      * \brief config values will be stored here.
      */
-    ConfigValues configValues;
+    conf::ConfigValues configValues;
 
     /**
      * Create a new config instance first,
