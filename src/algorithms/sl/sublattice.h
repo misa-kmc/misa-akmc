@@ -8,9 +8,7 @@
 #include <array>
 #include <domain/colored_domain.h>
 #include "../parallel_interface.h"
-
-#define SECTORS_NUM 8
-typedef unsigned int type_sector_id;
+#include "../selector.h"
 
 struct SectorMeta {
     // current sector.
@@ -24,15 +22,17 @@ struct SectorMeta {
 class SubLattice : public ParallelInterface {
 public:
     const double evolution_time[SECTORS_NUM]; // evolution time of each sector.
-    const type_sector_id sector_ids[SECTORS_NUM]{ // todo use a ring.
-            comm::X_LOW | comm::Y_LOW | comm::Z_LOW,
-            comm::X_LOW | comm::Y_HIGH | comm::Z_LOW,
-            comm::X_LOW | comm::Y_LOW | comm::Z_HIGH,
-            comm::X_LOW | comm::Y_HIGH | comm::Z_HIGH,
-            comm::X_HIGH | comm::Y_LOW | comm::Z_LOW,
-            comm::X_HIGH | comm::Y_HIGH | comm::Z_LOW,
-            comm::X_HIGH | comm::Y_LOW | comm::Z_HIGH,
-            comm::X_HIGH | comm::Y_HIGH | comm::Z_HIGH,
+    type_sector cur_sector{
+            {
+                    comm::X_LOW | comm::Y_LOW | comm::Z_LOW,
+                    comm::X_LOW | comm::Y_HIGH | comm::Z_LOW,
+                    comm::X_LOW | comm::Y_LOW | comm::Z_HIGH,
+                    comm::X_LOW | comm::Y_HIGH | comm::Z_HIGH,
+                    comm::X_HIGH | comm::Y_LOW | comm::Z_LOW,
+                    comm::X_HIGH | comm::Y_HIGH | comm::Z_LOW,
+                    comm::X_HIGH | comm::Y_LOW | comm::Z_HIGH,
+                    comm::X_HIGH | comm::Y_HIGH | comm::Z_HIGH,
+            }
     };
 
     /**

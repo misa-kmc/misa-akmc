@@ -45,4 +45,5 @@ void SubLattice::nextSector() {
 
 void SubLattice::beforeNextSector() {
 // todo sync ghost for next ghost.
+    ++cur_sector;
 }

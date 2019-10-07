@@ -2,6 +2,8 @@ include(configure.cmake)
 set(HEADER_FILES
         algorithms/parallel_interface.h
         algorithms/sl/sublattice.h
+        algorithms/ring.hpp
+        algorithms/selector.h
         lattice/lattice.h
         lattice/lattices_list.h
         lattice/lattice_types.h
