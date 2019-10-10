@@ -6,46 +6,23 @@
 #define MISA_KMC_RING_HPP
 
 #include <vector>
+#include "ring_iterator.h"
 
 /**
  * \brief  fixed size ring.
  * \tparam T type of element in ring.
  * \tparam N the size of ring.
  */
-template<typename T, unsigned int N> // todo size_t
+template<typename T, type_ring_size N>
 class ring {
     static_assert(N >= 1, "ring size can not be zero.");
 
+    friend class iterator;
+
 public:
+    typedef RingIterator<T, N, T &, T *> iterator;
+
     explicit ring(const std::array<T, N> _data);
-
-    /**
-     * \brief move the cursor to next element and return its reference after moving to next element.
-     * \return self reference after moving to next element.
-     */
-    ring<T, N> &operator++();
-
-    /**
-     * \brief move the cursor to next element and return next element in ring.
-     * \return next element in ring.
-     */
-    T next();
-
-    /**
-     * \brief return current element.
-     * \return current element.
-     */
-    inline T operator()() {
-        return data[cursor];
-    }
-
-    /**
-     * \brief get current element.
-     * \return current element.
-     */
-    inline T get() const {
-        return data[cursor];
-    }
 
     /**
      * \return size of ring
@@ -54,24 +31,18 @@ public:
         return N;
     }
 
+    iterator begin();
+
 private:
-    const std::array<T, N> data;
-    unsigned long cursor = 0;
+     std::array<T, N> data;
 };
 
-template<typename T, unsigned int N>
+template<typename T, type_ring_size N>
 ring<T, N>::ring(const std::array<T, N> _data):data(_data) {}
 
-template<typename T, unsigned int N>
-ring<T, N> &ring<T, N>::operator++() {
-    cursor = (cursor + 1) % N;
-    return *this;
-}
-
-template<typename T, unsigned int N>
-T ring<T, N>::next() {
-    cursor = (cursor + 1) % N;
-    return data[cursor];
+template<typename T, type_ring_size N>
+typename ring<T, N>::iterator ring<T, N>::begin() {
+    return ring::iterator(&data);
 }
 
 #endif //MISA_KMC_RING_HPP
