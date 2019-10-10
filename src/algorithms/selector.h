@@ -10,6 +10,11 @@
 #define SECTORS_NUM 8
 typedef unsigned int type_sector_id;
 
-typedef ring<type_sector_id, SECTORS_NUM> type_sector;
+typedef struct {
+    type_sector_id id; // id of this sector
+    double evolution_time; // evolution time of this sector.
+} type_sector;
+
+typedef ring<type_sector, SECTORS_NUM> type_sectors_ring;
 
 #endif //MISA_KMC_SELECTOR_H

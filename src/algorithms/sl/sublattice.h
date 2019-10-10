@@ -11,29 +11,27 @@
 #include "../selector.h"
 
 struct SectorMeta {
-    // current sector.
-    type_sector_id cur_sector;
-    // threshold time for communication (the T can be changing in simulation).
-    const double T;
-    // time increment in current sector.
-    double sector_time;
+    explicit SectorMeta();
+
+    // collection of sectors.
+    type_sectors_ring sectors{
+            {
+                    type_sector{comm::X_LOW | comm::Y_LOW | comm::Z_LOW, 0.0},
+                    type_sector{comm::X_LOW | comm::Y_HIGH | comm::Z_LOW, 0.0},
+                    type_sector{comm::X_LOW | comm::Y_LOW | comm::Z_HIGH, 0.0},
+                    type_sector{comm::X_LOW | comm::Y_HIGH | comm::Z_HIGH, 0.0},
+                    type_sector{comm::X_HIGH | comm::Y_LOW | comm::Z_LOW, 0.0},
+                    type_sector{comm::X_HIGH | comm::Y_HIGH | comm::Z_LOW, 0.0},
+                    type_sector{comm::X_HIGH | comm::Y_LOW | comm::Z_HIGH, 0.0},
+                    type_sector{comm::X_HIGH | comm::Y_HIGH | comm::Z_HIGH, 0.0},
+            }};
+
+    type_sectors_ring::iterator sector_itl;
 };
 
 class SubLattice : public ParallelInterface {
 public:
-    const double evolution_time[SECTORS_NUM]; // evolution time of each sector.
-    type_sector cur_sector{
-            {
-                    comm::X_LOW | comm::Y_LOW | comm::Z_LOW,
-                    comm::X_LOW | comm::Y_HIGH | comm::Z_LOW,
-                    comm::X_LOW | comm::Y_LOW | comm::Z_HIGH,
-                    comm::X_LOW | comm::Y_HIGH | comm::Z_HIGH,
-                    comm::X_HIGH | comm::Y_LOW | comm::Z_LOW,
-                    comm::X_HIGH | comm::Y_HIGH | comm::Z_LOW,
-                    comm::X_HIGH | comm::Y_LOW | comm::Z_HIGH,
-                    comm::X_HIGH | comm::Y_HIGH | comm::Z_HIGH,
-            }
-    };
+    explicit SubLattice(const comm::ColoredDomain *p_domain, const double T);
 
     /**
      * \brief start kmc time loop.
@@ -74,6 +72,11 @@ private:
      * \brief before performiing computing of next sector.
      */
     void beforeNextSector();
+
+private:
+    // threshold time for communication (the T can be changing in simulation).
+    const double T;
+    const comm::ColoredDomain *p_domain = nullptr;
 };
 
 
