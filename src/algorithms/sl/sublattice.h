@@ -7,7 +7,7 @@
 
 #include <array>
 #include <domain/colored_domain.h>
-#include "../parallel_interface.h"
+#include "models/model_adapter.h"
 #include "../selector.h"
 
 struct SectorMeta {
@@ -29,54 +29,60 @@ struct SectorMeta {
     type_sectors_ring::iterator sector_itl;
 };
 
-class SubLattice : public ParallelInterface {
+class SubLattice {
 public:
-    explicit SubLattice(const comm::ColoredDomain *p_domain, const double T);
+    /**
+     * \brief initialize sub-lattice algorithm with a specific kMC model.
+     * \param p_domain simulation domain.
+     * \param p_model kMC model
+     * \param time_limit the max evolution time.
+     * \param T threshold time for communication.
+     */
+    explicit SubLattice(const comm::ColoredDomain *p_domain, ModelAdapter *p_model,
+                        const double time_limit, const double T);
 
     /**
      * \brief start kmc time loop.
      */
-    void startTimeLoop() override;
+    void startTimeLoop();
 
     /**
      * \brief calculate rates in a region
+     * \param sector_id sector id
      * \return the total rates
      */
-    double calcRates(const comm::Region<comm::_type_lattice_size> region) override;
-
-    /**
-     * \brief select a event from rates list
-     */
-    void selectRate() override;
-
-    /**
-     * \brief perform the kmv event.
-     */
-    void perform() override;
+    double calcRates(const type_sector_id sector_id);
 
 private:
-    SectorMeta sec_meta; // todo init it.
 
     /**
-     * \brief it returns whether the time threshold T is reached.
-     * \return
+     * \brief communicate ghost area of current process to sync simulation regions of neighbor process.
      */
-    bool isTReached();
+    void syncSimRegions();
 
     /**
-     * \brief move to next sector.
+     * \brief communicate ghost area data of next sector in current process.
+     */
+    void syncNextSectorGhostRegions();
+
+    /**
+     * \brief some post operations after moved to next sector.
      */
     void nextSector();
 
-    /**
-     * \brief before performiing computing of next sector.
-     */
-    void beforeNextSector();
-
 private:
+    const comm::ColoredDomain *p_domain = nullptr;
+
     // threshold time for communication (the T can be changing in simulation).
     const double T;
-    const comm::ColoredDomain *p_domain = nullptr;
+    const double time_limit = 0.0;
+
+    SectorMeta sec_meta;
+
+    /**
+     * \brief kmc model to perform event selecting and execution.
+     */
+    ModelAdapter *p_model = nullptr;
 };
 
 
