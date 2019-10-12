@@ -1,9 +1,14 @@
 include(configure.cmake)
 set(HEADER_FILES
+        algorithms/sl/sublattice.h
+        algorithms/ring_iterator.h
+        algorithms/ring.hpp
+        algorithms/selector.h
         lattice/lattice.h
         lattice/lattices_list.h
         lattice/lattice_types.h
         lattice/normal_lattice_list.h
+        models/model_adapter.h
         utils/random/rand_generators.h
         utils/random/random.h
         utils/macros.h
@@ -13,10 +18,14 @@ set(HEADER_FILES
 
 
 set(SOURCE_FILES
+        algorithms/sl/sublattice.cpp
+        algorithms/ring_iterator.inc
+        algorithms/ring_iterator.h
         lattice/lattice.cpp
         lattice/lattices_list.cpp
         lattice/lattice_types.cpp
         lattice/normal_lattice_list.cpp
+        models/model_adapter.cpp
         utils/random/rand_generators.cpp
         utils/random/random.cpp
         creation.cpp
