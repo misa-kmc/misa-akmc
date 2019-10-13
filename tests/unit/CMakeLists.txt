@@ -2,12 +2,13 @@
 set(KMC_TEST_TEMP_STORAGE_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
 # configure a header file to pass some of the CMake settings to the source code
-#configure_file(
-#        "${CMAKE_CURRENT_SOURCE_DIR}/test/unit/test_config.h.in"
-#        "${CMAKE_CURRENT_SOURCE_DIR}/test/unit/test_config.h"
-#)
+configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/unit_test_config.h.in"
+        "${CMAKE_CURRENT_SOURCE_DIR}/unit_test_config.h"
+)
 
 set(TEST_HEADER_FILES
+        unit_test_config.h
         )
 
 set(TEST_SOURCE_FILES
@@ -15,6 +16,7 @@ set(TEST_SOURCE_FILES
         lattices_list_test.cpp
         lattice_list_status_test.cpp
         algorithms/ring_test.cpp
+        main.cpp
         )
 
 
@@ -29,7 +31,7 @@ add_executable(${PKMC_UINT_TEST_NAME} ${TEST_SOURCE_FILES} ${TEST_HEADER_FILES})
 
 # Extra linking for the project.
 target_link_libraries(${PKMC_UINT_TEST_NAME}
-        PRIVATE GTest::gtest GTest::gtest_main ${PKMC_LIB_NAME} ${KMC_EXTRA_LIBS}
+        PRIVATE GTest::gtest GTest::gtest_main kiwi::kiwi ${PKMC_LIB_NAME} ${KMC_EXTRA_LIBS}
         )
 
 # This is so you can do 'make test' to see all your tests run, instead of
