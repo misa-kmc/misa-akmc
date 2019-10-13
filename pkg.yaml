@@ -21,7 +21,7 @@ packages:
         include_directories(${YAML_CPP_INCLUDE_DIR})
     googletest:
       path: https://github.com/google/googletest.git
-      tag: release-1.8.1
+      tag: release-1.10.0
       build:
         - RUN {{.CACHE}} cmake {{.SRC_DIR}} -DCMAKE_INSTALL_PREFIX={{.PKG_DIR}}; make -j {{.CORES}}; make install
       cmake_lib: |
