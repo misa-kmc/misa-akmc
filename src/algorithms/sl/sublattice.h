@@ -43,8 +43,14 @@ public:
 
     /**
      * \brief start kmc time loop.
+     * \tparam PKf packer used to initialize ghost regions.
+     * \tparam PKg packer used to sync ghost regions.
+     * \tparam PKs packer used to sync simulation regions.
+     * \tparam Ins packer instance creator.
+     * \param pk_inst to instant the packer for communication.
      */
-    void startTimeLoop();
+    template<class PKf, class PKg, class PKs, class Ins>
+    void startTimeLoop(Ins pk_inst); // todo make sure RegionPacker is PKf, PKg, PKs's base class at compiling time.
 
     /**
      * \brief calculate rates in a region
@@ -57,13 +63,21 @@ private:
 
     /**
      * \brief communicate ghost area of current process to sync simulation regions of neighbor process.
+     * \tparam PKs packer used to sync simulation regions.
+     * \tparam Ins packer instance creator.
+     * \param pk_inst to instant the packer for communication.
      */
-    void syncSimRegions();
+    template<class PKs, class Ins>
+    void syncSimRegions(Ins &pk_inst);
 
     /**
      * \brief communicate ghost area data of next sector in current process.
+     * \tparam PKg packer used to sync ghost regions.
+     * \tparam Ins packer instance creator.
+     * \param pk_inst to instant the packer for communication.
      */
-    void syncNextSectorGhostRegions();
+    template<class PKg, class Ins>
+    void syncNextSectorGhostRegions(Ins &pk_inst);
 
     /**
      * \brief some post operations after moved to next sector.
@@ -71,6 +85,8 @@ private:
     void nextSector();
 
 private:
+    typedef std::array<std::vector<comm::Region<comm::_type_lattice_coord>>, comm::DIMENSION_SIZE> type_comm_lat_regions;
+
     const comm::ColoredDomain *p_domain = nullptr;
 
     // threshold time for communication (the T can be changing in simulation).
@@ -85,5 +101,6 @@ private:
     ModelAdapter *p_model = nullptr;
 };
 
+#include "sublattice.inl"
 
 #endif //MISA_KMC_SUBLATTICE_H
