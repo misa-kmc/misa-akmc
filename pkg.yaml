@@ -28,7 +28,7 @@ packages:
         find_package(GTest PATHS {{.CMAKE_VENDOR_PATH_PKG}})
     libcomm:
       path: https://git.hpcer.dev/HPCer/CrystalMD/libcomm.git
-      tag: v0.3.0
+      tag: v0.3.1
     kiwi:
       path: https://git.hpcer.dev/genshen/kiwi.git
       tag: v0.2.0
