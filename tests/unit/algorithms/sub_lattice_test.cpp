@@ -5,6 +5,7 @@
 
 #include <array>
 #include <gtest/gtest.h>
+#include <utils/mpi_utils.h>
 #include <algorithms/sl/sublattice.h>
 #include <algorithms/lattice_region_packer.h>
 
@@ -38,12 +39,12 @@ class TestPackerInstance {
 public:
     // make its return type matches template type.
     TestPks newSimCommPacker() {
-        return TestPks();
+        return TestPks{};
     }
 
     // make its return type matches template type.
     TestPks newGhostCommPacker() {
-        return TestPks();
+        return TestPks{};
     }
 };
 
@@ -59,16 +60,23 @@ class TestSLModel : public ModelAdapter {
 
 TEST(sublattice_template_compile_test, sublattice_test) {
     const int grid_size[3] = {2, 2, 2};
-    const int grid_coord[3] = {0, 0, 0};
     const int64_t space[3] = {50 * grid_size[0], 60 * grid_size[1], 71 * grid_size[2]};
     const double lattice_const = 0.86;
     const double cutoff_radius_factor = 1.1421;
 
+    // init domain
+    MPI_Comm new_comm;
+    comm::mpi_process pro = comm::mpi_process{
+            kiwi::mpiUtils::local_process.own_rank,
+            kiwi::mpiUtils::local_process.all_ranks,
+            kiwi::mpiUtils::local_process.comm,
+    };
     comm::ColoredDomain *p_domain = comm::ColoredDomain::Builder()
+            .setComm(pro, &new_comm)
             .setPhaseSpace(space)
             .setCutoffRadius(cutoff_radius_factor)
             .setLatticeConst(lattice_const)
-            .localBuild(grid_size, grid_coord);
+            .build();
 
     TestSLModel model;
     SubLattice sl(p_domain, &model, 1.0, 1.0);

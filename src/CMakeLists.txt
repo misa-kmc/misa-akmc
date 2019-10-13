@@ -19,6 +19,7 @@ set(HEADER_FILES
 
 
 set(SOURCE_FILES
+        algorithms/sl/comm_dirs.h
         algorithms/sl/sublattice.inl
         algorithms/sl/sublattice.cpp
         algorithms/ring_iterator.inc

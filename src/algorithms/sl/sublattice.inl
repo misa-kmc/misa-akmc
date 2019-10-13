@@ -8,6 +8,7 @@
 #include <comm.hpp>
 #include <preset/sector_forwarding_region.h>
 #include "utils/random/random.h"
+#include "comm_dirs.h"
 
 template<class PKf, class PKg, class PKs, class Ins>
 void SubLattice::startTimeLoop(Ins pk_inst) {
@@ -70,23 +71,31 @@ void SubLattice::syncSimRegions(Ins &pk_inst) {
             p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
 
     // pack data
+    // call ssfdCommRecvDirs for send dirs and call ssfdCommSendDirs for receive dirs.
+    const std::array<unsigned int, comm::DIMENSION_SIZE> send_dirs = ssfdCommRecvDirs(cur_sector.id);
+    const std::array<unsigned int, comm::DIMENSION_SIZE> recv_dirs = ssfdCommSendDirs(cur_sector.id);
+    const std::array<unsigned int, comm::DIMENSION_SIZE> ranks_send = {
+            static_cast<unsigned int>(p_domain->rank_id_neighbours[comm::DIM_X][send_dirs[0]]),
+            static_cast<unsigned int>(p_domain->rank_id_neighbours[comm::DIM_Y][send_dirs[1]]),
+            static_cast<unsigned int>(p_domain->rank_id_neighbours[comm::DIM_Z][send_dirs[2]]),
+    };
+    const std::array<unsigned int, comm::DIMENSION_SIZE> ranks_recv = {
+            static_cast<unsigned int>(p_domain->rank_id_neighbours[comm::DIM_X][recv_dirs[0]]),
+            static_cast<unsigned int>(p_domain->rank_id_neighbours[comm::DIM_Y][recv_dirs[1]]),
+            static_cast<unsigned int>(p_domain->rank_id_neighbours[comm::DIM_Z][recv_dirs[2]]),
+    };
+    // do data pack
     int ranks;
-    MPI_Comm_size(MPI_COMM_WORLD, &ranks);
-
-    // Get the rank of the process
+    MPI_Comm_size(MPI_COMM_WORLD, &ranks); // todo use comm in domain instead.
     int my_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
-    unsigned int my_rank_uint = my_rank;
-    // todo get neighbor ranks.
-    const std::array<unsigned int, comm::DIMENSION_SIZE> ranks_send = {my_rank_uint, my_rank_uint, my_rank_uint};
-    const std::array<unsigned int, comm::DIMENSION_SIZE> ranks_rec = {my_rank_uint, my_rank_uint, my_rank_uint};
-    // do data pack
+
     comm::mpi_process pro = comm::mpi_process{my_rank, ranks, MPI_COMM_WORLD};
     PKs packer = pk_inst.newSimCommPacker();
     comm::singleSideForwardComm(&packer, pro, packer.getMPI_DataType(),
                                 type_comm_lat_regions{send_regions_x, send_regions_y, send_regions_z},
                                 type_comm_lat_regions{recv_regions_x, recv_regions_y, recv_regions_z},
-                                ranks_send, ranks_rec);
+                                ranks_send, ranks_recv);
 
 }
 
@@ -121,23 +130,31 @@ void SubLattice::syncNextSectorGhostRegions(Ins &pk_inst) {
             p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
 
     // pack data
+    const std::array<unsigned int, comm::DIMENSION_SIZE> send_dirs = ssfdCommSendDirs(next_sector.id);
+    const std::array<unsigned int, comm::DIMENSION_SIZE> recv_dirs = ssfdCommRecvDirs(next_sector.id);
+    const std::array<unsigned int, comm::DIMENSION_SIZE> ranks_send = {
+            static_cast<unsigned int>(p_domain->rank_id_neighbours[comm::DIM_X][send_dirs[0]]),
+            static_cast<unsigned int>(p_domain->rank_id_neighbours[comm::DIM_Y][send_dirs[1]]),
+            static_cast<unsigned int>(p_domain->rank_id_neighbours[comm::DIM_Z][send_dirs[2]]),
+    };
+    const std::array<unsigned int, comm::DIMENSION_SIZE> ranks_recv = {
+            static_cast<unsigned int>(p_domain->rank_id_neighbours[comm::DIM_X][recv_dirs[0]]),
+            static_cast<unsigned int>(p_domain->rank_id_neighbours[comm::DIM_Y][recv_dirs[1]]),
+            static_cast<unsigned int>(p_domain->rank_id_neighbours[comm::DIM_Z][recv_dirs[2]]),
+    };
+
     int ranks;
     MPI_Comm_size(MPI_COMM_WORLD, &ranks);
-
-    // Get the rank of the process
     int my_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
     unsigned int my_rank_uint = my_rank;
-    // todo get neighbor ranks.
-    const std::array<unsigned int, comm::DIMENSION_SIZE> ranks_send = {my_rank_uint, my_rank_uint, my_rank_uint};
-    const std::array<unsigned int, comm::DIMENSION_SIZE> ranks_rec = {my_rank_uint, my_rank_uint, my_rank_uint};
     // do data pack
     comm::mpi_process pro = comm::mpi_process{my_rank, ranks, MPI_COMM_WORLD};
     PKg packer = pk_inst.newGhostCommPacker();
     comm::singleSideForwardComm(&packer, pro, packer.getMPI_DataType(),
                                 type_comm_lat_regions{send_regions_x, send_regions_y, send_regions_z},
                                 type_comm_lat_regions{recv_regions_x, recv_regions_y, recv_regions_z},
-                                ranks_send, ranks_rec);
+                                ranks_send, ranks_recv);
 }
 
 
