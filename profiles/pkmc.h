@@ -8,6 +8,7 @@
 
 #include <string>
 #include <kiwi_app.h>
+#include "simulation.h"
 
 class PKMC : public kiwi::kiwiApp {
 
@@ -44,6 +45,7 @@ public:
 
 private:
     std::string configFilePath = "config.yaml"; // configure file path default value.
+    simulation *sim;
 
 };
 

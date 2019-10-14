@@ -8,13 +8,14 @@
 #include <mpi.h>
 #include <cstring>
 #include <io/io_writer.h>
-
 #include <domain/colored_domain.h>
+
+#include "lattice/normal_lattice_list.h"
 
 class simulation {
 public:
 
-    simulation()= default;
+    simulation() = default;
 
     //virtual ~simulation();
 
@@ -30,9 +31,21 @@ public:
     void createDomain(const unsigned long phase_space[comm::DIMENSION_SIZE],
                       const double lattice_const, const double cutoff_radius);
 
-    comm::ColoredDomain *_p_domain;
+    /**
+     * \brief allocate memory for lattice list with ghost regions, and set ids for each lattice site.
+     * \note the lattice types are not set here.
+     */
+    void createLattice();
 
+    /**
+     * \brief perform simulation.
+     * \param time_limit the max simulation time.
+     */
+    void simulate(const double time_limit);
 
+public:
+    NormalLatticeList *lattice_list = nullptr;
+    comm::ColoredDomain *_p_domain = nullptr;
 };
 
 
