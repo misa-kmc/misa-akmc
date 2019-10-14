@@ -16,6 +16,7 @@ set(TEST_SOURCE_FILES
         lattices_list_test.cpp
         lattice_list_status_test.cpp
         algorithms/ring_test.cpp
+        algorithms/sub_lattice_test.cpp
         main.cpp
         )
 

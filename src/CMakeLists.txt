@@ -1,6 +1,7 @@
 include(configure.cmake)
 set(HEADER_FILES
         algorithms/sl/sublattice.h
+        algorithms/lattice_region_packer.h
         algorithms/ring_iterator.h
         algorithms/ring.hpp
         algorithms/selector.h
@@ -18,6 +19,8 @@ set(HEADER_FILES
 
 
 set(SOURCE_FILES
+        algorithms/sl/comm_dirs.h
+        algorithms/sl/sublattice.inl
         algorithms/sl/sublattice.cpp
         algorithms/ring_iterator.inc
         algorithms/ring_iterator.h
