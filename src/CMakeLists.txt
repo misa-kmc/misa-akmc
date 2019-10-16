@@ -11,6 +11,7 @@ set(HEADER_FILES
         lattice/normal_lattice_list.h
         models/abvi/abvi_model.h
         models/model_adapter.h
+        pack/ghost_packer.h
         pack/ghost_sync_packer.h
         pack/packer_instance.h
         utils/random/rand_generators.h
@@ -18,6 +19,7 @@ set(HEADER_FILES
         utils/macros.h
         type_define.h
         creation.h
+        simulation.h
         )
 
 
@@ -33,11 +35,13 @@ set(SOURCE_FILES
         lattice/normal_lattice_list.cpp
         models/abvi/abvi_model.cpp
         models/model_adapter.cpp
+        pack/ghost_packer.cpp
         pack/ghost_sync_packer.cpp
         pack/packer_instance.cpp
         utils/random/rand_generators.cpp
         utils/random/random.cpp
         creation.cpp
+        simulation.cpp
         )
 
 
@@ -52,7 +56,11 @@ target_include_directories(
         ${PKMC_LIB_NAME}
         PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
 )
-target_link_libraries(${PKMC_LIB_NAME} xoshiro::xoshiro comm::comm)
+target_link_libraries(${PKMC_LIB_NAME}
+        kiwi::kiwi
+        xoshiro::xoshiro
+        comm::comm
+        )
 
 ##########################
 ##### install files

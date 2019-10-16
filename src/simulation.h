@@ -1,5 +1,5 @@
 //
-// Created by z52527 on 2019-09-24.
+// Created by runchu on 2019-09-24.
 //
 
 #ifndef MISA_KMC_SIMULATION_H

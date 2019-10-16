@@ -1,13 +1,13 @@
 //
-// Created by z52527 on 2019-09-24.
+// Created by runchu on 2019-09-24.
 //
 
-#include <algorithms/sl/sublattice.h>
-#include <models/abvi/abvi_model.h>
-#include <pack/packer_instance.h>
-#include <pack/ghost_sync_packer.h>
+#include <utils/mpi_utils.h>
+#include "algorithms/sl/sublattice.h"
+#include "models/abvi/abvi_model.h"
+#include "pack/packer_instance.h"
+#include "pack/ghost_sync_packer.h"
 #include "simulation.h"
-#include "utils/mpi_utils.h"
 
 void simulation::createDomain(const unsigned long phase_space[comm::DIMENSION_SIZE],
                               const double lattice_const, const double cutoff_radius) {
