@@ -11,7 +11,7 @@ set(HEADER_FILES
         lattice/normal_lattice_list.h
         models/abvi/abvi_model.h
         models/model_adapter.h
-        pack/ghost_packer.h
+        pack/ghost_init_packer.h
         pack/ghost_sync_packer.h
         pack/packer_instance.h
         utils/random/rand_generators.h
@@ -35,7 +35,7 @@ set(SOURCE_FILES
         lattice/normal_lattice_list.cpp
         models/abvi/abvi_model.cpp
         models/model_adapter.cpp
-        pack/ghost_packer.cpp
+        pack/ghost_init_packer.cpp
         pack/ghost_sync_packer.cpp
         pack/packer_instance.cpp
         utils/random/rand_generators.cpp

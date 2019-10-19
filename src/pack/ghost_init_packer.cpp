@@ -1,10 +1,10 @@
 
 
-#include "ghost_packer.h"
+#include "ghost_init_packer.h"
 #include "type_define.h"
 
 
-const unsigned long GhostPacker::sendLength (const unsigned int sector_id, const unsigned int dim,
+const unsigned long GhostInitPacker::sendLength (const unsigned int sector_id, const unsigned int dim,
                                 const _type_lattice_size ghost_size[comm::DIMENSION_SIZE],
                                 const _type_lattice_coord split_coord[comm::DIMENSION_SIZE],
                                 const comm::Region<comm::_type_lattice_coord> local_box_region) {
@@ -18,7 +18,8 @@ const unsigned long GhostPacker::sendLength (const unsigned int sector_id, const
     }
     return  len;
 }
-void GhostPacker::onSend(Lattice buffer[], const unsigned long send_len, LatticesList *lats,
+
+void GhostInitPacker::onSend(Lattice buffer[], const unsigned long send_len, LatticesList *lats,
             const unsigned int sector_id, const unsigned int dim,
             const _type_lattice_size ghost_size[comm::DIMENSION_SIZE],
             const _type_lattice_coord split_coord[comm::DIMENSION_SIZE],
@@ -40,7 +41,7 @@ void GhostPacker::onSend(Lattice buffer[], const unsigned long send_len, Lattice
 
 }
 
-void GhostPacker::onReceive(Lattice buffer[], const unsigned long receive_len, LatticesList *lats,
+void GhostInitPacker::onReceive(Lattice buffer[], const unsigned long receive_len, LatticesList *lats,
                const unsigned int sector_id, const unsigned int dim,
                const _type_lattice_size ghost_size[comm::DIMENSION_SIZE],
                const _type_lattice_coord split_coord[comm::DIMENSION_SIZE],

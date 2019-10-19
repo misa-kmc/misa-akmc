@@ -1,12 +1,12 @@
 
-#ifndef MISA_KMC_GHOST_PACKER_H
-#define MISA_KMC_GHOST_PACKER_H
+#ifndef MISA_KMC_GHOST_INIT_PACKER_H
+#define MISA_KMC_GHOST_INIT_PACKER_H
 
 #include<preset/sector_forwarding_region.h>
 #include <lattice/normal_lattice_list.h>
 #include "lattice/lattices_list.h"
 
-class GhostPacker{
+class GhostInitPacker{
 public:
 
     const unsigned long sendLength (const unsigned int sector_id, const unsigned int dim,
@@ -31,4 +31,4 @@ private:
 };
 
 
-#endif //MISA_KMC_GHOST_PACKER_H
+#endif //MISA_KMC_GHOST_INIT_PACKER_H
