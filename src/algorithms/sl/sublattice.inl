@@ -7,6 +7,7 @@
 
 #include <comm.hpp>
 #include <preset/sector_forwarding_region.h>
+#include "utils/simulation_domain.h"
 #include "utils/random/random.h"
 #include "comm_dirs.h"
 
@@ -70,16 +71,11 @@ void SubLattice::syncSimRegions(Ins &pk_inst) {
             static_cast<unsigned int>(p_domain->rank_id_neighbours[comm::DIM_Y][recv_dirs[1]]),
             static_cast<unsigned int>(p_domain->rank_id_neighbours[comm::DIM_Z][recv_dirs[2]]),
     };
-    // do data pack
-    int ranks;
-    MPI_Comm_size(MPI_COMM_WORLD, &ranks); // todo use comm in domain instead.
-    int my_rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
 
-    comm::mpi_process pro = comm::mpi_process{my_rank, ranks, MPI_COMM_WORLD};
     PKs packer = pk_inst.newSimCommPacker();
     // todo communication order from Z to Y, and X.
-    comm::singleSideForwardComm(&packer, pro, packer.getMPI_DataType(),
+    comm::singleSideForwardComm(&packer, SimulationDomain::comm_sim_pro,
+                                packer.getMPI_DataType(),
                                 send_regions, recv_regions,
                                 ranks_send, ranks_recv);
 }
@@ -114,15 +110,10 @@ void SubLattice::syncNextSectorGhostRegions(Ins &pk_inst) {
             static_cast<unsigned int>(p_domain->rank_id_neighbours[comm::DIM_Z][recv_dirs[2]]),
     };
 
-    int ranks;
-    MPI_Comm_size(MPI_COMM_WORLD, &ranks);
-    int my_rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
-    unsigned int my_rank_uint = my_rank;
     // do data pack
-    comm::mpi_process pro = comm::mpi_process{my_rank, ranks, MPI_COMM_WORLD};
     PKg packer = pk_inst.newGhostCommPacker();
-    comm::singleSideForwardComm(&packer, pro, packer.getMPI_DataType(),
+    comm::singleSideForwardComm(&packer, SimulationDomain::comm_sim_pro,
+                                packer.getMPI_DataType(),
                                 send_regions, recv_regions,
                                 ranks_send, ranks_recv);
 }
