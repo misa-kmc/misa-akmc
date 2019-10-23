@@ -55,7 +55,7 @@ public:
     static const int MAX_NEI_BITS = 8;
     static const int MAX_2NN = 6;
 
-    friend class GhostPacker;
+    friend class GhostInitPacker;
     /*!
      * \brief initialize the lattice_lists array(allocate memory) with box size in x,y,z direction.
      * besides, the lattice id will be set in this constructor.

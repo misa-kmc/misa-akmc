@@ -19,10 +19,6 @@ add_executable(${P_KMC_EXECUTE_BIN_NAME}
         config_values.h
         lattice_types_string.cpp
         lattice_types_string.h
-        simulation.h
-        simulation.cpp
-        ghost_packer.cpp
-        ghost_packer.h
         )
 
 target_link_libraries(${P_KMC_EXECUTE_BIN_NAME} PRIVATE

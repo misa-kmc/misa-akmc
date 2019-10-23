@@ -1,13 +1,14 @@
 //
-// Created by z52527 on 2019-09-24.
+// Created by runchu on 2019-09-24.
 //
 
-#include <algorithms/sl/sublattice.h>
-#include <models/abvi/abvi_model.h>
-#include <pack/packer_instance.h>
-#include <pack/ghost_sync_packer.h>
+#include <utils/mpi_utils.h>
+#include "algorithms/sl/sublattice.h"
+#include "models/abvi/abvi_model.h"
+#include <pack/ghost_init_packer.h>
+#include "pack/packer_instance.h"
+#include "pack/ghost_sync_packer.h"
 #include "simulation.h"
-#include "utils/mpi_utils.h"
 
 void simulation::createDomain(const unsigned long phase_space[comm::DIMENSION_SIZE],
                               const double lattice_const, const double cutoff_radius) {
@@ -57,6 +58,6 @@ void simulation::simulate(const double time_limit) {
     SubLattice sl(_p_domain, &model, time_limit, 1.0); // todo calculate T
 
     PackerInstance pk_ins;
-    // todo use other packers: simulation sync packer and ghost init packer.
-    sl.startTimeLoop<GhostSyncPacker, GhostSyncPacker, GhostSyncPacker, PackerInstance>(pk_ins);
+    // todo use other packers: ghost init packer, simulation sync packer .
+    sl.startTimeLoop<GhostInitPacker, GhostSyncPacker, GhostSyncPacker, PackerInstance>(pk_ins);
 }
