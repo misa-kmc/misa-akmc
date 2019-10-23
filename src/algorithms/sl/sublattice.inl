@@ -44,31 +44,17 @@ void SubLattice::syncSimRegions(Ins &pk_inst) {
     // but in synchronizing ghost communication, the order is X,Y,Z.
     // todo the regions can be static.
     const type_sector cur_sector = (*sec_meta.sector_itl);
-    // sending region at x dimension.
-    const comm::type_region_array send_regions_x = comm::fwCommSectorRecvRegion(
-            cur_sector.id, comm::DIM_X, p_domain->lattice_size_ghost,
-            p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
-    // sending region at y dimension.
-    const comm::type_region_array send_regions_y = comm::fwCommSectorRecvRegion(
-            cur_sector.id, comm::DIM_Y, p_domain->lattice_size_ghost,
-            p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
-    // sending region at z dimension.
-    const comm::type_region_array send_regions_z = comm::fwCommSectorRecvRegion(
-            cur_sector.id, comm::DIM_Z, p_domain->lattice_size_ghost,
-            p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
-
-    // receiving region at x dimension.
-    const comm::type_region_array recv_regions_x = comm::fwCommSectorSendRegion(
-            cur_sector.id, comm::DIM_X, p_domain->lattice_size_ghost,
-            p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
-    // receiving region at y dimension.
-    const comm::type_region_array recv_regions_y = comm::fwCommSectorSendRegion(
-            cur_sector.id, comm::DIM_Y, p_domain->lattice_size_ghost,
-            p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
-    // receiving region at z dimension.
-    const comm::type_region_array recv_regions_z = comm::fwCommSectorSendRegion(
-            cur_sector.id, comm::DIM_Z, p_domain->lattice_size_ghost,
-            p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
+    const int dims[comm::DIMENSION_SIZE] = {comm::DIM_X, comm::DIM_Y, comm::DIM_Z};
+    type_comm_lat_regions send_regions; // send regions in each dimension
+    type_comm_lat_regions recv_regions; // receive regions in each dimension.
+    for (int d = 0; d < comm::DIMENSION_SIZE; d++) {
+        send_regions[d] = comm::fwCommSectorRecvRegion(
+                cur_sector.id, dims[d], p_domain->lattice_size_ghost,
+                p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
+        recv_regions[d] = comm::fwCommSectorSendRegion(
+                cur_sector.id, dims[d], p_domain->lattice_size_ghost,
+                p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
+    }
 
     // pack data
     // call ssfdCommRecvDirs for send dirs and call ssfdCommSendDirs for receive dirs.
@@ -92,42 +78,27 @@ void SubLattice::syncSimRegions(Ins &pk_inst) {
 
     comm::mpi_process pro = comm::mpi_process{my_rank, ranks, MPI_COMM_WORLD};
     PKs packer = pk_inst.newSimCommPacker();
+    // todo communication order from Z to Y, and X.
     comm::singleSideForwardComm(&packer, pro, packer.getMPI_DataType(),
-                                type_comm_lat_regions{send_regions_x, send_regions_y, send_regions_z},
-                                type_comm_lat_regions{recv_regions_x, recv_regions_y, recv_regions_z},
+                                send_regions, recv_regions,
                                 ranks_send, ranks_recv);
-
 }
 
 template<class PKg, class Ins>
 void SubLattice::syncNextSectorGhostRegions(Ins &pk_inst) {
     const type_sector next_sector = sec_meta.sector_itl.next();
+    const int dims[comm::DIMENSION_SIZE] = {comm::DIM_X, comm::DIM_Y, comm::DIM_Z};
     // todo the regions can be static.
-    // sending region at x dimension.
-    const comm::type_region_array send_regions_x = comm::fwCommSectorSendRegion(
-            next_sector.id, comm::DIM_X, p_domain->lattice_size_ghost,
-            p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
-    // sending region at y dimension.
-    const comm::type_region_array send_regions_y = comm::fwCommSectorSendRegion(
-            next_sector.id, comm::DIM_Y, p_domain->lattice_size_ghost,
-            p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
-    // sending region at z dimension.
-    const comm::type_region_array send_regions_z = comm::fwCommSectorSendRegion(
-            next_sector.id, comm::DIM_Z, p_domain->lattice_size_ghost,
-            p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
-
-    // receiving region at x dimension.
-    const comm::type_region_array recv_regions_x = comm::fwCommSectorRecvRegion(
-            next_sector.id, comm::DIM_X, p_domain->lattice_size_ghost,
-            p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
-    // receiving region at y dimension.
-    const comm::type_region_array recv_regions_y = comm::fwCommSectorRecvRegion(
-            next_sector.id, comm::DIM_Y, p_domain->lattice_size_ghost,
-            p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
-    // receiving region at z dimension.
-    const comm::type_region_array recv_regions_z = comm::fwCommSectorRecvRegion(
-            next_sector.id, comm::DIM_Z, p_domain->lattice_size_ghost,
-            p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
+    type_comm_lat_regions send_regions; // send regions in each dimension
+    type_comm_lat_regions recv_regions; // receive regions in each dimension.
+    for (int d = 0; d < comm::DIMENSION_SIZE; d++) {
+        send_regions[d] = comm::fwCommSectorSendRegion(
+                next_sector.id, dims[d], p_domain->lattice_size_ghost,
+                p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);;
+        recv_regions[d] = comm::fwCommSectorRecvRegion(
+                next_sector.id, dims[d], p_domain->lattice_size_ghost,
+                p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
+    }
 
     // pack data
     const std::array<unsigned int, comm::DIMENSION_SIZE> send_dirs = ssfdCommSendDirs(next_sector.id);
@@ -152,8 +123,7 @@ void SubLattice::syncNextSectorGhostRegions(Ins &pk_inst) {
     comm::mpi_process pro = comm::mpi_process{my_rank, ranks, MPI_COMM_WORLD};
     PKg packer = pk_inst.newGhostCommPacker();
     comm::singleSideForwardComm(&packer, pro, packer.getMPI_DataType(),
-                                type_comm_lat_regions{send_regions_x, send_regions_y, send_regions_z},
-                                type_comm_lat_regions{recv_regions_x, recv_regions_y, recv_regions_z},
+                                send_regions, recv_regions,
                                 ranks_send, ranks_recv);
 }
 
