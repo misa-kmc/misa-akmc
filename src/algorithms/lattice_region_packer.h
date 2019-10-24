@@ -5,8 +5,8 @@
 #ifndef MISA_KMC_LATTICE_REGION_PACKER_H
 #define MISA_KMC_LATTICE_REGION_PACKER_H
 
-#include <types_define.h>
-#include <region_packer.h>
+#include <comm/types_define.h>
+#include <comm/region_packer.h>
 
 template<class T>
 class LatticeRegionPacker : public comm::RegionPacker<T, comm::_type_lattice_coord> {

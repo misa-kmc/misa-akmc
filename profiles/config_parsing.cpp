@@ -3,7 +3,7 @@
 //
 
 #include <fstream>
-#include <types_define.h>
+#include <comm/types_define.h>
 #include "config_parsing.h"
 #include "lattice_types_string.h"
 

@@ -5,8 +5,8 @@
 #ifndef MISA_KMC_SUB_LATTICE_INC
 #define MISA_KMC_SUB_LATTICE_INC
 
-#include <comm.hpp>
-#include <preset/sector_forwarding_region.h>
+#include <comm/comm.hpp>
+#include <comm/preset/sector_forwarding_region.h>
 #include "utils/random/random.h"
 #include "comm_dirs.h"
 

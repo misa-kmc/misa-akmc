@@ -3,7 +3,7 @@
 // Update by genshen on 2018-12-09.
 //
 
-#include <domain/region.hpp>
+#include <comm/domain/region.hpp>
 #include "lattices_list.h"
 #include "type_define.h"
 

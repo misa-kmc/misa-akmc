@@ -5,7 +5,7 @@
 #ifndef MISA_KMC_MODEL_ADAPTER_H
 #define MISA_KMC_MODEL_ADAPTER_H
 
-#include <domain/colored_domain.h>
+#include <comm/domain/colored_domain.h>
 
 /**
  * \brief this is kmc model adapter

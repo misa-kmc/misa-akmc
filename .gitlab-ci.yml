@@ -2,7 +2,7 @@
 image: hpcer/hpcdev:pkg-0.3.0
 
 cache:
-  key: vendor_version_gtest_1.10.0   # change this key if vendor changed.
+  key: vendor_version_libcomm_0.3.2   # change this key if vendor changed.
   paths:
     - vendor/
 

@@ -5,7 +5,7 @@
 #ifndef MISA_KMC_GHOST_INIT_PACKER_H
 #define MISA_KMC_GHOST_INIT_PACKER_H
 
-#include<preset/sector_forwarding_region.h>
+#include <comm/preset/sector_forwarding_region.h>
 #include <lattice/normal_lattice_list.h>
 #include "lattice/lattices_list.h"
 
