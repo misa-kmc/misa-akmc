@@ -8,7 +8,7 @@
 #include <mpi.h>
 #include <cstring>
 #include <io/io_writer.h>
-#include <domain/colored_domain.h>
+#include <comm/domain/colored_domain.h>
 
 #include "lattice/normal_lattice_list.h"
 

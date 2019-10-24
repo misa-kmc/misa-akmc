@@ -6,7 +6,7 @@
 #define MISA_KMC_SIMULATION_DOMAIN_H
 
 #include <utils/mpi_utils.h>
-#include <types_define.h>
+#include <comm/types_define.h>
 
 struct SimulationDomain {
     // the MPI ranks metadata,

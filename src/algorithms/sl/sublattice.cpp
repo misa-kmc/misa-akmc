@@ -2,7 +2,7 @@
 // Created by genshen on 2019/9/21.
 //
 
-#include <preset/sector_forwarding_region.h>
+#include <comm/preset/sector_forwarding_region.h>
 #include "sublattice.h"
 
 SectorMeta::SectorMeta() : sector_itl(sectors.begin()) {}

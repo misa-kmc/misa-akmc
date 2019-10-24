@@ -8,7 +8,7 @@
 
 #include <vector>
 #include <utils/bundle.h>
-#include <types_define.h>
+#include <comm/types_define.h>
 #include "lattice/lattice_types.h"
 
 namespace conf {

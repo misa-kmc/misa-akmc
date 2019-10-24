@@ -5,8 +5,8 @@
 #ifndef MISA_KMC_CREATION_H
 #define MISA_KMC_CREATION_H
 
+#include <comm/domain/colored_domain.h>
 #include "lattice/lattices_list.h"
-#include <domain/colored_domain.h>
 
 
 class creation {

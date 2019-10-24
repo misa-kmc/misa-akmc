@@ -6,7 +6,7 @@
 #define MISA_KMC_SUBLATTICE_H
 
 #include <array>
-#include <domain/colored_domain.h>
+#include <comm/domain/colored_domain.h>
 #include "models/model_adapter.h"
 #include "../selector.h"
 

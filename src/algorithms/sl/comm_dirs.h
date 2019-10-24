@@ -6,7 +6,7 @@
 #define MISA_KMC_COMM_DIRS_H
 
 #include <array>
-#include <types_define.h>
+#include <comm/types_define.h>
 
 // todo use libcomm
 
