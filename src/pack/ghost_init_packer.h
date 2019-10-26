@@ -28,8 +28,6 @@ public:
     void onReceive(buffer_data_type buffer[], const unsigned long receive_len,
                    const int dimension, const int direction) override;
 
-    static MPI_Datatype getMPI_DataType();
-
 private:
     const comm::ColoredDomain *p_domain;
     LatticesList *lats;

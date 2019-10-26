@@ -8,6 +8,7 @@
 #include <utils/mpi_utils.h>
 #include <lattice/lattices_list.h>
 #include <lattice/normal_lattice_list.h>
+#include <utils/mpi_types.h>
 #include "creation.h"
 #include "building_config.h"
 #include "profile_config.h"
@@ -79,6 +80,7 @@ void PKMC::onCreate() {
 }
 
 bool PKMC::prepare() {
+    mpi_types::setInterMPIType();
     sim = new simulation();
     conf::ConfigValues config_v = ConfigParsing::getInstance()->configValues;
     sim->createDomain(config_v.box_size, config_v.lattice_const,
@@ -112,7 +114,7 @@ void PKMC::onStart() {
 }
 
 void PKMC::onFinish() {
-    kiwiApp::onFinish();
+    mpi_types::unsetInterMPIType();
 }
 
 void PKMC::beforeDestroy() {

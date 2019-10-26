@@ -3,6 +3,7 @@
 //
 
 #include <utils/mpi_utils.h>
+#include "utils/mpi_types.h"
 #include "simulation.h"
 #include "algorithms/sl/sublattice.h"
 #include "models/abvi/abvi_model.h"
@@ -58,7 +59,7 @@ void simulation::prepareForStart() {
     // initialize ghost area for all sectors.
     GhostInitPacker init_packer{_p_domain, lattice_list};
     comm::neiSendReceive(&init_packer, SimulationDomain::comm_sim_pro,
-                         MPI_INT, // todo mpi type.
+                         mpi_types::_mpi_type_lattice_data,
                          _p_domain->rank_id_neighbours);
 }
 
