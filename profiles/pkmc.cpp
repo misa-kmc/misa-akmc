@@ -105,7 +105,8 @@ bool PKMC::prepare() {
 
 void PKMC::onStart() {
     conf::ConfigValues config_v = ConfigParsing::getInstance()->configValues;
-    // set up ghost.
+    //  set up ghost.
+    sim->prepareForStart();
     // run simulation
     sim->simulate(config_v.physics_time);
 }

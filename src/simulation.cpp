@@ -54,6 +54,14 @@ void simulation::createLattice() {
     };
 }
 
+void simulation::prepareForStart() {
+    // initialize ghost area for all sectors.
+    GhostInitPacker init_packer{_p_domain, lattice_list};
+    comm::neiSendReceive(&init_packer, SimulationDomain::comm_sim_pro,
+                         MPI_INT, // todo mpi type.
+                         _p_domain->rank_id_neighbours);
+}
+
 void simulation::simulate(const double time_limit) {
     ABVIModel model;
     SubLattice sl(_p_domain, &model, time_limit, 1.0); // todo calculate T

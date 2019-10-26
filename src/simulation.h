@@ -38,6 +38,11 @@ public:
     void createLattice();
 
     /**
+     * Initialize ghost area for starting simulation.
+     */
+    void prepareForStart();
+
+    /**
      * \brief perform simulation.
      * \param time_limit the max simulation time.
      */
