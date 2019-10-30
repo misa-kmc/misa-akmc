@@ -5,12 +5,13 @@
 
 #include <comm/domain/region.hpp>
 #include "lattices_list.h"
+#include "utils/macros.h"
 #include "type_define.h"
 
 LatticesList::LatticesList(const _type_box_size box_x, const _type_box_size box_y, const _type_box_size box_z,
                            const _type_box_size ghost_x, const _type_box_size ghost_y,
                            const _type_box_size ghost_z)
-        : size_x(2 * box_x + 2 * 2 * ghost_x), size_y(box_y + 2 * ghost_y),
+        : size_x(BCC_DBX * box_x + BCC_DBX * 2 * ghost_x), size_y(box_y + 2 * ghost_y),
           size_z(box_z + 2 * ghost_z), _max_id(size_z * size_y * size_x - 1) {
     _lattices = new Lattice **[size_z];
     for (_type_lattice_size z = 0; z < size_z; z++) {
@@ -22,8 +23,8 @@ LatticesList::LatticesList(const _type_box_size box_x, const _type_box_size box_
     // set id (skip ghost area is setting)
     _type_lattice_id id = 0;
     comm::Region<_type_lattice_size> box_region{
-            2 * ghost_x, ghost_y, ghost_z,
-            2 * ghost_x + 2 * box_x, ghost_y + box_y, ghost_z + box_z,
+            BCC_DBX * ghost_x, ghost_y, ghost_z,
+            BCC_DBX * ghost_x + BCC_DBX * box_x, ghost_y + box_y, ghost_z + box_z,
     }; // note: index at x dimension is doubled.
     for (_type_lattice_size z = box_region.z_low; z < box_region.z_high; z++) {
         for (_type_lattice_size y = box_region.y_low; y < box_region.y_high; y++) {

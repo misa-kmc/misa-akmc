@@ -3,6 +3,7 @@
 //
 
 #include <comm/preset/comm_forwarding_region.h>
+#include "utils/macros.h"
 #include "ghost_init_packer.h"
 
 GhostInitPacker::GhostInitPacker(const comm::ColoredDomain *p_domain, LatticesList *lats_list)
@@ -13,7 +14,7 @@ const unsigned long GhostInitPacker::sendLength(const int dimension, const int d
     comm::Region<comm::_type_lattice_size> send_region = comm::fwCommLocalSendRegion(
             p_domain->lattice_size_ghost, p_domain->local_sub_box_lattice_region,
             dimension, direction);
-    return send_region.volume();
+    return BCC_DBX * send_region.volume();
 }
 
 void GhostInitPacker::onSend(buffer_data_type *buffer, const unsigned long send_len,
@@ -26,7 +27,8 @@ void GhostInitPacker::onSend(buffer_data_type *buffer, const unsigned long send_
     for (int x = send_region.x_low; x <= send_region.x_high; x++) {
         for (int y = send_region.y_low; y <= send_region.y_high; y++) {
             for (int z = send_region.z_low; z <= send_region.z_high; z++) {
-                buffer[len++] = lats->_lattices[x][y][z];
+                buffer[len++] = lats->_lattices[BCC_DBX * x][y][z];
+                buffer[len++] = lats->_lattices[BCC_DBX * x + 1][y][z];
             }
         }
     }
@@ -42,7 +44,8 @@ void GhostInitPacker::onReceive(GhostInitPacker::buffer_data_type *buffer, const
     for (int x = recv_region.x_low; x <= recv_region.x_high; x++) {
         for (int y = recv_region.y_low; y <= recv_region.y_high; y++) {
             for (int z = recv_region.z_low; z <= recv_region.z_high; z++) {
-                lats->_lattices[x][y][z] = buffer[len++];
+                lats->_lattices[BCC_DBX * x][y][z] = buffer[len++];
+                lats->_lattices[BCC_DBX * x + 1][y][z] = buffer[len++];
             }
         }
     }
