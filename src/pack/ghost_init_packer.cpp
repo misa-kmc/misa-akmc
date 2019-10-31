@@ -24,11 +24,11 @@ void GhostInitPacker::onSend(buffer_data_type *buffer, const unsigned long send_
             dimension, direction);
 
     unsigned long len = 0;
-    for (int x = send_region.x_low; x <= send_region.x_high; x++) {
-        for (int y = send_region.y_low; y <= send_region.y_high; y++) {
-            for (int z = send_region.z_low; z <= send_region.z_high; z++) {
-                buffer[len++] = lats->_lattices[BCC_DBX * x][y][z];
-                buffer[len++] = lats->_lattices[BCC_DBX * x + 1][y][z];
+    for (int x = send_region.x_low; x < send_region.x_high; x++) {
+        for (int y = send_region.y_low; y < send_region.y_high; y++) {
+            for (int z = send_region.z_low; z < send_region.z_high; z++) {
+                buffer[len++] = lats->_lattices[z][y][BCC_DBX * x];
+                buffer[len++] = lats->_lattices[z][y][BCC_DBX * x + 1];
             }
         }
     }
@@ -41,11 +41,11 @@ void GhostInitPacker::onReceive(GhostInitPacker::buffer_data_type *buffer, const
             dimension, direction);
 
     unsigned long len = 0;
-    for (int x = recv_region.x_low; x <= recv_region.x_high; x++) {
-        for (int y = recv_region.y_low; y <= recv_region.y_high; y++) {
-            for (int z = recv_region.z_low; z <= recv_region.z_high; z++) {
-                lats->_lattices[BCC_DBX * x][y][z] = buffer[len++];
-                lats->_lattices[BCC_DBX * x + 1][y][z] = buffer[len++];
+    for (int z = recv_region.z_low; z < recv_region.z_high; z++) {
+        for (int y = recv_region.y_low; y < recv_region.y_high; y++) {
+            for (int x = recv_region.x_low; x < recv_region.x_high; x++) {
+                lats->_lattices[z][y][BCC_DBX * x] = buffer[len++];
+                lats->_lattices[z][y][BCC_DBX * x + 1] = buffer[len++];
             }
         }
     }

@@ -67,9 +67,7 @@ public:
      */
     void rules_recb(int xi, int yi, int zi, int xv, int yv, int zv);
 
-
-
-private:
+public:
     _type_lattice_id id;
 
 };
