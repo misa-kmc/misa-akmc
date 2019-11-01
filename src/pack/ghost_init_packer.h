@@ -5,32 +5,32 @@
 #ifndef MISA_KMC_GHOST_INIT_PACKER_H
 #define MISA_KMC_GHOST_INIT_PACKER_H
 
-#include <comm/preset/sector_forwarding_region.h>
-#include <lattice/normal_lattice_list.h>
+#include <comm/comm.hpp>
+#include <comm/domain/colored_domain.h>
 #include "lattice/lattices_list.h"
 
-class GhostInitPacker {
+class GhostInitPacker : public comm::Packer<Lattice> {
 public:
+    typedef Lattice buffer_data_type;
 
-    const unsigned long sendLength(const unsigned int sector_id, const unsigned int dim,
-                                   const _type_lattice_size ghost_size[comm::DIMENSION_SIZE],
-                                   const _type_lattice_coord split_coord[comm::DIMENSION_SIZE],
-                                   const comm::Region<comm::_type_lattice_coord> local_box_region);
+    /**
+     *
+     * \param p_domain pointer to domain.
+     * \param lats_list lattice list.
+     */
+    explicit GhostInitPacker(const comm::ColoredDomain *p_domain, LatticesList *lats_list);
 
-    void onSend(Lattice buffer[], const unsigned long send_len, LatticesList *lats,
-                const unsigned int sector_id, const unsigned int dim,
-                const _type_lattice_size ghost_size[comm::DIMENSION_SIZE],
-                const _type_lattice_coord split_coord[comm::DIMENSION_SIZE],
-                const comm::Region<comm::_type_lattice_coord> local_box_region);
+    const unsigned long sendLength(const int dimension, const int direction) override;
 
-    void onReceive(Lattice buffer[], const unsigned long receive_len, LatticesList *lats,
-                   const unsigned int sector_id, const unsigned int dim,
-                   const _type_lattice_size ghost_size[comm::DIMENSION_SIZE],
-                   const _type_lattice_coord split_coord[comm::DIMENSION_SIZE],
-                   const comm::Region<comm::_type_lattice_coord> local_box_region);
+    void onSend(buffer_data_type buffer[], const unsigned long send_len,
+                const int dimension, const int direction) override;
+
+    void onReceive(buffer_data_type buffer[], const unsigned long receive_len,
+                   const int dimension, const int direction) override;
 
 private:
-
+    const comm::ColoredDomain *p_domain;
+    LatticesList *lats;
 };
 
 

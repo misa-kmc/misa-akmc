@@ -3,12 +3,14 @@
 //
 
 #include <utils/mpi_utils.h>
+#include "utils/mpi_types.h"
+#include "simulation.h"
 #include "algorithms/sl/sublattice.h"
 #include "models/abvi/abvi_model.h"
-#include <pack/ghost_init_packer.h>
+#include "pack/ghost_init_packer.h"
 #include "pack/packer_instance.h"
 #include "pack/ghost_sync_packer.h"
-#include "simulation.h"
+#include "utils/simulation_domain.h"
 
 void simulation::createDomain(const unsigned long phase_space[comm::DIMENSION_SIZE],
                               const double lattice_const, const double cutoff_radius) {
@@ -35,7 +37,7 @@ void simulation::createDomain(const unsigned long phase_space[comm::DIMENSION_SI
 //            .setGhostSize(static_cast<int>(ceil(cutoff_radius)))
             .build();
     kiwi::mpiUtils::onGlobalCommChanged(new_comm); // set new domain.
-//    MPIDomain::sim_processor = kiwi::mpiUtils::global_process;
+    SimulationDomain::setSimDomain(kiwi::mpiUtils::global_process);
 
 //    kiwi::logs::v(MASTER_PROCESSOR, "domain", "Initialization done.\n");
 }
@@ -51,6 +53,14 @@ void simulation::createLattice() {
                                          static_cast<_type_box_size>(_p_domain->lattice_size_ghost[1]),
                                          static_cast<_type_box_size>(_p_domain->lattice_size_ghost[2])
     };
+}
+
+void simulation::prepareForStart() {
+    // initialize ghost area for all sectors.
+    GhostInitPacker init_packer{_p_domain, lattice_list};
+    comm::neiSendReceive(&init_packer, SimulationDomain::comm_sim_pro,
+                         mpi_types::_mpi_type_lattice_data,
+                         _p_domain->rank_id_neighbours);
 }
 
 void simulation::simulate(const double time_limit) {

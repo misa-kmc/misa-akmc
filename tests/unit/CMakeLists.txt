@@ -17,6 +17,8 @@ set(TEST_SOURCE_FILES
         lattice_list_status_test.cpp
         algorithms/ring_test.cpp
         algorithms/sub_lattice_test.cpp
+        pack/ghost_init_packer_test.cpp
+        utils/mpi_data_types_test.cpp
         main.cpp
         )
 

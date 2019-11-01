@@ -2,73 +2,52 @@
 // Created by runchu on 2019-10-16.
 //
 
+#include <comm/preset/comm_forwarding_region.h>
+#include "utils/macros.h"
 #include "ghost_init_packer.h"
-#include "type_define.h"
 
-
-const unsigned long GhostInitPacker::sendLength(const unsigned int sector_id, const unsigned int dim,
-                                                const _type_lattice_size ghost_size[comm::DIMENSION_SIZE],
-                                                const _type_lattice_coord split_coord[comm::DIMENSION_SIZE],
-                                                const comm::Region<comm::_type_lattice_coord> local_box_region) {
-    comm::type_region_array region = comm::fwCommSectorSendRegion(
-            sector_id, dim,
-            reinterpret_cast<const comm::_type_lattice_size *>(ghost_size),
-            reinterpret_cast<const comm::_type_lattice_coord *>(split_coord),
-            local_box_region);
-
-    unsigned long len = 0;
-    for (auto iter = region.cbegin(); iter != region.cend(); iter++) {
-        len += ((*iter).x_high - (*iter).x_low) * ((*iter).y_high - (*iter).y_low) * ((*iter).z_high - (*iter).z_low);
-    }
-    return len;
+GhostInitPacker::GhostInitPacker(const comm::ColoredDomain *p_domain, LatticesList *lats_list)
+        : p_domain(p_domain), lats(lats_list) {
 }
 
-void GhostInitPacker::onSend(Lattice buffer[], const unsigned long send_len, LatticesList *lats,
-                             const unsigned int sector_id, const unsigned int dim,
-                             const _type_lattice_size ghost_size[comm::DIMENSION_SIZE],
-                             const _type_lattice_coord split_coord[comm::DIMENSION_SIZE],
-                             const comm::Region<comm::_type_lattice_coord> local_box_region) {
-    comm::type_region_array region = comm::fwCommSectorSendRegion(
-            sector_id, dim,
-            reinterpret_cast<const comm::_type_lattice_size *>(ghost_size),
-            reinterpret_cast<const comm::_type_lattice_coord *>(split_coord),
-            local_box_region);
+const unsigned long GhostInitPacker::sendLength(const int dimension, const int direction) {
+    comm::Region<comm::_type_lattice_size> send_region = comm::fwCommLocalSendRegion(
+            p_domain->lattice_size_ghost, p_domain->local_sub_box_lattice_region,
+            dimension, direction);
+    return BCC_DBX * send_region.volume();
+}
+
+void GhostInitPacker::onSend(buffer_data_type *buffer, const unsigned long send_len,
+                             const int dimension, const int direction) {
+    const comm::Region<comm::_type_lattice_size> send_region = comm::fwCommLocalSendRegion(
+            p_domain->lattice_size_ghost, p_domain->local_sub_box_lattice_region,
+            dimension, direction);
 
     unsigned long len = 0;
-    for (auto iter = region.cbegin(); iter != region.cend(); iter++) {
-        len += ((*iter).x_high - (*iter).x_low) * ((*iter).y_high - (*iter).y_low) * ((*iter).z_high - (*iter).z_low);
-        for (int x = (*iter).x_low; x <= (*iter).x_high; x++) {
-            for (int y = (*iter).y_low; y <= (*iter).y_high; y++) {
-                for (int z = (*iter).z_low; z <= (*iter).z_high; z++) {
-                    buffer[len++] = lats->_lattices[x][y][z];
-                }
+    for (int x = send_region.x_low; x < send_region.x_high; x++) {
+        for (int y = send_region.y_low; y < send_region.y_high; y++) {
+            for (int z = send_region.z_low; z < send_region.z_high; z++) {
+                buffer[len++] = lats->_lattices[z][y][BCC_DBX * x];
+                buffer[len++] = lats->_lattices[z][y][BCC_DBX * x + 1];
             }
         }
     }
 }
 
-void GhostInitPacker::onReceive(Lattice buffer[], const unsigned long receive_len, LatticesList *lats,
-                                const unsigned int sector_id, const unsigned int dim,
-                                const _type_lattice_size ghost_size[comm::DIMENSION_SIZE],
-                                const _type_lattice_coord split_coord[comm::DIMENSION_SIZE],
-                                const comm::Region<comm::_type_lattice_coord> local_box_region) {
-
-    comm::type_region_array region = comm::fwCommSectorRecvRegion(
-            sector_id, dim,
-            reinterpret_cast<const comm::_type_lattice_size *>(ghost_size),
-            reinterpret_cast<const comm::_type_lattice_coord *>(split_coord),
-            local_box_region);
+void GhostInitPacker::onReceive(GhostInitPacker::buffer_data_type *buffer, const unsigned long receive_len,
+                                const int dimension, const int direction) {
+    const comm::Region<comm::_type_lattice_size> recv_region = comm::fwCommLocalRecvRegion(
+            p_domain->lattice_size_ghost, p_domain->local_sub_box_lattice_region,
+            dimension, direction);
 
     unsigned long len = 0;
-    for (auto iter = region.cbegin(); iter != region.cend(); iter++) {
-        len += ((*iter).x_high - (*iter).x_low) * ((*iter).y_high - (*iter).y_low) * ((*iter).z_high - (*iter).z_low);
-        for (int x = (*iter).x_low; x <= (*iter).x_high; x++) {
-            for (int y = (*iter).y_low; y <= (*iter).y_high; y++) {
-                for (int z = (*iter).z_low; z <= (*iter).z_high; z++) {
-                    lats->_lattices[x][y][z] = buffer[len++];
-                }
+    for (int z = recv_region.z_low; z < recv_region.z_high; z++) {
+        for (int y = recv_region.y_low; y < recv_region.y_high; y++) {
+            for (int x = recv_region.x_low; x < recv_region.x_high; x++) {
+                lats->_lattices[z][y][BCC_DBX * x] = buffer[len++];
+                lats->_lattices[z][y][BCC_DBX * x + 1] = buffer[len++];
             }
         }
     }
+    // todo set more information if the lattice is vacancy or dumbbell.
 }
-

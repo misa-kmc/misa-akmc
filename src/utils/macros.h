@@ -5,6 +5,8 @@
 #ifndef MISA_KMC_MACROS_H
 #define MISA_KMC_MACROS_H
 
+#define BCC_DBX 2
+
 #define ASSIGN_ARRAY_8(arr, i0, i1, i2, i3, i4, i5, i6, i7)  { \
    arr[0] = i0; \
    arr[1] = i1; \
