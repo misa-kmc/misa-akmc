@@ -11,7 +11,7 @@
 #include "utils/random/random.h"
 #include "comm_dirs.h"
 
-template<class PKf, class PKg, class PKs, class Ins>
+template<class PKg, class PKs, class Ins>
 void SubLattice::startTimeLoop(Ins pk_inst) {
     const unsigned long time_steps = ceil(time_limit / T);
     for (unsigned long step = 0; step < time_steps; step++) { // time steps loop

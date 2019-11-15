@@ -14,6 +14,7 @@ set(HEADER_FILES
         pack/ghost_init_packer.h
         pack/ghost_sync_packer.h
         pack/packer_instance.h
+        pack/sim_sync_packer.h
         utils/macros.h
         utils/mpi_types.h
         utils/random/rand_generators.h
@@ -40,6 +41,7 @@ set(SOURCE_FILES
         pack/ghost_init_packer.cpp
         pack/ghost_sync_packer.cpp
         pack/packer_instance.cpp
+        pack/sim_sync_packer.cpp
         utils/mpi_types.cpp
         utils/random/rand_generators.cpp
         utils/random/random.cpp

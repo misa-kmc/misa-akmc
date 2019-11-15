@@ -1,23 +1,21 @@
 //
-// Created by genshen on 2019/10/14.
+// Created by genshen on 2019/11/15.
 //
 
-#ifndef MISA_KMC_GHOST_SYNC_PACKER_H
-#define MISA_KMC_GHOST_SYNC_PACKER_H
+#ifndef MISA_KMC_SIM_SYNC_PACKER_H
+#define MISA_KMC_SIM_SYNC_PACKER_H
 
-#include "lattice/lattices_list.h"
+
+#include <lattice/lattices_list.h>
+#include "utils/mpi_types.h"
 #include "lattice/lattice.h"
 #include "algorithms/lattice_region_packer.h"
-#include "utils/mpi_types.h"
 
-/**
- * \brief ghost sync means: before performing computing on the simulation area,
- *       the ghost area must be received for its neighbor processes.
- * \note: the region type(pack_region_type) is always comm::_type_lattice_coord.
- */
-class GhostSyncPacker : public LatticeRegionPacker<Lattice> {
+
+class SimSyncPacker : public LatticeRegionPacker<Lattice> {
+
 public:
-    explicit GhostSyncPacker(LatticesList *lats_list);
+    explicit SimSyncPacker(LatticesList *lattice_list);
 
     const unsigned long sendLength(const std::vector<comm::Region<pack_region_type >> send_regions,
                                    const int dimension, const int direction) override;
@@ -37,4 +35,4 @@ private:
 };
 
 
-#endif //MISA_KMC_GHOST_SYNC_PACKER_H
+#endif //MISA_KMC_SIM_SYNC_PACKER_H

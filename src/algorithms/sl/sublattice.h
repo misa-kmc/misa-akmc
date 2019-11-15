@@ -43,13 +43,12 @@ public:
 
     /**
      * \brief start kmc time loop.
-     * \tparam PKf packer used to initialize ghost regions.
      * \tparam PKg packer used to sync ghost regions.
      * \tparam PKs packer used to sync simulation regions.
      * \tparam Ins packer instance creator.
      * \param pk_inst to instant the packer for communication.
      */
-    template<class PKf, class PKg, class PKs, class Ins>
+    template<class PKg, class PKs, class Ins>
     void startTimeLoop(Ins pk_inst); // todo make sure RegionPacker is PKf, PKg, PKs's base class at compiling time.
 
     /**

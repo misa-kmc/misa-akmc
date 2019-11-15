@@ -6,17 +6,27 @@
 #define MISA_KMC_PACKER_INSTANCE_H
 
 
+#include "lattice/lattices_list.h"
 #include "ghost_sync_packer.h"
+#include "sim_sync_packer.h"
 
 class PackerInstance {
 public:
-    GhostSyncPacker newSimCommPacker() {
-        return GhostSyncPacker{};
+    explicit PackerInstance(LatticesList *lattice_list) : lattice_list(lattice_list) {
+
+    }
+
+    SimSyncPacker newSimCommPacker() {
+        return SimSyncPacker{lattice_list};
     }
 
     GhostSyncPacker newGhostCommPacker() {
-        return GhostSyncPacker{};
+        return GhostSyncPacker{lattice_list};
     }
+
+private:
+    // reference or pointers to create packer
+    LatticesList *lattice_list;
 };
 
 

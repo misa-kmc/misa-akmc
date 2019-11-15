@@ -8,8 +8,9 @@
 #include "algorithms/sl/sublattice.h"
 #include "models/abvi/abvi_model.h"
 #include "pack/ghost_init_packer.h"
-#include "pack/packer_instance.h"
 #include "pack/ghost_sync_packer.h"
+#include "pack/sim_sync_packer.h"
+#include "pack/packer_instance.h"
 #include "utils/simulation_domain.h"
 
 void simulation::createDomain(const unsigned long phase_space[comm::DIMENSION_SIZE],
@@ -67,7 +68,6 @@ void simulation::simulate(const double time_limit) {
     ABVIModel model;
     SubLattice sl(_p_domain, &model, time_limit, 1.0); // todo calculate T
 
-    PackerInstance pk_ins;
-    // todo use other packers: ghost init packer, simulation sync packer .
-    sl.startTimeLoop<GhostInitPacker, GhostSyncPacker, GhostSyncPacker, PackerInstance>(pk_ins);
+    PackerInstance pk_ins(lattice_list);
+    sl.startTimeLoop<GhostSyncPacker, SimSyncPacker, PackerInstance>(pk_ins);
 }
