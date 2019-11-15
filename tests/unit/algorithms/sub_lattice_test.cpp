@@ -82,5 +82,5 @@ TEST(sublattice_template_compile_test, sublattice_test) {
     SubLattice sl(p_domain, &model, 1.0, 1.0);
 
     TestPackerInstance pk_ins;
-    sl.startTimeLoop<TestPks, TestPks, TestPks, TestPackerInstance>(pk_ins);
+    sl.startTimeLoop<TestPks, TestPks, TestPackerInstance>(pk_ins);
 }

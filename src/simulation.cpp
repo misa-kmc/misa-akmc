@@ -68,6 +68,6 @@ void simulation::simulate(const double time_limit) {
     SubLattice sl(_p_domain, &model, time_limit, 1.0); // todo calculate T
 
     PackerInstance pk_ins;
-    // todo use other packers: ghost init packer, simulation sync packer .
-    sl.startTimeLoop<GhostInitPacker, GhostSyncPacker, GhostSyncPacker, PackerInstance>(pk_ins);
+    // todo use other packers: simulation sync packer.
+    sl.startTimeLoop<GhostSyncPacker, GhostSyncPacker, PackerInstance>(pk_ins);
 }
