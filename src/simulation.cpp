@@ -67,7 +67,7 @@ void simulation::simulate(const double time_limit) {
     ABVIModel model;
     SubLattice sl(_p_domain, &model, time_limit, 1.0); // todo calculate T
 
-    PackerInstance pk_ins;
+    PackerInstance pk_ins(lattice_list);
     // todo use other packers: simulation sync packer.
     sl.startTimeLoop<GhostSyncPacker, GhostSyncPacker, PackerInstance>(pk_ins);
 }
