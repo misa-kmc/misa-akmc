@@ -59,6 +59,8 @@ public:
 
     friend class GhostSyncPacker;
 
+    friend class SimSyncPacker;
+
     /*!
      * \brief initialize the lattice_lists array(allocate memory) with box size in x,y,z direction.
      * besides, the lattice id will be set in this constructor.

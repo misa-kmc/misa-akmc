@@ -8,6 +8,7 @@
 
 #include "lattice/lattices_list.h"
 #include "ghost_sync_packer.h"
+#include "sim_sync_packer.h"
 
 class PackerInstance {
 public:
@@ -15,8 +16,8 @@ public:
 
     }
 
-    GhostSyncPacker newSimCommPacker() {
-        return GhostSyncPacker{lattice_list};
+    SimSyncPacker newSimCommPacker() {
+        return SimSyncPacker{lattice_list};
     }
 
     GhostSyncPacker newGhostCommPacker() {
