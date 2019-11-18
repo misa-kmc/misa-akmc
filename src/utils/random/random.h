@@ -10,7 +10,7 @@
 
 namespace r {
     /**
-     * \brief set seed fro rng.
+     * \brief set seed for rng.
      */
     void initSeed();
 
