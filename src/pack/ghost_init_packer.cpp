@@ -24,9 +24,9 @@ void GhostInitPacker::onSend(buffer_data_type *buffer, const unsigned long send_
             dimension, direction);
 
     unsigned long len = 0;
-    for (int x = send_region.x_low; x < send_region.x_high; x++) {
+    for (int z = send_region.z_low; z < send_region.z_high; z++) {
         for (int y = send_region.y_low; y < send_region.y_high; y++) {
-            for (int z = send_region.z_low; z < send_region.z_high; z++) {
+            for (int x = send_region.x_low; x < send_region.x_high; x++) {
                 buffer[len++] = lats->_lattices[z][y][BCC_DBX * x];
                 buffer[len++] = lats->_lattices[z][y][BCC_DBX * x + 1];
             }
