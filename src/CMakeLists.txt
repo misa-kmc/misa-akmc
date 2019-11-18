@@ -22,6 +22,7 @@ set(HEADER_FILES
         utils/simulation_domain.h
         type_define.h
         creation.h
+        counter.h
         simulation.h
         )
 
@@ -47,6 +48,7 @@ set(SOURCE_FILES
         utils/random/random.cpp
         utils/simulation_domain.cpp
         creation.cpp
+        counter.cpp
         simulation.cpp
         )
 

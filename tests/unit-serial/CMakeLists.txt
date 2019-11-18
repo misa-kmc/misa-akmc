@@ -16,7 +16,6 @@ set(TEST_SOURCE_FILES
         rate/vac_rates_solver_test.cpp
         defect/itl_rates_test.cpp
         orientation_test.cpp
-        counter_test.cpp
         )
 
 
