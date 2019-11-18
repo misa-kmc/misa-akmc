@@ -15,3 +15,7 @@ void ABVIModel::selectRate() {
 void ABVIModel::perform() {
 
 }
+
+unsigned long ABVIModel::defectSize() {
+    return 1;
+}

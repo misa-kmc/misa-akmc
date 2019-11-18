@@ -23,6 +23,8 @@ public:
      */
     virtual void selectRate() = 0;
 
+    virtual unsigned long defectSize() = 0;
+
     /**
      * \brief perform the kmv event.
      */
