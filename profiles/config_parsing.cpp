@@ -45,6 +45,7 @@ void ConfigParsing::parse(const std::string config_file) {
         return;
     }
     const YAML::Node config = YAML::Load(ifs);
+    ifs.close();
 
     // parse box
     const YAML::Node box = config["box"];
