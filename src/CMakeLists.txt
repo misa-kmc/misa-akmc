@@ -8,8 +8,9 @@ set(HEADER_FILES
         lattice/lattice.h
         lattice/lattice_list_meta.h
         lattice/lattice_types.h
-        lattice/normal_lattice_list.h
         lattice/lattices_list.h
+        lattice/normal_lattice_list.h
+        lattice/period_lattice_list.h
         models/abvi/abvi_model.h
         models/model_adapter.h
         pack/ghost_init_packer.h
@@ -38,6 +39,7 @@ set(SOURCE_FILES
         lattice/lattice_types.cpp
         lattice/lattices_list.cpp
         lattice/normal_lattice_list.cpp
+        lattice/period_lattice_list.cpp
         models/abvi/abvi_model.cpp
         models/model_adapter.cpp
         pack/ghost_init_packer.cpp

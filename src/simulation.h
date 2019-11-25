@@ -10,7 +10,7 @@
 #include <io/io_writer.h>
 #include <comm/domain/colored_domain.h>
 
-#include "lattice/normal_lattice_list.h"
+#include "lattice/period_lattice_list.h"
 
 class simulation {
 public:
@@ -49,7 +49,7 @@ public:
     void simulate(const double time_limit);
 
 public:
-    NormalLatticeList *lattice_list = nullptr;
+    PeriodLatticeList *lattice_list = nullptr;
     comm::ColoredDomain *_p_domain = nullptr;
 };
 

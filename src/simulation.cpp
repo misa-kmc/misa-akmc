@@ -47,7 +47,7 @@ void simulation::createLattice() {
     // create empty lattice list.
     // todo type conversion.
     // todo delete lattice list
-    lattice_list = new NormalLatticeList{static_cast<_type_box_size>(_p_domain->sub_box_lattice_size[0]),
+    lattice_list = new PeriodLatticeList{static_cast<_type_box_size>(_p_domain->sub_box_lattice_size[0]),
                                          static_cast<_type_box_size>(_p_domain->sub_box_lattice_size[1]),
                                          static_cast<_type_box_size>(_p_domain->sub_box_lattice_size[0]),
                                          static_cast<_type_box_size>(_p_domain->lattice_size_ghost[0]),
