@@ -11,16 +11,15 @@
 LatticesList::LatticesList(const _type_box_size box_x, const _type_box_size box_y, const _type_box_size box_z,
                            const _type_box_size ghost_x, const _type_box_size ghost_y,
                            const _type_box_size ghost_z)
-        : size_x(BCC_DBX * box_x + BCC_DBX * 2 * ghost_x), size_y(box_y + 2 * ghost_y),
-          size_z(box_z + 2 * ghost_z), _max_id(size_z * size_y * size_x - 1) {
-    _lattices = new Lattice **[size_z];
-    for (_type_lattice_size z = 0; z < size_z; z++) {
-        _lattices[z] = new Lattice *[size_y];
-        for (_type_lattice_size y = 0; y < size_y; y++) {
-            _lattices[z][y] = new Lattice[size_x];
+        : meta(box_x, box_y, box_z, ghost_x, ghost_y, ghost_z) {
+    _lattices = new Lattice **[meta.size_z];
+    for (_type_lattice_size z = 0; z < meta.size_z; z++) {
+        _lattices[z] = new Lattice *[meta.size_y];
+        for (_type_lattice_size y = 0; y < meta.size_y; y++) {
+            _lattices[z][y] = new Lattice[meta.size_x];
         }
     }
-    // set id (skip ghost area is setting)
+    // set id (skip ghost area id setting)
     _type_lattice_id id = 0;
     comm::Region<_type_lattice_size> box_region{
             BCC_DBX * ghost_x, ghost_y, ghost_z,
@@ -36,8 +35,8 @@ LatticesList::LatticesList(const _type_box_size box_x, const _type_box_size box_
 }
 
 LatticesList::~LatticesList() {
-    for (_type_lattice_size z = 0; z < size_z; z++) {
-        for (_type_lattice_size y = 0; y < size_y; y++) {
+    for (_type_lattice_size z = 0; z < meta.size_z; z++) {
+        for (_type_lattice_size y = 0; y < meta.size_y; y++) {
             delete[] _lattices[z][y];
         }
         delete[] _lattices[z];
@@ -46,9 +45,9 @@ LatticesList::~LatticesList() {
 }
 
 void LatticesList::forAllLattices(const func_lattices_callback callback) {
-    for (_type_lattice_size z = 0; z < size_z; z++) {
-        for (_type_lattice_size y = 0; y < size_y; y++) {
-            for (_type_lattice_size x = 0; x < size_x; x++) {
+    for (_type_lattice_size z = 0; z < meta.size_z; z++) {
+        for (_type_lattice_size y = 0; y < meta.size_y; y++) {
+            for (_type_lattice_size x = 0; x < meta.size_x; x++) {
                 if (!callback(x, y, z, _lattices[z][y][x])) {
                     return;
                 }
@@ -62,7 +61,7 @@ _type_neighbour_status LatticesList::get1nnBoundaryStatus(_type_lattice_coord x,
     if (x == 0) {
         flag &= 0xF0; // invalid first 4 index.
     }
-    if (x + 1 == size_x) {
+    if (x + 1 == meta.size_x) {
         flag &= 0x0F; // invalid last 4 index.
     }
     if (x % 2 == 0) {
@@ -73,10 +72,10 @@ _type_neighbour_status LatticesList::get1nnBoundaryStatus(_type_lattice_coord x,
             flag &= 0xAA; // 0b10101010 = 0xAA
         }
     } else {
-        if (y + 1 == size_y) {
+        if (y + 1 == meta.size_y) {
             flag &= 0x33; // 0b00110011 = 0x033
         }
-        if (z + 1 == size_z) {
+        if (z + 1 == meta.size_z) {
             flag &= 0x55; // 0b01010101 = 0x55
         }
     }
@@ -97,33 +96,33 @@ _type_neighbour_status LatticesList::get2nnBoundaryStatus(_type_lattice_coord x,
     if (z == 0) {
         status &= 0x3B; // 0b 0011 1011
     }
-    if (z + 1 == size_z) {
+    if (z + 1 == meta.size_z) {
         status &= 0x37; // 0b 0011 0111
     }
-    if (y + 1 == size_y) {
+    if (y + 1 == meta.size_y) {
         status &= 0x2F; // 0b 0010 1111
     }
-    if (x + 2 >= size_x) {
+    if (x + 2 >= meta.size_x) {
         status &= 0x1F; // 0b 0001 1111
     }
     return status;
 }
 
 Lattice &LatticesList::getLat(_type_lattice_id id) {
-    _type_lattice_coord x = id % size_x;
-    id = id / size_x;
-    _type_lattice_coord y = id % size_y;
-    _type_lattice_coord z = id / size_y;
+    _type_lattice_coord x = id % meta.size_x;
+    id = id / meta.size_x;
+    _type_lattice_coord y = id % meta.size_y;
+    _type_lattice_coord z = id / meta.size_y;
     return _lattices[z][y][x];
 }
 
 Lattice *LatticesList::walk(_type_lattice_id id, const _type_lattice_offset offset_x,
                             const _type_lattice_offset offset_y, const _type_lattice_offset offset_z) {
-    _type_lattice_coord sx = id % size_x;
-    id = id / size_x;
+    _type_lattice_coord sx = id % meta.size_x;
+    id = id / meta.size_x;
     // use half lattice const coord.
-    _type_lattice_coord sy = sx % 2 == 0 ? 2 * (id % size_y) : 2 * (id % size_y) + 1;
-    _type_lattice_coord sz = sx % 2 == 0 ? 2 * (id / size_y) : 2 * (id / size_y) + 1;
+    _type_lattice_coord sy = sx % 2 == 0 ? 2 * (id % meta.size_y) : 2 * (id % meta.size_y) + 1;
+    _type_lattice_coord sz = sx % 2 == 0 ? 2 * (id / meta.size_y) : 2 * (id / meta.size_y) + 1;
 
     // add offset
     sx += offset_x;
@@ -131,7 +130,7 @@ Lattice *LatticesList::walk(_type_lattice_id id, const _type_lattice_offset offs
     sz += offset_z;
 
     //if out of index
-    if (sx >= size_x || sy >= 2 * size_y || sz >= 2 * size_z) {
+    if (sx >= meta.size_x || sy >= 2 * meta.size_y || sz >= 2 * meta.size_z) {
         return nullptr;
     }
     // if sx is even, sy and sz should also be even.
