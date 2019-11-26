@@ -12,7 +12,6 @@ set(HEADER_FILES
         rate/rates_solver.h
         rate/vacancy_rates_solver.h
         box.h
-        counter.h
         env.h
         kmc.h
         orientation.h
@@ -29,7 +28,6 @@ set(SOURCE_FILES
         rate/rates_solver.cpp
         rate/vacancy_rates_solver.cpp
         box.cpp
-        counter.cpp
         env.cpp
         event.h
         kmc.cpp

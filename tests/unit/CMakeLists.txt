@@ -19,6 +19,7 @@ set(TEST_SOURCE_FILES
         algorithms/sub_lattice_test.cpp
         pack/ghost_init_packer_test.cpp
         utils/mpi_data_types_test.cpp
+        counter_test.cpp
         main.cpp
         )
 

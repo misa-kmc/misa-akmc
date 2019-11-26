@@ -18,7 +18,7 @@ void SubLattice::startTimeLoop(Ins pk_inst) {
         for (int sect = 0; sect < SECTORS_NUM; sect++) { // sector loop
             const double init_overflow_time = sec_meta.sector_itl->evolution_time - step * T;
             double sector_time = init_overflow_time;
-            while (sector_time < T) {
+            while (p_model->defectSize() != 0 && sector_time < T) {
                 const double total_rates = calcRates((*sec_meta.sector_itl).id);
                 p_model->selectRate();
                 p_model->perform();

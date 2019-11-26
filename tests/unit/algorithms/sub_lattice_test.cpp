@@ -56,6 +56,8 @@ class TestSLModel : public ModelAdapter {
     void selectRate() override {}
 
     void perform() override {}
+
+    unsigned long defectSize() override { return 0; }
 };
 
 TEST(sublattice_template_compile_test, sublattice_test) {

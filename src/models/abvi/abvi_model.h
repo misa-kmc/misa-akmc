@@ -17,6 +17,8 @@ public:
      */
     void selectRate() override;
 
+    unsigned long defectSize() override;
+
     /**
      * \brief perform the kmv event.
      */
