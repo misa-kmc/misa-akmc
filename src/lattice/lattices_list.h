@@ -11,6 +11,7 @@
 #include <functional>
 #include "type_define.h"
 #include "lattice.h"
+#include "lattice_list_meta.h"
 
 // typedef of iteration of all lattices.
 typedef std::function<bool(const _type_lattice_coord x,
@@ -21,10 +22,10 @@ typedef std::function<bool(const _type_lattice_coord x,
 // convert lattice id to x,y,z coordinate, and call callback function using x,y,z.
 #define ID_TO_XYZ(id, callback) {       \
 id -= local_base_id;                    \
-_type_lattice_coord x = id % size_x;    \
-id = id / size_x;                       \
-_type_lattice_coord y = id % size_y;    \
-_type_lattice_coord z = id / size_y;    \
+_type_lattice_coord x = id % meta.size_x;    \
+id = id / meta.size_x;                       \
+_type_lattice_coord y = id % meta.size_y;    \
+_type_lattice_coord z = id / meta.size_y;    \
 callback;                               \
 }
 
@@ -224,14 +225,14 @@ public:
      * \return Id
      */
     inline _type_lattice_id getId(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
-        return x + y * size_x + z * size_x * size_y; // todo return from Lattice object.
+        return x + y * meta.size_x + z * meta.size_x * meta.size_y; // todo return from Lattice object.
     }
 
     /**
      * \return the max lattice id of all lattices.
      */
     inline _type_lattice_id maxId() {
-        return _max_id;
+        return meta._max_id;
     }
 
     /**
@@ -270,19 +271,14 @@ public:
      * \return lattices count
      */
     inline _type_lattice_count getLatCount() {
-        return size_x * size_y * size_z;
+        return meta.size_x * meta.size_y * meta.size_z;
     }
 
 protected:
-    /*!
-     * \brief the size of lattice lists array in each dimension.
-     * \note the size_x is two times then real box size due to BCC structure.
-     * size_y and size_y is the same as the simulation real box size.
+    /**
+     * \brief metadata of lattice list
      */
-    const _type_lattice_coord size_x, size_y, size_z;
-
-    // the max lattice id in box.
-    const _type_lattice_id _max_id;
+    const LatListMeta meta;
 
     // global id = local id + local_base_id
     const _type_lattice_id local_base_id = 0;

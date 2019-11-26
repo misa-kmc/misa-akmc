@@ -6,9 +6,11 @@ set(HEADER_FILES
         algorithms/ring.hpp
         algorithms/selector.h
         lattice/lattice.h
-        lattice/lattices_list.h
+        lattice/lattice_list_meta.h
         lattice/lattice_types.h
+        lattice/lattices_list.h
         lattice/normal_lattice_list.h
+        lattice/period_lattice_list.h
         models/abvi/abvi_model.h
         models/model_adapter.h
         pack/ghost_init_packer.h
@@ -33,9 +35,11 @@ set(SOURCE_FILES
         algorithms/ring_iterator.inc
         algorithms/ring_iterator.h
         lattice/lattice.cpp
-        lattice/lattices_list.cpp
+        lattice/lattice_list_meta.cpp
         lattice/lattice_types.cpp
+        lattice/lattices_list.cpp
         lattice/normal_lattice_list.cpp
+        lattice/period_lattice_list.cpp
         models/abvi/abvi_model.cpp
         models/model_adapter.cpp
         pack/ghost_init_packer.cpp
