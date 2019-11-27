@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 #include <lattice/normal_lattice_list.h>
-#include <rate/bonds/bonds_counter.h>
+#include <abvi/rate/bonds/bonds_counter.h>
 
 class BondsCounterTester : public bonds::BondsCounter {
     FRIEND_TEST(bonds_counter_count_test, bonds_counter_test);

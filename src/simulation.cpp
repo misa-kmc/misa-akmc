@@ -6,7 +6,7 @@
 #include "utils/mpi_types.h"
 #include "simulation.h"
 #include "algorithms/sl/sublattice.h"
-#include "models/abvi/abvi_model.h"
+#include "abvi/abvi_model.h"
 #include "pack/ghost_init_packer.h"
 #include "pack/ghost_sync_packer.h"
 #include "pack/sim_sync_packer.h"

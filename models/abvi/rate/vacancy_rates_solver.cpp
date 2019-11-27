@@ -4,9 +4,9 @@
 
 #include <cassert>
 
-#include "env.h"
+#include "../env.h"
 #include "vacancy_rates_solver.h"
-#include "rate/bonds/bonds_counter.h"
+#include "bonds/bonds_counter.h"
 
 VacRatesSolver::VacRatesSolver(LatticesList &lat_list, const double v, const double T)
         : RatesSolver(lat_list, v, T) {}

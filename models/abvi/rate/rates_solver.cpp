@@ -3,7 +3,7 @@
 //
 
 #include <cmath>
-#include "env.h"
+#include "../env.h"
 #include "rates_solver.h"
 
 RatesSolver::RatesSolver(LatticesList &lat_list, const double v, const double T)

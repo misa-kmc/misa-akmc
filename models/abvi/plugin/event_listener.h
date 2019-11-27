@@ -5,7 +5,7 @@
 #ifndef MISA_KMC_EVENT_LISTENER_H
 #define MISA_KMC_EVENT_LISTENER_H
 
-#include "recombine.h"
+#include "../recombine.h"
 
 /**
  * \brief KMC event listener for all kinds of KMC events,

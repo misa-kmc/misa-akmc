@@ -6,8 +6,8 @@
 #include <cmath>
 
 #include <lattice/normal_lattice_list.h>
-#include <rate/vacancy_rates_solver.h>
-#include <rate/bonds/bonds_counter.h>
+#include <abvi/rate/vacancy_rates_solver.h>
+#include <abvi/rate/bonds/bonds_counter.h>
 
 class bondDataForTest : public bonds::BondsCounter {
 public:

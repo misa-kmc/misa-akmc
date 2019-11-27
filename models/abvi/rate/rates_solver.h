@@ -5,7 +5,7 @@
 #ifndef MISA_KMC_RATES_SOLVER_H
 #define MISA_KMC_RATES_SOLVER_H
 
-#include "box.h"
+#include "../box.h"
 
 /**
  * \brief interface of rates solver for different type of lattice.
