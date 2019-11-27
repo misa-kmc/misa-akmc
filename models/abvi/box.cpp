@@ -6,15 +6,13 @@
 #include "lattice/normal_lattice_list.h"
 
 Box *BoxBuilder::build() {
-    Box *box = new Box(size_x, size_y, size_z); // todo remember to delete
-    box->createBox(); // create box: new array LatticesList, and set ItlList and VacancyList.
+    Box *box = new Box(); // todo remember to delete
+    // create box: new array LatticesList, and set ItlList and VacancyList.
+    box->createBox(box_x, box_y, box_z, ghost_x, ghost_y, ghost_z);
     return box;
 }
 
-Box::Box(_type_box_size size_x, _type_box_size size_y, _type_box_size size_z)
-        : size_x(size_x), size_y(size_y), size_z(size_z),
-          lattice_list(nullptr), va_list(nullptr), itl_list(nullptr) {
-}
+Box::Box() : lattice_list(nullptr), va_list(nullptr), itl_list(nullptr) {}
 
 Box::~Box() {
     delete lattice_list; // todo non-virtual destructor
@@ -22,9 +20,11 @@ Box::~Box() {
     delete itl_list;
 }
 
-void Box::createBox() {
+void Box::createBox(const _type_box_size box_x, const _type_box_size box_y, const _type_box_size box_z,
+                    const _type_box_size ghost_x, const _type_box_size ghost_y, const _type_box_size ghost_z) {
     // todo other type of boundary.
-    lattice_list = new NormalLatticeList(size_x, size_y, size_z); // new Lattice array and set lattice id.
+    // new Lattice array and set lattice id.
+    lattice_list = new NormalLatticeList(box_x, box_y, box_z, ghost_x, ghost_y, ghost_z);
     va_list = new VacancyList();
     itl_list = new ItlList();
 }

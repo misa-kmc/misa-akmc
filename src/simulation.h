@@ -11,6 +11,7 @@
 #include <comm/domain/colored_domain.h>
 
 #include "lattice/period_lattice_list.h"
+#include "abvi/box.h"
 
 class simulation {
 public:
@@ -49,7 +50,7 @@ public:
     void simulate(const double time_limit);
 
 public:
-    PeriodLatticeList *lattice_list = nullptr;
+    Box *box = nullptr;
     comm::ColoredDomain *_p_domain = nullptr;
 };
 
