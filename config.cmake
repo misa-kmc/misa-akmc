@@ -1,10 +1,9 @@
 set(KMC_VERSION "0.1.0")
 
 option(KMC_OpenMP_ENABLE_FLAG "Use OpenMP" OFF) #change this flag to OFF to disable OpenMP
-option(KMC_MPI_ENABLE_FLAG "Use MPI library" OFF) #change this flag to false to disable mpi
+option(KMC_MPI_ENABLE_FLAG "Use MPI library" ON) #change this flag to false to disable mpi
 option(KMC_TEST_BUILD_ENABLE_FLAG "Enable test" ON) # enable test
 option(KMC_TEST_MPI_ENABLE_FLAG "Enable MPI in test" ON) # enable mpi in test, its value depends on option MPI_ENABLE_FLAG.
-option(KMC_TOOLS_BUILD_ENABLE_FLAG "Enable tools building" ON) # building tools directory.
 
 set(KMC_RAND "MT" CACHE STRING "random number generating algorithm") # random number generating
 # options are:
@@ -29,8 +28,10 @@ option(EAM_POT_EBNABLE_FLAG "Enable using eam potential to calculate system ener
 #############
 ## const ##
 #############
-set(KMC_LIB_NAME kmc)
+set(KMC_MODEL_LIB_NAME abvi)
+set(PKMC_LIB_NAME pkmc)
 set(KMC_EXECUTE_BIN_NAME ${PROJECT_NAME})
 
 # test
-set(KMC_UINT_TEST_NAME "misa-kmc-unit-tests")
+set(KMC_MODEL_UINT_TEST_NAME "abvi-model-unit-tests")
+set(PKMC_UINT_TEST_NAME "pkmc-unit-tests")

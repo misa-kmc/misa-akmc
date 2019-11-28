@@ -1,0 +1,50 @@
+# This is the config file of parallel kMC program.
+# file format: yaml, see https://yaml.org for mor e details.
+# config template file writen by <a href='mailto:genshenchu@gmail.com'>genshen</a>"
+
+title: "parallel kMC configure file"
+version: "0.1.0"
+
+box:
+  size: [80, 80, 80]
+  lattice_const: 2.85532   # lattice constance
+  cutoff_radius: 5.6
+
+create: # how the simulation box is created.
+  random:
+    enable: true
+    va_count: 1   # vacancy number, not percent.
+    alloy:
+      Fe: 9598
+      Cu: 134
+      Mn: 134
+      Ni: 134
+      FeFe: 0 # pair number of [110] dumbbell.
+      FeCu: 0
+      FeMn: 0
+      FeNi: 0
+      CuCu: 0
+      CuNi: 0
+      CuMn: 0
+      NiNi: 0
+      NiMn: 0
+      MnMn: 0
+  pipe: # if create_box is set to false or not set, then pipe will be used.
+    enable: false
+    input_box: last_frame.xyz # pipe from MD.
+  restart:
+    enable: false
+    file_path: 1072.xyz
+
+simulation:
+  temperature: 673  # unit: K
+  physics_time: 8e4  # physics time limit.
+  steps_limit: 1000 # limit of kMC steps.
+  isgenr: false
+  dpasm1: 3e-9 # unit: dpa/s
+
+output:
+  log_interval: 10 # if zero is set, it means no log.
+  dump:
+    interval: 100 # dump system lattice information.
+    file_path: "kmc.{}.out"

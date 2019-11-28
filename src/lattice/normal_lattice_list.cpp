@@ -2,11 +2,13 @@
 // Created by genshen on 2019-01-10.
 //
 
-#include <macros.h>
+#include "../utils/macros.h"
 #include "normal_lattice_list.h"
 
-NormalLatticeList::NormalLatticeList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z)
-        : LatticesList(box_x, box_y, box_z) {}
+NormalLatticeList::NormalLatticeList(_type_box_size box_x, _type_box_size box_y,
+                                     _type_box_size box_z, _type_box_size ghost_x,
+                                     _type_box_size ghost_y, _type_box_size ghost_z)
+        : LatticesList(box_x, box_y, box_z, ghost_x, ghost_y, ghost_z) {}
 
 _type_neighbour_status
 NormalLatticeList::get1nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
@@ -67,15 +69,15 @@ NormalLatticeList::get2nn(_type_lattice_coord x, _type_lattice_coord y, _type_la
         _2nn_list[2] = &_lattices[z + _2nn_offset_z[2]][y + _2nn_offset_y[2]][x + _2nn_offset_x[2]];
         _count++;
     }
-    if (z + 1 != size_z) {
+    if (z + 1 != meta.size_z) {
         _2nn_list[3] = &_lattices[z + _2nn_offset_z[3]][y + _2nn_offset_y[3]][x + _2nn_offset_x[3]];
         _count++;
     }
-    if (y + 1 != size_y) {
+    if (y + 1 != meta.size_y) {
         _2nn_list[4] = &_lattices[z + _2nn_offset_z[4]][y + _2nn_offset_y[4]][x + _2nn_offset_x[4]];
         _count++;
     }
-    if (x + 2 < size_x) {
+    if (x + 2 < meta.size_x) {
         _2nn_list[5] = &_lattices[z + _2nn_offset_z[5]][y + _2nn_offset_y[5]][x + _2nn_offset_x[5]];
         _count++;
     }

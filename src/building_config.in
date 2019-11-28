@@ -2,7 +2,7 @@
 
 #cmakedefine EAM_POT_ENABLED
 
-#cmakedefine DEBUG_MODE
+#cmakedefine KMC_DEBUG_MODE
 
 // random number generating
 #cmakedefine RAND_LCG

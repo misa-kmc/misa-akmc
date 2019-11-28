@@ -10,6 +10,9 @@
 #include "type_define.h"
 #include "lattice_types.h"
 
+/**
+ * \brief lattice is a class that contains id and type of each lattice.
+ */
 class Lattice {
     friend class LatticesList;  // so lattice list can set private member:id directly.
 
@@ -28,7 +31,7 @@ public:
      * \brief get unique id of current lattice
      * \return lattice id
      */
-    inline _type_lattice_id getId() const{
+    inline _type_lattice_id getId() const {
         return id;
     }
 
@@ -67,9 +70,7 @@ public:
      */
     void rules_recb(int xi, int yi, int zi, int xv, int yv, int zv);
 
-
-
-private:
+public:
     _type_lattice_id id;
 
 };

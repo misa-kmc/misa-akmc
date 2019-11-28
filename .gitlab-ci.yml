@@ -1,10 +1,10 @@
 # image:
-image: hpcer/hpcdev:latest
+image: hpcer/hpcdev:pkg-0.3.0
 
 cache:
-  key: "$CI_COMMIT_REF_SLUG"
+  key: vendor_version_libcomm_0.3.2_2  # change this key if vendor changed.
   paths:
-    - vendor/
+    - vendor/src
 
 stages:
   - fetch
@@ -17,9 +17,11 @@ fetch:
   tags:
     - cpp
     - pkg
+  variables:
+    PKG_AUTH: 'gitlab-ci-token?${CI_JOB_TOKEN}@git.hpcer.dev'
   script:
     - pkg fetch
-    - pkg install
+    - pkg install --verbose
   artifacts:
     untracked: true
 
@@ -42,7 +44,7 @@ test:
     - cpp
     - pkg
   script:
-    - GTEST_OUTPUT=xml:report.xml GTEST_COLOR=yes ./cmake-build/bin/misa-kmc-unit-tests
+    - GTEST_OUTPUT=xml:report.xml GTEST_COLOR=yes ./cmake-build/bin/abvi-model-unit-tests
     # - cd cmake-build
     # - GTEST_COLOR=yes make test ARGS=-V
     - gcovr --exclude tests --exclude vendor

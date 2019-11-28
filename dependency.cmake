@@ -17,16 +17,16 @@ if (KMC_MPI_ENABLE_FLAG)
     MESSAGE(STATUS "MPI_LIBRARIES dir:" ${MPI_LIBRARIES})
 
     if (MPI_CXX_COMPILE_FLAGS)
-        set(COMPILE_FLAGS "${COMPILE_FLAGS} ${MPI_CXX_COMPILE_FLAGS}")
+        set(COMPILE_FLAGS "${COMPILE_FLAGS} ${MPI_COMPILE_FLAGS}")
     endif ()
 
-    if (MPI_CXX_LINK_FLAGS)
-        set(LINK_FLAGS "${LINK_FLAGS} ${MPI_CXX_LINK_FLAGS}")
+    if (MPI_LINK_FLAGS)
+        set(LINK_FLAGS "${LINK_FLAGS} ${MPI_LINK_FLAGS}")
     endif ()
 
-    include_directories(${MPI_CXX_INCLUDE_PATH})
+    include_directories(${MPI_INCLUDE_PATH})
 
-    set(KMC_EXTRA_LIBS ${KMC_EXTRA_LIBS} ${MPI_CXX_LIBRARIES}) #add mpi lib
+    set(KMC_EXTRA_LIBS ${KMC_EXTRA_LIBS} ${MPI_LIBRARIES}) #add mpi lib
 endif ()
 ##### mpi and openmp end
 

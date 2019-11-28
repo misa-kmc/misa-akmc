@@ -11,6 +11,7 @@
 #include <functional>
 #include "type_define.h"
 #include "lattice.h"
+#include "lattice_list_meta.h"
 
 // typedef of iteration of all lattices.
 typedef std::function<bool(const _type_lattice_coord x,
@@ -21,10 +22,10 @@ typedef std::function<bool(const _type_lattice_coord x,
 // convert lattice id to x,y,z coordinate, and call callback function using x,y,z.
 #define ID_TO_XYZ(id, callback) {       \
 id -= local_base_id;                    \
-_type_lattice_coord x = id % size_x;    \
-id = id / size_x;                       \
-_type_lattice_coord y = id % size_y;    \
-_type_lattice_coord z = id / size_y;    \
+_type_lattice_coord x = id % meta.size_x;    \
+id = id / meta.size_x;                       \
+_type_lattice_coord y = id % meta.size_y;    \
+_type_lattice_coord z = id / meta.size_y;    \
 callback;                               \
 }
 
@@ -55,14 +56,25 @@ public:
     static const int MAX_NEI_BITS = 8;
     static const int MAX_2NN = 6;
 
+    friend class GhostInitPacker;
+
+    friend class GhostSyncPacker;
+
+    friend class SimSyncPacker;
+
     /*!
      * \brief initialize the lattice_lists array(allocate memory) with box size in x,y,z direction.
      * besides, the lattice id will be set in this constructor.
-     * \param box_x box size/lattice count in x direction.
-     * \param box_y box size/lattice count in y direction.
-     * \param box_z box size/lattice count in z direction.
+     * \param box_x box size/lattice count in x direction without ghost area.
+     * \param box_y box size/lattice count in y direction without ghost area.
+     * \param box_z box size/lattice count in z direction without ghost area.
+     * \param ghost_x ghost size/lattice at x dimension.
+     * \param ghost_y ghost size/lattice at y dimension.
+     * \param ghost_z ghost size/lattice at z dimension.
      */
-    LatticesList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z);
+    LatticesList(const _type_box_size box_x, const _type_box_size box_y, const _type_box_size box_z,
+                 const _type_box_size ghost_x, const _type_box_size ghost_y,
+                 const _type_box_size ghost_z);
 
     ~LatticesList();
 
@@ -213,14 +225,14 @@ public:
      * \return Id
      */
     inline _type_lattice_id getId(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
-        return x + y * size_x + z * size_x * size_y; // todo return from Lattice object.
+        return x + y * meta.size_x + z * meta.size_x * meta.size_y; // todo return from Lattice object.
     }
 
     /**
      * \return the max lattice id of all lattices.
      */
     inline _type_lattice_id maxId() {
-        return _max_id;
+        return meta._max_id;
     }
 
     /**
@@ -259,19 +271,14 @@ public:
      * \return lattices count
      */
     inline _type_lattice_count getLatCount() {
-        return size_x * size_y * size_z;
+        return meta.size_x * meta.size_y * meta.size_z;
     }
 
 protected:
-    /*!
-     * \brief the size of lattice lists array in each dimension.
-     * \note the size_x is two times then real box size due to BCC structure.
-     * size_y and size_y is the same as the simulation real box size.
+    /**
+     * \brief metadata of lattice list
      */
-    const _type_lattice_coord size_x, size_y, size_z;
-
-    // the max lattice id in box.
-    const _type_lattice_id _max_id;
+    const LatListMeta meta;
 
     // global id = local id + local_base_id
     const _type_lattice_id local_base_id = 0;

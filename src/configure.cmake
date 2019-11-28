@@ -4,7 +4,7 @@ if (EAM_POT_EBNABLE_FLAG)
 endif ()
 
 if (KMC_DEBUG_ENABLE_FLAG)
-    set(DEBUG_MODE ON)
+    set(KMC_DEBUG_MODE ON)
 endif ()
 
 if (KMC_RAND MATCHES "LCG")
