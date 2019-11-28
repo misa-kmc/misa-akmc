@@ -7,7 +7,6 @@
 #include <logs/logs.h>
 #include <utils/mpi_utils.h>
 #include <lattice/lattices_list.h>
-#include <lattice/normal_lattice_list.h>
 #include <utils/mpi_types.h>
 #include "creation.h"
 #include "building_config.h"

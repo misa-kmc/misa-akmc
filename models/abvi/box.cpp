@@ -3,7 +3,7 @@
 //
 
 #include "box.h"
-#include "lattice/normal_lattice_list.h"
+#include "lattice/period_lattice_list.h"
 
 Box *BoxBuilder::build() {
     Box *box = new Box(); // todo remember to delete
@@ -24,7 +24,7 @@ void Box::createBox(const _type_box_size box_x, const _type_box_size box_y, cons
                     const _type_box_size ghost_x, const _type_box_size ghost_y, const _type_box_size ghost_z) {
     // todo other type of boundary.
     // new Lattice array and set lattice id.
-    lattice_list = new NormalLatticeList(box_x, box_y, box_z, ghost_x, ghost_y, ghost_z);
+    lattice_list = new PeriodLatticeList(box_x, box_y, box_z, ghost_x, ghost_y, ghost_z);
     va_list = new VacancyList();
     itl_list = new ItlList();
 }
