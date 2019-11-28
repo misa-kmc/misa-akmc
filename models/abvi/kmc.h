@@ -5,6 +5,7 @@
 #ifndef MISA_KMC_KMC_H
 #define MISA_KMC_KMC_H
 
+#include <models/model_adapter.h>
 #include "type_define.h"
 #include "box.h"
 #include "event.h"
@@ -13,12 +14,13 @@
 /*!
  * \brief the main routine of KMC simulation.
  */
-class kmc {
+class ABVIModel : public ModelAdapter {
+
 public:
-    /*!
+    /**
      * \brief initialize kmc with simulation box.
      */
-    explicit kmc(Box *box);
+    explicit ABVIModel(Box *box);
 
     /**
      * \brief calculate the transition rates of each lattice.
@@ -31,10 +33,12 @@ public:
      * \return return the sum of rates of all KMC events,
      * including dumbbell transition and vacancy transition and defect generation).
      */
-    _type_rate updateRates(double v, double T);
+    _type_rate calcRates(double v, double T);
+
+    _type_rate calcRates(const comm::Region<comm::_type_lattice_size> region) override {}; // todo
 
     /**
-     * \brief select an event randomly.
+     * \brief select an event randomly from rates list.
      *
      * \param excepted_rate which equals to total rate* random number between 0-1.
      * \param total_rates the sum rates
@@ -42,17 +46,23 @@ public:
      */
     event::SelectedEvent select(const double excepted_rate, const _type_rate sum_rates);
 
+    void selectRate() override {}; // todo
+
     /**
-     * \brief  execute the selected KMC event.
+     * \brief perform the selected KMC event.
      *
      */
-    void execute(const event::SelectedEvent selected);
+    void perform(const event::SelectedEvent selected);
+
+    void perform() override {}; // todo
 
     /**
      * \brief set kmc event listener.
      * \param p_listener pointer to the event listener.
      */
     void setEventListener(EventListener *p_listener);
+
+    unsigned long defectSize() override;
 
 protected:
     double time = 0;

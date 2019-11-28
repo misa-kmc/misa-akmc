@@ -11,9 +11,9 @@
 #include "utils/random/random.h"
 #include "env.h"
 
-kmc::kmc(Box *box) : box(box) {}
+ABVIModel::ABVIModel(Box *box) : box(box) {}
 
-_type_rate kmc::updateRates(double v, double T) {
+_type_rate ABVIModel::calcRates(double v, double T) {
     _type_rate sum_rates = 0;
     ItlRatesSolver itl_rate(*(box->lattice_list), *(box->va_list), *(box->itl_list), v, T);
     VacRatesSolver vac_rate(*(box->lattice_list), v, T);
@@ -66,11 +66,11 @@ _type_rate kmc::updateRates(double v, double T) {
     return sum_rates;
 }
 
-_type_rate kmc::defectGenRate() {
+_type_rate ABVIModel::defectGenRate() {
     return env::global_env.defect_gen_rate;
 }
 
-event::SelectedEvent kmc::select(const double excepted_rate, const _type_rate sum_rates) {
+event::SelectedEvent ABVIModel::select(const double excepted_rate, const _type_rate sum_rates) {
     _type_rate rate_accumulator = 0.0;
     event::SelectedEvent selected_event{event::DefectGen, 0, 0}; // default event is defect generation.
     box->lattice_list->forAllLattices([&](const _type_lattice_coord x,
@@ -124,7 +124,7 @@ event::SelectedEvent kmc::select(const double excepted_rate, const _type_rate su
     return selected_event;
 }
 
-void kmc::execute(const event::SelectedEvent selected) {
+void ABVIModel::perform(const event::SelectedEvent selected) {
     switch (selected.event_type) {
         case event::VacancyTrans: {
             Lattice &lat_from = box->lattice_list->getLat(selected.from_id);
@@ -274,6 +274,10 @@ void kmc::execute(const event::SelectedEvent selected) {
     }
 }
 
-void kmc::setEventListener(EventListener *p_listener) {
+void ABVIModel::setEventListener(EventListener *p_listener) {
     p_event_listener = p_listener;
+}
+
+unsigned long ABVIModel::defectSize() {
+    return 1; // todo add implementation
 }

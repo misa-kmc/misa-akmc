@@ -11,7 +11,6 @@ set(HEADER_FILES
         abvi/rate/rates_types.h
         abvi/rate/rates_solver.h
         abvi/rate/vacancy_rates_solver.h
-        abvi/abvi_model.h
         abvi/box.h
         abvi/env.h
         abvi/kmc.h
@@ -28,7 +27,6 @@ set(SOURCE_FILES
         abvi/rate/itl_rates_solver.cpp
         abvi/rate/rates_solver.cpp
         abvi/rate/vacancy_rates_solver.cpp
-        abvi/abvi_model.cpp
         abvi/box.cpp
         abvi/env.cpp
         abvi/event.h

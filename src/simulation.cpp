@@ -6,7 +6,7 @@
 #include "utils/mpi_types.h"
 #include "simulation.h"
 #include "algorithms/sl/sublattice.h"
-#include "abvi/abvi_model.h"
+#include "abvi/kmc.h"
 #include "pack/ghost_init_packer.h"
 #include "pack/ghost_sync_packer.h"
 #include "pack/sim_sync_packer.h"
@@ -67,7 +67,7 @@ void simulation::prepareForStart() {
 }
 
 void simulation::simulate(const double time_limit) {
-    ABVIModel model(box->lattice_list);
+    ABVIModel model(box);
     SubLattice sl(_p_domain, &model, time_limit, 1.0); // todo calculate T
 
     PackerInstance pk_ins(box->lattice_list);

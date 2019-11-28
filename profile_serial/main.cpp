@@ -108,7 +108,7 @@ int main() {
     MEventListener m_listener(m_counter);
 
     // start simulation
-    kmc kmc{sim_box}; // fixme init box pointer
+    ABVIModel kmc{sim_box}; // fixme init box pointer
     kmc.setEventListener(&m_listener);
 
     double current_time = 0;
@@ -116,12 +116,12 @@ int main() {
     unsigned long step = 0;
     const clock_t app_start_time = clock();
     while (current_time < total_time) {
-        const _type_rate total_rates = kmc.updateRates(env::global_env.attempt_freq, env::global_env.temperature);
+        const _type_rate total_rates = kmc.calcRates(env::global_env.attempt_freq, env::global_env.temperature);
         const event::SelectedEvent event = kmc.select(r::random() * total_rates, total_rates);
         if (event.event_type == event::DefectGen) {
             std::cout << "Defect generation." << std::endl;
         }
-        kmc.execute(event);
+        kmc.perform(event);
         current_time += -log(r::random()) / total_rates;
 
         step++;
