@@ -30,7 +30,7 @@ add_executable(${KMC_MODEL_UINT_TEST_NAME} ${TEST_SOURCE_FILES} ${TEST_HEADER_FI
 
 # Extra linking for the project.
 target_link_libraries(${KMC_MODEL_UINT_TEST_NAME}
-        PRIVATE GTest::gtest GTest::gtest_main ${KMC_MODEL_LIB_NAME} ${PKMC_LIB_NAME} ${KMC_EXTRA_LIBS}
+        PRIVATE GTest::gtest GTest::gtest_main ${KMC_MODEL_LIB_NAME} ${KMC_EXTRA_LIBS}
         )
 
 # This is so you can do 'make test' to see all your tests run, instead of

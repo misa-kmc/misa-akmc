@@ -63,7 +63,8 @@ add_library(${PKMC_LIB_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
 
 target_include_directories(
         ${PKMC_LIB_NAME}
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+        PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
 target_link_libraries(${PKMC_LIB_NAME}
         ${KMC_MODEL_LIB_NAME}

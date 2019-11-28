@@ -47,10 +47,10 @@ target_include_directories(
         ${KMC_MODEL_LIB_NAME}
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
 )
 
 target_link_libraries(${KMC_MODEL_LIB_NAME}
+        ${PKMC_LIB_NAME}
         xoshiro::xoshiro
         kiwi::kiwi
         comm::comm
