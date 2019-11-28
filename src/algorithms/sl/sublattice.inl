@@ -19,8 +19,8 @@ void SubLattice::startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model) {
             const double init_overflow_time = sec_meta.sector_itl->evolution_time - step * T;
             double sector_time = init_overflow_time;
             while (p_model->defectSize() != 0 && sector_time < T) {
-                const double total_rates = calcRates(p_model, (*sec_meta.sector_itl).id);
-                p_model->selectAndPerform(total_rates);
+                const double total_rates = calcRatesWrapper(p_model, (*sec_meta.sector_itl).id);
+                selectPerformWrapper(p_model, total_rates, (*sec_meta.sector_itl).id);
                 const double delta_t = -log(r::random() / total_rates);
                 sector_time += delta_t;
             }
@@ -37,8 +37,14 @@ void SubLattice::startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model) {
 }
 
 template<typename E>
-double SubLattice::calcRates(ModelAdapter<E> *p_model, const type_sector_id sector_id) {
+double SubLattice::calcRatesWrapper(ModelAdapter<E> *p_model, const type_sector_id sector_id) {
     return p_model->calcRates(p_domain->local_sector_region[sector_id]);
+}
+
+template<typename E>
+void SubLattice::selectPerformWrapper(ModelAdapter<E> *p_model, const _type_rate total_rates,
+                                      const type_sector_id sector_id) {
+    p_model->selectAndPerform(p_domain->local_sector_region[sector_id], total_rates);
 }
 
 template<class PKs, class Ins>

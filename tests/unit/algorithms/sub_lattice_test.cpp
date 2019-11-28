@@ -49,11 +49,11 @@ public:
 };
 
 class TestSLModel : public ModelAdapter<int> {
-    double calcRates(const comm::Region<comm::_type_lattice_size> region) override {
+    double calcRates(const lat_region region) override {
         return 1.0;
     }
 
-    int select(_type_rate, _type_rate) override {
+    int select(lat_region region, _type_rate, _type_rate) override {
         return 0;
     }
 

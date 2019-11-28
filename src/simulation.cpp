@@ -67,7 +67,7 @@ void simulation::prepareForStart() {
 }
 
 void simulation::simulate(const double time_limit) {
-    ABVIModel model(box);
+    ABVIModel model(box, 0, 378); // todo param from config
     SubLattice sl(_p_domain, time_limit, 1.0); // todo calculate T
 
     PackerInstance pk_ins(box->lattice_list);

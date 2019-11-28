@@ -56,12 +56,22 @@ public:
 
     /**
      * \brief calculate rates in a region
-     * \tparam type of event in kmc model.
+     * \tparam E type of event in kmc model.
      * \param sector_id sector id
      * \return the total rates
      */
     template<typename E>
-    double calcRates(ModelAdapter<E> *p_model, const type_sector_id sector_id);
+    _type_rate calcRatesWrapper(ModelAdapter<E> *p_model, const type_sector_id sector_id);
+
+    /**
+     * \brief wrapper function of event selection and performing
+     * \tparam E model event type
+     * \param p_model model pointer
+     * \param total_rates the sum of rates
+     * \param sector_id sector id
+     */
+    template<typename E>
+    void selectPerformWrapper(ModelAdapter<E> *p_model, const _type_rate total_rates, const type_sector_id sector_id);
 
 private:
 
