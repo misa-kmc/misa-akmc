@@ -48,14 +48,16 @@ public:
     }
 };
 
-class TestSLModel : public ModelAdapter {
+class TestSLModel : public ModelAdapter<int> {
     double calcRates(const comm::Region<comm::_type_lattice_size> region) override {
         return 1.0;
     }
 
-    void selectRate() override {}
+    int select(_type_rate, _type_rate) override {
+        return 0;
+    }
 
-    void perform() override {}
+    void perform(const int) override {}
 
     unsigned long defectSize() override { return 0; }
 };
@@ -81,8 +83,8 @@ TEST(sublattice_template_compile_test, sublattice_test) {
             .build();
 
     TestSLModel model;
-    SubLattice sl(p_domain, &model, 1.0, 1.0);
+    SubLattice sl(p_domain, 1.0, 1.0);
 
     TestPackerInstance pk_ins;
-    sl.startTimeLoop<TestPks, TestPks, TestPackerInstance>(pk_ins);
+    sl.startTimeLoop<TestPks, TestPks, TestPackerInstance>(pk_ins, &model);
 }

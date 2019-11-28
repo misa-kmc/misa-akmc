@@ -38,7 +38,7 @@ public:
      * \param time_limit the max evolution time.
      * \param T threshold time for communication.
      */
-    explicit SubLattice(const comm::ColoredDomain *p_domain, ModelAdapter *p_model,
+    explicit SubLattice(const comm::ColoredDomain *p_domain,
                         const double time_limit, const double T);
 
     /**
@@ -46,17 +46,22 @@ public:
      * \tparam PKg packer used to sync ghost regions.
      * \tparam PKs packer used to sync simulation regions.
      * \tparam Ins packer instance creator.
+     * \tparam E type of event in kmc model.
      * \param pk_inst to instant the packer for communication.
+     * \param p_model kmc model to perform event selecting and execution.
+     * todo make sure RegionPacker is PKf, PKg, PKs's base class at compiling time.
      */
-    template<class PKg, class PKs, class Ins>
-    void startTimeLoop(Ins pk_inst); // todo make sure RegionPacker is PKf, PKg, PKs's base class at compiling time.
+    template<class PKg, class PKs, class Ins, typename E>
+    void startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model);
 
     /**
      * \brief calculate rates in a region
+     * \tparam type of event in kmc model.
      * \param sector_id sector id
      * \return the total rates
      */
-    double calcRates(const type_sector_id sector_id);
+    template<typename E>
+    double calcRates(ModelAdapter<E> *p_model, const type_sector_id sector_id);
 
 private:
 
@@ -83,8 +88,11 @@ private:
      */
     void nextSector();
 
-private:
+public:
+    // todo move this type to other file
     typedef std::array<std::vector<comm::Region<comm::_type_lattice_coord>>, comm::DIMENSION_SIZE> type_comm_lat_regions;
+
+private:
 
     const comm::ColoredDomain *p_domain = nullptr;
 
@@ -93,11 +101,6 @@ private:
     const double time_limit = 0.0;
 
     SectorMeta sec_meta;
-
-    /**
-     * \brief kmc model to perform event selecting and execution.
-     */
-    ModelAdapter *p_model = nullptr;
 };
 
 #include "sublattice.inl"

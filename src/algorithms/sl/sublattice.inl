@@ -11,17 +11,16 @@
 #include "utils/random/random.h"
 #include "comm_dirs.h"
 
-template<class PKg, class PKs, class Ins>
-void SubLattice::startTimeLoop(Ins pk_inst) {
+template<class PKg, class PKs, class Ins, typename E>
+void SubLattice::startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model) {
     const unsigned long time_steps = ceil(time_limit / T);
     for (unsigned long step = 0; step < time_steps; step++) { // time steps loop
         for (int sect = 0; sect < SECTORS_NUM; sect++) { // sector loop
             const double init_overflow_time = sec_meta.sector_itl->evolution_time - step * T;
             double sector_time = init_overflow_time;
             while (p_model->defectSize() != 0 && sector_time < T) {
-                const double total_rates = calcRates((*sec_meta.sector_itl).id);
-                p_model->selectRate();
-                p_model->perform();
+                const double total_rates = calcRates(p_model, (*sec_meta.sector_itl).id);
+                p_model->selectAndPerform(total_rates);
                 const double delta_t = -log(r::random() / total_rates);
                 sector_time += delta_t;
             }
@@ -35,6 +34,11 @@ void SubLattice::startTimeLoop(Ins pk_inst) {
             nextSector(); // some post operations after moved to next sector.
         }
     }
+}
+
+template<typename E>
+double SubLattice::calcRates(ModelAdapter<E> *p_model, const type_sector_id sector_id) {
+    return p_model->calcRates(p_domain->local_sector_region[sector_id]);
 }
 
 template<class PKs, class Ins>

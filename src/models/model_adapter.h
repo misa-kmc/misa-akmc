@@ -6,30 +6,64 @@
 #define MISA_KMC_MODEL_ADAPTER_H
 
 #include <comm/domain/colored_domain.h>
+#include <type_define.h>
+#include <utils/random/random.h>
 
 /**
  * \brief this is kmc model adapter
+ * \tparam E the event type
  */
+template<typename E>
 class ModelAdapter {
 public:
+    ModelAdapter();
+
     /**
      * \brief calculate rates in a region
      * \return the sum of all rates.
      */
-    virtual double calcRates(const comm::Region<comm::_type_lattice_size> region) = 0;
+    virtual _type_rate calcRates(const comm::Region<comm::_type_lattice_size> region) = 0;
 
     /**
-     * \brief select a event from rates list
+     * \brief select an event from rates list
+     * \param excepted_rate excepted rate
+     * \param sum_rates the total rates
      */
-    virtual void selectRate() = 0;
+    virtual E select(const _type_rate excepted_rate, const _type_rate sum_rates) = 0;
 
     virtual unsigned long defectSize() = 0;
 
     /**
      * \brief perform the kmv event.
      */
-    virtual void perform() = 0;
+    virtual void perform(const E e) = 0;
+
+    /**
+     * \brief select an event and perform the event.
+     * this is the wrapper function for \fn select() and \fn perform()
+     * \param sum_rates the total rates
+     */
+    void selectAndPerform(const _type_rate sum_rates);
+
+    /**
+     * \brief generate a float random number between [0,1)
+     * \return
+     */
+    inline double rand() {
+        return r::random(); // todo random number
+    }
 };
+
+template<typename E>
+ModelAdapter<E>::ModelAdapter() {
+
+}
+
+template<class E>
+void ModelAdapter<E>::selectAndPerform(const _type_rate sum_rates) {
+    E e = select(rand() * sum_rates, sum_rates);
+    perform(e);
+}
 
 
 #endif //MISA_KMC_MODEL_ADAPTER_H

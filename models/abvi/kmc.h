@@ -12,9 +12,10 @@
 #include "plugin/event_listener.h"
 
 /*!
- * \brief the main routine of KMC simulation.
+ * \brief the model routine of KMC simulation, including rate calculation, event selecting
+ * and execution implementation.
  */
-class ABVIModel : public ModelAdapter {
+class ABVIModel : public ModelAdapter<event::SelectedEvent> {
 
 public:
     /**
@@ -35,7 +36,7 @@ public:
      */
     _type_rate calcRates(double v, double T);
 
-    _type_rate calcRates(const comm::Region<comm::_type_lattice_size> region) override {}; // todo
+    _type_rate calcRates(const comm::Region<comm::_type_lattice_size> region) override; // todo
 
     /**
      * \brief select an event randomly from rates list.
@@ -44,17 +45,13 @@ public:
      * \param total_rates the sum rates
      * \return the selected event.
      */
-    event::SelectedEvent select(const double excepted_rate, const _type_rate sum_rates);
-
-    void selectRate() override {}; // todo
+    event::SelectedEvent select(const double excepted_rate, const _type_rate sum_rates) override;
 
     /**
      * \brief perform the selected KMC event.
      *
      */
-    void perform(const event::SelectedEvent selected);
-
-    void perform() override {}; // todo
+    void perform(const event::SelectedEvent event) override;
 
     /**
      * \brief set kmc event listener.
