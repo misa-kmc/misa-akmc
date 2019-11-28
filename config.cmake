@@ -28,10 +28,10 @@ option(EAM_POT_EBNABLE_FLAG "Enable using eam potential to calculate system ener
 #############
 ## const ##
 #############
-set(KMC_LIB_NAME kmc)
+set(KMC_MODEL_LIB_NAME abvi)
 set(PKMC_LIB_NAME pkmc)
 set(KMC_EXECUTE_BIN_NAME ${PROJECT_NAME})
 
 # test
-set(KMC_UINT_TEST_NAME "misa-kmc-unit-tests")
+set(KMC_MODEL_UINT_TEST_NAME "abvi-model-unit-tests")
 set(PKMC_UINT_TEST_NAME "pkmc-unit-tests")

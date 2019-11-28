@@ -11,120 +11,125 @@
 #include "utils/random/random.h"
 #include "env.h"
 
-kmc::kmc(Box *box) : box(box) {}
+ABVIModel::ABVIModel(Box *box, double v, double T) : box(box), v(v), T(T) {}
 
-_type_rate kmc::updateRates(double v, double T) {
+_type_rate ABVIModel::calcRates(const comm::Region<comm::_type_lattice_size> region) {
     _type_rate sum_rates = 0;
     ItlRatesSolver itl_rate(*(box->lattice_list), *(box->va_list), *(box->itl_list), v, T);
     VacRatesSolver vac_rate(*(box->lattice_list), v, T);
 
-    box->lattice_list->forAllLattices([&](const _type_lattice_coord x,
-                                          const _type_lattice_coord y,
-                                          const _type_lattice_coord z,
-                                          Lattice &lattice) {
-        if (lattice.type.isDumbbell()) { // dumbbell
-            Itl &itl_ref = box->itl_list->mp.at(lattice.getId());
+    for (int z = region.z_low; z < region.z_high; z++) {
+        for (int y = region.y_low; y < region.y_high; y++) {
+            for (int x = 2 * region.x_low; x < 2 * region.x_high; x++) {
+                Lattice &lattice = box->lattice_list->getLat(x, y, z);
+                if (lattice.type.isDumbbell()) { // dumbbell
+                    Itl &itl_ref = box->itl_list->mp.at(lattice.getId());
 
-            Lattice *lat_list[LatticesList::MAX_1NN] = {nullptr}; // todo new array many times.
-            box->lattice_list->get1nn(x, y, z, lat_list);
-            _type_neighbour_status nei_status = box->lattice_list->get1nnStatus(x, y, z);
-            itl_ref.beforeRatesUpdate(lat_list, nei_status);
-            // update transition rate to each direction
-            itl_ref.updateRates(lattice, lat_list, nei_status,
-                                [&lattice, &itl_rate, &sum_rates]
-                                        (Lattice *lat_nei,
-                                         const LatticeTypes::lat_type ghost_atom,
-                                         const _type_dir_id _1nn_offset) -> _type_rate {
-                                    // in lambda, it returns the rate of transition
-                                    // from current lattice to lat_nei neighbour lattice.
-                                    _type_rate rate = itl_rate.rate(lattice, *lat_nei, ghost_atom, _1nn_offset);
-                                    sum_rates += rate; // add this rate to sum
-                                    return rate;
-                                });
-        } else if (lattice.type.isVacancy()) { // vacancy
-            Vacancy &vacancy = box->va_list->mp.at(lattice.getId());
+                    Lattice *lat_list[LatticesList::MAX_1NN] = {nullptr}; // todo new array many times.
+                    box->lattice_list->get1nn(x, y, z, lat_list);
+                    _type_neighbour_status nei_status = box->lattice_list->get1nnStatus(x, y, z);
+                    itl_ref.beforeRatesUpdate(lat_list, nei_status);
+                    // update transition rate to each direction
+                    itl_ref.updateRates(lattice, lat_list, nei_status,
+                                        [&lattice, &itl_rate, &sum_rates]
+                                                (Lattice *lat_nei,
+                                                 const LatticeTypes::lat_type ghost_atom,
+                                                 const _type_dir_id _1nn_offset) -> _type_rate {
+                                            // in lambda, it returns the rate of transition
+                                            // from current lattice to lat_nei neighbour lattice.
+                                            _type_rate rate = itl_rate.rate(lattice, *lat_nei, ghost_atom, _1nn_offset);
+                                            sum_rates += rate; // add this rate to sum
+                                            return rate;
+                                        });
+                } else if (lattice.type.isVacancy()) { // vacancy
+                    Vacancy &vacancy = box->va_list->mp.at(lattice.getId());
 
-            Lattice *lat_list[LatticesList::MAX_1NN] = {nullptr}; // todo new array many times.
-            box->lattice_list->get1nn(x, y, z, lat_list);
-            _type_neighbour_status nei_status = box->lattice_list->get1nnStatus(x, y, z);
-            vacancy.beforeRatesUpdate(lat_list, nei_status);
-            // update transition rate to each direction
-            vacancy.updateRates(lattice, lat_list, nei_status,
-                                [&lattice, &vac_rate, &sum_rates]
-                                        (Lattice *lat_nei,
-                                         const LatticeTypes::lat_type ghost_atom,
-                                         const _type_dir_id _1nn_offset) -> _type_rate {
-                                    _type_rate rate = vac_rate.rate(lattice, *lat_nei, ghost_atom, _1nn_offset);
-                                    sum_rates += rate; // add this rate to sum
-                                    return rate;
-                                });
+                    Lattice *lat_list[LatticesList::MAX_1NN] = {nullptr}; // todo new array many times.
+                    box->lattice_list->get1nn(x, y, z, lat_list);
+                    _type_neighbour_status nei_status = box->lattice_list->get1nnStatus(x, y, z);
+                    vacancy.beforeRatesUpdate(lat_list, nei_status);
+                    // update transition rate to each direction
+                    vacancy.updateRates(lattice, lat_list, nei_status,
+                                        [&lattice, &vac_rate, &sum_rates]
+                                                (Lattice *lat_nei,
+                                                 const LatticeTypes::lat_type ghost_atom,
+                                                 const _type_dir_id _1nn_offset) -> _type_rate {
+                                            _type_rate rate = vac_rate.rate(lattice, *lat_nei, ghost_atom, _1nn_offset);
+                                            sum_rates += rate; // add this rate to sum
+                                            return rate;
+                                        });
+                }
+                // there is no transition rate for single atom.
+            }
         }
-        // there is no transition rate for single atom.
-        return true;
-    });
+    }
     sum_rates += defectGenRate();
     return sum_rates;
 }
 
-_type_rate kmc::defectGenRate() {
+_type_rate ABVIModel::defectGenRate() {
     return env::global_env.defect_gen_rate;
 }
 
-event::SelectedEvent kmc::select(const double excepted_rate, const _type_rate sum_rates) {
+event::SelectedEvent ABVIModel::select(const lat_region region, const _type_rate excepted_rate,
+                                       const _type_rate sum_rates) {
     _type_rate rate_accumulator = 0.0;
     event::SelectedEvent selected_event{event::DefectGen, 0, 0}; // default event is defect generation.
-    box->lattice_list->forAllLattices([&](const _type_lattice_coord x,
-                                          const _type_lattice_coord y,
-                                          const _type_lattice_coord z,
-                                          Lattice &lattice) {
-        if (lattice.type.isDumbbell()) { // dumbbell
-            const Itl &itl_ref = box->itl_list->mp.at(lattice.getId());
-            for (int rate_index = 0; rate_index < Itl::RATES_SIZE; rate_index++) {
-                rate_accumulator += itl_ref.rates[rate_index];
-                if (rate_accumulator > excepted_rate) {
-                    Lattice *_1nn_list[LatticesList::MAX_1NN] = {nullptr};
-                    box->lattice_list->get1nn(lattice.getId(), _1nn_list);
-                    // convert rate index to 1nn list array index.
-                    const orientation ori = box->itl_list->mp[lattice.getId()].orient;
-                    const _type_dir_id _1nn_tag = Itl::get1nnIdByRatesIndex(rate_index, ori.availTransDirs());
+    for (int z = region.z_low; z < region.z_high; z++) {
+        for (int y = region.y_low; y < region.y_high; y++) {
+            for (int x = 2 * region.x_low; x < 2 * region.x_high; x++) {
+                Lattice &lattice = box->lattice_list->getLat(x, y, z);
+                // filter defect type
+                if (lattice.type.isDumbbell()) { // dumbbell
+                    const Itl &itl_ref = box->itl_list->mp.at(lattice.getId());
+                    for (int rate_index = 0; rate_index < Itl::RATES_SIZE; rate_index++) {
+                        rate_accumulator += itl_ref.rates[rate_index];
+                        if (rate_accumulator > excepted_rate) {
+                            Lattice *_1nn_list[LatticesList::MAX_1NN] = {nullptr};
+                            box->lattice_list->get1nn(lattice.getId(), _1nn_list);
+                            // convert rate index to 1nn list array index.
+                            const orientation ori = box->itl_list->mp[lattice.getId()].orient;
+                            const _type_dir_id _1nn_tag = Itl::get1nnIdByRatesIndex(rate_index, ori.availTransDirs());
 #ifdef DEBUG_MODE
-                    assert(_1nn_list[_1nn_tag] != nullptr);
+                            assert(_1nn_list[_1nn_tag] != nullptr);
 #endif
-                    selected_event.event_type = event::DumbbellTrans;
-                    selected_event.from_id = lattice.getId();
-                    selected_event.to_id = _1nn_list[_1nn_tag]->getId();
-                    selected_event.target_tag = _1nn_tag;
-                    selected_event.rotate_direction = rate_index % 2 != 0;
-                    return false;
-                }
-            }
-        } else if (lattice.type.isVacancy()) {
-            const Vacancy &vacancy = box->va_list->mp.at(lattice.getId());
-            for (int rate_index = 0; rate_index < Vacancy::RATES_SIZE; rate_index++) {
-                rate_accumulator += vacancy.rates[rate_index];
-                if (rate_accumulator > excepted_rate) {
-                    Lattice *_1nn_list[LatticesList::MAX_1NN] = {nullptr};
-                    box->lattice_list->get1nn(lattice.getId(), _1nn_list);
+                            selected_event.event_type = event::DumbbellTrans;
+                            selected_event.from_id = lattice.getId();
+                            selected_event.to_id = _1nn_list[_1nn_tag]->getId();
+                            selected_event.target_tag = _1nn_tag;
+                            selected_event.rotate_direction = rate_index % 2 != 0;
+                            break; // event found
+                        }
+                    }
+                } else if (lattice.type.isVacancy()) {
+                    const Vacancy &vacancy = box->va_list->mp.at(lattice.getId());
+                    for (int rate_index = 0; rate_index < Vacancy::RATES_SIZE; rate_index++) {
+                        rate_accumulator += vacancy.rates[rate_index];
+                        if (rate_accumulator > excepted_rate) {
+                            Lattice *_1nn_list[LatticesList::MAX_1NN] = {nullptr};
+                            box->lattice_list->get1nn(lattice.getId(), _1nn_list);
 #ifdef DEBUG_MODE
-                    assert(_1nn_list[rate_index] != nullptr);
+                            assert(_1nn_list[rate_index] != nullptr);
 #endif
-                    selected_event.event_type = event::VacancyTrans;
-                    selected_event.from_id = lattice.getId();
-                    selected_event.to_id = _1nn_list[rate_index]->getId();
-                    selected_event.target_tag = static_cast<_type_dir_id>(rate_index);
-                    return false;
+                            selected_event.event_type = event::VacancyTrans;
+                            selected_event.from_id = lattice.getId();
+                            selected_event.to_id = _1nn_list[rate_index]->getId();
+                            selected_event.target_tag = static_cast<_type_dir_id>(rate_index);
+                            break; // event found
+                        }
+                    }
                 }
+                // event not found
             }
         }
-        return true;
-    });
+    }
 #ifdef DEBUG_MODE
     //    todo assert total rates == rate_accumulator + defect_gen_rate
 #endif
     return selected_event;
 }
 
-void kmc::execute(const event::SelectedEvent selected) {
+void ABVIModel::perform(const event::SelectedEvent selected) {
     switch (selected.event_type) {
         case event::VacancyTrans: {
             Lattice &lat_from = box->lattice_list->getLat(selected.from_id);
@@ -274,6 +279,10 @@ void kmc::execute(const event::SelectedEvent selected) {
     }
 }
 
-void kmc::setEventListener(EventListener *p_listener) {
+void ABVIModel::setEventListener(EventListener *p_listener) {
     p_event_listener = p_listener;
+}
+
+unsigned long ABVIModel::defectSize() {
+    return 1; // todo add implementation
 }

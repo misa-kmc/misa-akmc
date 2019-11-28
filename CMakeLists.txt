@@ -8,9 +8,9 @@ include(version.cmake)
 include(config.cmake)
 include(dependency.cmake)
 
+add_subdirectory(models)
 add_subdirectory(src)
 add_subdirectory(profiles)
-add_subdirectory(serial)
 add_subdirectory(profile_serial)
 
 #if (KMC_TOOLS_BUILD_ENABLE_FLAG)

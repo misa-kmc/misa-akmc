@@ -3,7 +3,7 @@
 //
 
 #include <gtest/gtest.h>
-#include <orientation.h>
+#include <abvi/orientation.h>
 
 TEST(orientation_availTransDirsHighLow_test, orientation_test) {
     // availTransDirs() is always equals to " availTransDirsHigh | availTransDirsLow()"

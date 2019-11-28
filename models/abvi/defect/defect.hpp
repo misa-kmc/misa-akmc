@@ -10,7 +10,7 @@
 #include "type_define.h"
 #include "../orientation.h"
 #include "def_types.h"
-#include "rate/rates_types.h"
+#include "../rate/rates_types.h"
 
 /**
  * In KMC defect includes interval(or calling dumbbell) and vacancy.

@@ -9,8 +9,9 @@ configure_file(
 )
 
 set(P_KMC_EXECUTE_BIN_NAME pmisa-kmc)
-add_executable(${P_KMC_EXECUTE_BIN_NAME}
-        profile.cpp
+set(P_KMP_PROFILE_LIB_NAME profile)
+
+add_library(${P_KMP_PROFILE_LIB_NAME} STATIC
         pkmc.h
         pkmc.cpp
         config_parsing.cpp
@@ -21,11 +22,18 @@ add_executable(${P_KMC_EXECUTE_BIN_NAME}
         lattice_types_string.h
         )
 
-target_link_libraries(${P_KMC_EXECUTE_BIN_NAME} PRIVATE
+target_link_libraries(${P_KMP_PROFILE_LIB_NAME} PUBLIC
         kiwi::kiwi
         yaml-cpp
         ${PKMC_LIB_NAME}
-        ${KMC_EXTRA_LIBS})
+        ${KMC_EXTRA_LIBS}
+        )
+
+add_executable(${P_KMC_EXECUTE_BIN_NAME} profile.cpp)
+
+target_link_libraries(${P_KMC_EXECUTE_BIN_NAME} PRIVATE
+        ${P_KMP_PROFILE_LIB_NAME}
+        )
 
 # install bin and libs
 install(TARGETS ${P_KMC_EXECUTE_BIN_NAME}

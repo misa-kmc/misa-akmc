@@ -6,7 +6,7 @@
 #include "utils/mpi_types.h"
 #include "simulation.h"
 #include "algorithms/sl/sublattice.h"
-#include "models/abvi/abvi_model.h"
+#include "abvi/kmc.h"
 #include "pack/ghost_init_packer.h"
 #include "pack/ghost_sync_packer.h"
 #include "pack/sim_sync_packer.h"
@@ -44,30 +44,32 @@ void simulation::createDomain(const unsigned long phase_space[comm::DIMENSION_SI
 }
 
 void simulation::createLattice() {
-    // create empty lattice list.
+    BoxBuilder builder{};
     // todo type conversion.
-    // todo delete lattice list
-    lattice_list = new PeriodLatticeList{static_cast<_type_box_size>(_p_domain->sub_box_lattice_size[0]),
-                                         static_cast<_type_box_size>(_p_domain->sub_box_lattice_size[1]),
-                                         static_cast<_type_box_size>(_p_domain->sub_box_lattice_size[0]),
-                                         static_cast<_type_box_size>(_p_domain->lattice_size_ghost[0]),
-                                         static_cast<_type_box_size>(_p_domain->lattice_size_ghost[1]),
-                                         static_cast<_type_box_size>(_p_domain->lattice_size_ghost[2])
-    };
+    builder.setBoxSize(
+            static_cast<_type_box_size>(_p_domain->sub_box_lattice_size[0]),
+            static_cast<_type_box_size>(_p_domain->sub_box_lattice_size[1]),
+            static_cast<_type_box_size>(_p_domain->sub_box_lattice_size[0]));
+    builder.setGhostSize(
+            static_cast<_type_box_size>(_p_domain->lattice_size_ghost[0]),
+            static_cast<_type_box_size>(_p_domain->lattice_size_ghost[1]),
+            static_cast<_type_box_size>(_p_domain->lattice_size_ghost[2]));
+    // create empty lattice list(lattice types are not specified) and defects list.
+    box = builder.build(); // todo delete pointer
 }
 
 void simulation::prepareForStart() {
     // initialize ghost area for all sectors.
-    GhostInitPacker init_packer{_p_domain, lattice_list};
+    GhostInitPacker init_packer{_p_domain, box->lattice_list};
     comm::neiSendReceive(&init_packer, SimulationDomain::comm_sim_pro,
                          mpi_types::_mpi_type_lattice_data,
                          _p_domain->rank_id_neighbours);
 }
 
 void simulation::simulate(const double time_limit) {
-    ABVIModel model;
-    SubLattice sl(_p_domain, &model, time_limit, 1.0); // todo calculate T
+    ABVIModel model(box, 0, 378); // todo param from config
+    SubLattice sl(_p_domain, time_limit, 1.0); // todo calculate T
 
-    PackerInstance pk_ins(lattice_list);
-    sl.startTimeLoop<GhostSyncPacker, SimSyncPacker, PackerInstance>(pk_ins);
+    PackerInstance pk_ins(box->lattice_list);
+    sl.startTimeLoop<GhostSyncPacker, SimSyncPacker, PackerInstance>(pk_ins, &model);
 }

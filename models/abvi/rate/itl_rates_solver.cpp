@@ -4,10 +4,10 @@
 
 #include <cassert>
 
-#include "env.h"
-#include "rate/bonds/bonds_counter.h"
+#include "../env.h"
+#include "../rate/bonds/bonds_counter.h"
 #include "itl_rates_solver.h"
-#include "rate/bonds/energy_dumbbell.h"
+#include "bonds/energy_dumbbell.h"
 
 ItlRatesSolver::ItlRatesSolver(LatticesList &lat_list,
                                VacancyList &va_list,

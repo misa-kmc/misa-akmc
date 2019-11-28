@@ -44,7 +44,7 @@ test:
     - cpp
     - pkg
   script:
-    - GTEST_OUTPUT=xml:report.xml GTEST_COLOR=yes ./cmake-build/bin/misa-kmc-unit-tests
+    - GTEST_OUTPUT=xml:report.xml GTEST_COLOR=yes ./cmake-build/bin/abvi-model-unit-tests
     # - cd cmake-build
     # - GTEST_COLOR=yes make test ARGS=-V
     - gcovr --exclude tests --exclude vendor

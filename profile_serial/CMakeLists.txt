@@ -12,7 +12,11 @@ add_executable(${KMC_EXECUTE_BIN_NAME}
 # link google perftools
 #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lprofiler")
 
-target_link_libraries(${KMC_EXECUTE_BIN_NAME} PRIVATE ${KMC_LIB_NAME} ${KMC_EXTRA_LIBS})
+target_link_libraries(${KMC_EXECUTE_BIN_NAME} PRIVATE
+        ${KMC_MODEL_LIB_NAME}
+        ${PKMC_LIB_NAME}
+        ${KMC_EXTRA_LIBS}
+        )
 
 # install bin and libs
 install(TARGETS ${KMC_EXECUTE_BIN_NAME}

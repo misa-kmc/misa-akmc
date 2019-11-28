@@ -11,7 +11,6 @@ set(HEADER_FILES
         lattice/lattices_list.h
         lattice/normal_lattice_list.h
         lattice/period_lattice_list.h
-        models/abvi/abvi_model.h
         models/model_adapter.h
         pack/ghost_init_packer.h
         pack/ghost_sync_packer.h
@@ -41,8 +40,6 @@ set(SOURCE_FILES
         lattice/lattices_list.cpp
         lattice/normal_lattice_list.cpp
         lattice/period_lattice_list.cpp
-        models/abvi/abvi_model.cpp
-        models/model_adapter.cpp
         pack/ghost_init_packer.cpp
         pack/ghost_sync_packer.cpp
         pack/packer_instance.cpp
@@ -66,9 +63,11 @@ add_library(${PKMC_LIB_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
 
 target_include_directories(
         ${PKMC_LIB_NAME}
-        PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+        PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
 target_link_libraries(${PKMC_LIB_NAME}
+        ${KMC_MODEL_LIB_NAME}
         kiwi::kiwi
         xoshiro::xoshiro
         comm::comm
