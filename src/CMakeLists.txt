@@ -20,6 +20,7 @@ set(HEADER_FILES
         utils/mpi_types.h
         utils/random/rand_generators.h
         utils/random/random.h
+        utils/random/rng_type.h
         utils/simulation_domain.h
         type_define.h
         creation.h

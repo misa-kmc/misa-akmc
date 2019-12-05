@@ -9,6 +9,8 @@
 #include <chrono>
 
 namespace r {
+    const uint32_t seed_auto = 0;
+
     /**
      * \brief set seed for rng.
      */

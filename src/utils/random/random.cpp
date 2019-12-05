@@ -30,7 +30,6 @@ double r::random() {
 #ifdef DEBUG_MODE
     return (double)rand() / RAND_MAX;
 #else
-//    return (r >> 11) * (1.0 / (UINT64_C(1) << 53));
-    return rand32() * (1.0 / 0xFFFFFFFFL);
+    return rand32() * (1.0 / r::type_rng::max());
 #endif
 }
