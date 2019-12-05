@@ -50,6 +50,7 @@ namespace conf {
         double temperature = 0.0;
         double physics_time = 0.0;
         unsigned long steps_limit = 0;
+        double attempt_freq = 0.0;
         // isgenr in config file.
         bool is_def_gen = false;
         // dpasm1 in config file

@@ -47,7 +47,7 @@ public:
      * \brief perform simulation.
      * \param time_limit the max simulation time.
      */
-    void simulate(const double time_limit);
+    void simulate(const double time_limit, const double attempt_frequencies, const double Temperture);
 
 public:
     Box *box = nullptr;
