@@ -33,8 +33,8 @@ packages:
       path: https://git.hpcer.dev/genshen/kiwi.git
       tag: v0.2.0
     xoshiro:
-      path: https://github.com/misa-kmc/xoshiro
-      branch: master
+      path: https://github.com/misa-kmc/xoshiro.git
+      tag: v0.1.0
       cmake_lib: |
         find_package(xoshiro REQUIRED PATHS {{.CMAKE_VENDOR_PATH_PKG}})
   files:
