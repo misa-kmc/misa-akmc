@@ -11,10 +11,20 @@
 
 #endif
 
-void r::initSeed() {
-#ifndef DEBUG_MODE
-    std::random_device rd;
-    r::seed(rd());
+uint32_t r::initSeed(const uint32_t seed) {
+#ifdef DEBUG_MODE
+    srand(seed);
+    return seed;
+#else
+    if (seed == seed_auto) {
+        std::random_device rd;
+        const uint32_t seed_ = rd();
+        r::seed(seed_);
+        return seed_;
+    } else {
+        r::seed(seed);
+        return seed;
+    }
 #endif
 }
 

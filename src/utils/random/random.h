@@ -13,8 +13,11 @@ namespace r {
 
     /**
      * \brief set seed for rng.
+     * \param seed random seed to be used. if \param seed equals seed_auto and it is not debug mode,
+     * seed will be initialized by std::random_device.
+     * \return the seed used for rng
      */
-    void initSeed();
+    uint32_t initSeed(const uint32_t seed);
 
     /**
      * \brief \brief returns a uint32_t random type, between \param low to \param high.
