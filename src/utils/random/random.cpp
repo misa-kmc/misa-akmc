@@ -11,10 +11,20 @@
 
 #endif
 
-void r::initSeed() {
-#ifndef DEBUG_MODE
-    std::random_device rd;
-    r::seed(rd());
+uint32_t r::initSeed(const uint32_t seed) {
+#ifdef DEBUG_MODE
+    srand(seed);
+    return seed;
+#else
+    if (seed == seed_auto) {
+        std::random_device rd;
+        const uint32_t seed_ = rd();
+        r::seed(seed_);
+        return seed_;
+    } else {
+        r::seed(seed);
+        return seed;
+    }
 #endif
 }
 
@@ -30,7 +40,6 @@ double r::random() {
 #ifdef DEBUG_MODE
     return (double)rand() / RAND_MAX;
 #else
-//    return (r >> 11) * (1.0 / (UINT64_C(1) << 53));
-    return rand32() * (1.0 / 0xFFFFFFFFL);
+    return rand32() * (1.0 / r::type_rng::max());
 #endif
 }

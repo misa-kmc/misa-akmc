@@ -9,7 +9,7 @@
 void creation::createRandom(LatticesList *lats, const std::vector<LatticeTypes::lat_type> types,
                             const std::vector<unsigned int> types_ratio, const unsigned long va_count,
                             const comm::ColoredDomain *p_domain) {
-    r::initSeed(); // initialize random number seed // todo generate seed here
+    r::initSeed(0); // initialize random number seed // todo generate seed here
     // todo skip ghost lattices.
     lats->forAllLattices([&](const _type_lattice_coord x,
                              const _type_lattice_coord y,

@@ -37,7 +37,7 @@ void logCounter(counter &m_counter) {
 }
 
 int main() {
-    r::initSeed(); // initialize random number seed // todo generate seed here
+    r::initSeed(0x146221); // initialize random number seed // todo generate seed here
 
     // set configuration
     env::global_env = env::environment{
