@@ -76,7 +76,7 @@ public:
                  const _type_box_size ghost_x, const _type_box_size ghost_y,
                  const _type_box_size ghost_z);
 
-    ~LatticesList();
+    virtual ~LatticesList();
 
     /**
      * \brief iterate all lattice in this list, each lattice will be passed to callback function.
@@ -104,6 +104,7 @@ public:
      *
      * \param x,y,z the coordinate of the source lattice point.
      * \return bits for status of "1nn out-of-boundary lattices"
+     * \deprecated only for legacy serial code, because in paralle version, lattice can found all its neighbor lattice
      */
     virtual _type_neighbour_status
     get1nnBoundaryStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z);
@@ -112,6 +113,7 @@ public:
      * \brief similar as above one (use x,y,z to specific a lattice), but it receives a lattice id.
      * \param id global lattice id to specific lattice position.
      * \return bits for status of "1nn out-of-boundary lattices"
+     * \deprecated only for legacy serial code, because in paralle version, lattice can found all its neighbor lattice
      */
     _type_neighbour_status get1nnBoundaryStatus(_type_lattice_id id) {
         ID_TO_XYZ(id, return get1nnBoundaryStatus(x, y, z));
@@ -126,6 +128,7 @@ public:
      *
      * \param x the coordinate of the source lattice point.
      * \return bits for status of "2nn out-of-boundary lattices"
+     * \deprecated only for legacy serial code, because in paralle version, lattice can found all its neighbor lattice
      */
     virtual _type_neighbour_status
     get2nnBoundaryStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z);
@@ -148,6 +151,7 @@ public:
      *
      * \param x,y,z the coordinate of the source lattice point.
      * \return bits for status of 1nn neighbour lattices.
+     * \deprecated only for legacy serial code, because in paralle version, lattice can found all its neighbor lattice
      */
     virtual _type_neighbour_status
     get1nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) = 0;
@@ -156,6 +160,7 @@ public:
      * \brief similar as above one (use x,y,z to specific a lattice), but it receives a lattice id.
      * \param id global lattice id to specific lattice position.
      * \return bits for status of 1nn neighbour lattices.
+     * \deprecated only for legacy serial code, because in paralle version, lattice can found all its neighbor lattice
      */
     _type_neighbour_status get1nnStatus(_type_lattice_id id) {
         ID_TO_XYZ(id, return get1nnStatus(x, y, z));
@@ -165,6 +170,7 @@ public:
      * \brief similar as get1nnStatus, it returns the bits status of 2nn neighbour lattices.
      * \param x the coordinate of the source lattice point.
      * \return bits for status of 2nn neighbour lattices
+     * \deprecated only for legacy serial code, because in paralle version, lattice can found all its neighbor lattice
      */
     virtual _type_neighbour_status
     get2nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) = 0;
@@ -173,6 +179,7 @@ public:
      * \brief similar as above one (use x,y,z to specific a lattice), but it receives a lattice id.
      * \param id global lattice id to specific lattice position.
      * \return bits for status of 2nn neighbour lattices.
+     * \deprecated only for legacy serial code, because in paralle version, lattice can found all its neighbor lattice
      */
     _type_neighbour_status get2nnStatus(_type_lattice_id id) {
         ID_TO_XYZ(id, return get2nnStatus(x, y, z));
@@ -267,7 +274,7 @@ public:
                   const _type_lattice_offset offset_y, const _type_lattice_offset offset_z);
 
     /**
-     * \brief get the lattices count in current box.
+     * \brief get the lattices count in current box(with ghost area).
      * \return lattices count
      */
     inline _type_lattice_count getLatCount() {

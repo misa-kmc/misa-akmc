@@ -15,7 +15,7 @@ Box *BoxBuilder::build() {
 Box::Box() : lattice_list(nullptr), va_list(nullptr), itl_list(nullptr) {}
 
 Box::~Box() {
-    delete lattice_list; // todo non-virtual destructor
+    delete lattice_list;
     delete va_list;
     delete itl_list;
 }
