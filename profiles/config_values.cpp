@@ -18,6 +18,7 @@ void conf::ConfigValues::packData(kiwi::Bundle &bundle) {
     bundle.put(steps_limit);
     bundle.put(is_def_gen);
     bundle.put(dpa_ps);
+    bundle.put(attempt_freq);
     // create
     bundle.put(create.create_option);
     bundle.put(create.va_count);
@@ -46,6 +47,7 @@ void conf::ConfigValues::unpackData(kiwi::Bundle &bundle) {
     bundle.get(cursor, steps_limit);
     bundle.get(cursor, is_def_gen);
     bundle.get(cursor, dpa_ps);
+    bundle.get(cursor, attempt_freq);
     // create
     bundle.get(cursor, create.create_option);
     bundle.get(cursor, create.va_count);
@@ -69,9 +71,9 @@ std::ostream &conf::operator<<(std::ostream &os, const conf::ConfigValues &cv) {
     os << "size: " << cv.box_size[0] << " " << cv.box_size[1] << " " << cv.box_size[2] << std::endl;
     os << "lattice const: " << cv.lattice_const << std::endl;
     os << "cutoff radius: " << cv.cutoff_radius << std::endl;
-    os << "simulation: T,\t time,\t steps,\t is gen,\t dpa\n" "\t"
+    os << "simulation: T,\t time,\t steps,\t is gen,\t dpa,\t attempt_freq\n" "\t"
        << cv.temperature << "\t" << cv.physics_time << "\t" << cv.steps_limit << "\t"
-       << (cv.is_def_gen ? "true" : "false") << "\t" << cv.dpa_ps << std::endl;
+       << (cv.is_def_gen ? "true" : "false") << "\t" << cv.dpa_ps << "\t" << cv.attempt_freq << std::endl;
 
     if (cv.create.create_option == conf::CreateOption::Random) {
         os << "create by: random" << std::endl;

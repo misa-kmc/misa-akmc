@@ -109,7 +109,7 @@ void PKMC::onStart() {
     //  set up ghost.
     sim->prepareForStart();
     // run simulation
-    sim->simulate(config_v.physics_time);
+    sim->simulate(config_v.physics_time, config_v.attempt_freq, config_v.temperature);
 }
 
 void PKMC::onFinish() {

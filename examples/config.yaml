@@ -40,8 +40,9 @@ simulation:
   temperature: 673  # unit: K
   physics_time: 8e4  # physics time limit.
   steps_limit: 1000 # limit of kMC steps.
+  attempt_freq: 6e12 #  unit:  1/s
   isgenr: false
-  dpasm1: 3e-9 # unit: dpa/s
+  dpasm1: 3e-9 # dpa per second, unit: dpa/s
 
 output:
   log_interval: 10 # if zero is set, it means no log.
