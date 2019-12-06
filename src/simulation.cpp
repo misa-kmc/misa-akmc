@@ -66,8 +66,8 @@ void simulation::prepareForStart() {
                          _p_domain->rank_id_neighbours);
 }
 
-void simulation::simulate(const double time_limit, const double attempt_frequencies, const double Temperture) {
-    ABVIModel model(box, attempt_frequencies, Temperture); // todo param from config
+void simulation::simulate(const double time_limit, const double attempt_frequency, const double temperature) {
+    ABVIModel model(box, attempt_frequency, temperature);
     SubLattice sl(_p_domain, time_limit, 1.0); // todo calculate T
 
     PackerInstance pk_ins(box->lattice_list);

@@ -118,7 +118,7 @@ bool ConfigParsing::parseSim(const YAML::Node &yaml_sim) {
     configValues.steps_limit = yaml_sim["steps_limit"].as<unsigned long>(0);
     configValues.is_def_gen = yaml_sim["isgenr"].as<bool>(false);
     configValues.dpa_ps = yaml_sim["dpasm1"].as<double>(0.0);
-    configValues.attempt_freq = yaml_sim["yaml_sim"].as<double>(0.0);
+    configValues.attempt_freq = yaml_sim["attempt_freq"].as<double>(0.0);
     return true;
 }
 
