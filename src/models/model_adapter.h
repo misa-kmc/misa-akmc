@@ -48,6 +48,12 @@ public:
     void selectAndPerform(const lat_region region, const _type_rate sum_rates);
 
     /**
+     * \brief reindex defect list in a specific region.
+     * \param region the region
+     */
+    virtual void reindex(const lat_region region) = 0;
+
+    /**
      * \brief generate a float random number between [0,1)
      * \return
      */

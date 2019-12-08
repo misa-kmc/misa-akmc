@@ -6,7 +6,8 @@
 #include "creation.h"
 #include "type_define.h"
 
-void creation::createRandom(LatticesList *lats, const std::vector<LatticeTypes::lat_type> types,
+void creation::createRandom(LatticesList *lats, VacancyList *va_list,
+                            const std::vector<LatticeTypes::lat_type> types,
                             const std::vector<unsigned int> types_ratio, const unsigned long va_count,
                             const comm::ColoredDomain *p_domain) {
     r::initSeed(0); // initialize random number seed // todo generate seed here
@@ -19,4 +20,6 @@ void creation::createRandom(LatticesList *lats, const std::vector<LatticeTypes::
         lattice.type._type = LatticeTypes::randomAtomsType(types.data(), types_ratio.data(), types.size());
         return true;
     });
+    // todo init interval list
+    va_list->reindex(lats, p_domain->local_sub_box_lattice_region);
 }
