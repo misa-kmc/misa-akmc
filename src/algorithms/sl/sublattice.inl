@@ -11,22 +11,30 @@
 #include "utils/random/random.h"
 #include "comm_dirs.h"
 
+
 template<class PKg, class PKs, class Ins, typename E>
 void SubLattice::startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model) {
     const unsigned long time_steps = ceil(time_limit / T);
     for (unsigned long step = 0; step < time_steps; step++) { // time steps loop
         for (int sect = 0; sect < SECTORS_NUM; sect++) { // sector loop
-            const double init_overflow_time = sec_meta.sector_itl->evolution_time - step * T;
-            double sector_time = init_overflow_time;
-            while (p_model->defectSize() != 0 && sector_time < T) {
+            const double step_threshold_time = static_cast<double>(step + 1) * T - sec_meta.sector_itl->evolution_time;
+            double sector_time = 0.0;
+            do {
                 const double total_rates = calcRatesWrapper(p_model, (*sec_meta.sector_itl).id);
-                selectPerformWrapper(p_model, total_rates, (*sec_meta.sector_itl).id);
-                const double delta_t = -log(r::random() / total_rates);
-                sector_time += delta_t;
-            }
+                if (total_rates == 0.0 || abs(total_rates) < std::numeric_limits<_type_rate>::epsilon()) {
+                    // If there is no defect, use synchronous parallel kMC algorithm.
+                    // Because there is no kMC event, just increase time.
+                    sector_time = step_threshold_time;
+                } else {
+                    selectPerformWrapper(p_model, total_rates, (*sec_meta.sector_itl).id);
+                    const double delta_t = -log(r::random() / total_rates);
+                    sector_time += delta_t;
+                }
+                // todo: time comparing, nearest principle based on predicting next delta t.
+            } while (sector_time < step_threshold_time);
             // kmc simulation on this sector is finished
             // we store evolution time of current sector when the sector loop finishes.
-            sec_meta.sector_itl->evolution_time += sector_time - init_overflow_time;
+            sec_meta.sector_itl->evolution_time += sector_time;
             // communicate ghost area of current process to sync simulation regions of neighbor process.
             syncSimRegions<PKs>(pk_inst);
             syncNextSectorGhostRegions<PKg>(pk_inst); // communicate ghost area data of next sector in current process.
