@@ -15,7 +15,7 @@ const unsigned long GhostSyncPacker::sendLength(const std::vector<comm::Region<p
     for (auto r:send_regions) {
         size_ghost += r.volume();
     }
-    return size_ghost;
+    return BCC_DBX * size_ghost;
 }
 
 void GhostSyncPacker::onSend(pack_date_type *buffer,

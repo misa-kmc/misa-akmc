@@ -16,7 +16,7 @@ SimSyncPacker::sendLength(const std::vector<comm::Region<pack_region_type>> send
     for (auto r:send_regions) {
         size_send += r.volume();
     }
-    return size_send;
+    return BCC_DBX * size_send;
 }
 
 void SimSyncPacker::onSend(Lattice *buffer, const std::vector<comm::Region<pack_region_type>> send_regions,
