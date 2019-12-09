@@ -16,6 +16,7 @@
 #include "pkmc.h"
 #include "device.h"
 #include "seed_relocate.h"
+#include "m_event_listener.h"
 
 bool PKMC::beforeCreate(int argc, char **argv) {
     // parser arguments
@@ -125,6 +126,10 @@ void PKMC::onStart() {
     sim->prepareForStart();
     // setup model and run simulation
     ABVIModel model(sim->box, config_v.attempt_freq, config_v.temperature);
+    counter m_counter; // atoms counter
+    MEventListener m_listener(m_counter);
+    model.setEventListener(&m_listener);
+    // run simulation
     sim->simulate(&model, config_v.physics_time);
 }
 
