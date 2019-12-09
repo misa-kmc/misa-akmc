@@ -13,6 +13,7 @@
 #include "profile_config.h"
 #include "config_parsing.h"
 #include "pkmc.h"
+#include "device.h"
 
 bool PKMC::beforeCreate(int argc, char **argv) {
     // parser arguments
@@ -76,6 +77,14 @@ void PKMC::onCreate() {
         std::cout << p_config->configValues;
     }
 #endif
+
+    // prepare logs.
+    if (istty() && !(p_config->configValues.output.logs_to_file)) {
+        // set colorful log if we output to console and it is a real tty(no io redirection).
+        kiwi::logs::setCorlorFul(true);
+    } else if (p_config->configValues.output.logs_to_file) {
+        kiwi::logs::setLogFile(p_config->configValues.output.logs_file);
+    }
 }
 
 bool PKMC::prepare() {
