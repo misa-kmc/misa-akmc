@@ -279,6 +279,11 @@ void ABVIModel::perform(const event::SelectedEvent selected) {
     }
 }
 
+void ABVIModel::reindex(const lat_region region) {
+    box->va_list->reindex(box->lattice_list, region);
+    // todo reindex interval list
+}
+
 void ABVIModel::setEventListener(EventListener *p_listener) {
     p_event_listener = p_listener;
 }

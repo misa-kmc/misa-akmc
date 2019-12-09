@@ -38,6 +38,7 @@ void SubLattice::startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model) {
             // communicate ghost area of current process to sync simulation regions of neighbor process.
             syncSimRegions<PKs>(pk_inst);
             syncNextSectorGhostRegions<PKg>(pk_inst); // communicate ghost area data of next sector in current process.
+            p_model->reindex(p_domain->local_sector_region[(*sec_meta.sector_itl).id]); // reindex defects lists
             ++sec_meta.sector_itl; // update sector id.
             nextSector(); // some post operations after moved to next sector.
         }

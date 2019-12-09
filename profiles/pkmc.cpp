@@ -92,9 +92,9 @@ bool PKMC::prepare() {
             // todo log error
             return false;
         case conf::Random:
-            creation::createRandom(sim->box->lattice_list, config_v.create.types,
-                                   config_v.create.types_ratio, config_v.create.va_count,
-                                   sim->_p_domain);
+            creation::createRandom(sim->box->lattice_list, sim->box->va_list,
+                                   config_v.create.types, config_v.create.types_ratio,
+                                   config_v.create.va_count, sim->_p_domain);
             break;
         case conf::Pipe:
             break;
