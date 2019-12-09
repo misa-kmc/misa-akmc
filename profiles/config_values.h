@@ -28,9 +28,11 @@ namespace conf {
     };
 
     struct Output {
-        unsigned long log_interval = 0;
         unsigned long dump_interval = 0;
         std::string dump_file_path = "";
+        unsigned long logs_interval = 0;
+        std::string logs_file = "";
+        bool logs_to_file = false;
     };
 
     struct ConfigValues {
