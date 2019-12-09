@@ -8,6 +8,7 @@
 #include <utils/mpi_utils.h>
 #include <lattice/lattices_list.h>
 #include <utils/mpi_types.h>
+#include <abvi/kmc.h>
 #include "creation.h"
 #include "building_config.h"
 #include "profile_config.h"
@@ -122,8 +123,9 @@ void PKMC::onStart() {
     conf::ConfigValues config_v = ConfigParsing::getInstance()->configValues;
     //  set up ghost.
     sim->prepareForStart();
-    // run simulation
-    sim->simulate(config_v.physics_time, config_v.attempt_freq, config_v.temperature);
+    // setup model and run simulation
+    ABVIModel model(sim->box, config_v.attempt_freq, config_v.temperature);
+    sim->simulate(&model, config_v.physics_time);
 }
 
 void PKMC::onFinish() {

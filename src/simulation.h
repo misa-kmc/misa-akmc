@@ -12,6 +12,12 @@
 
 #include "lattice/period_lattice_list.h"
 #include "abvi/box.h"
+#include "models/model_adapter.h"
+#include "algorithms/sl/sublattice.h"
+#include "pack/ghost_sync_packer.h"
+#include "pack/sim_sync_packer.h"
+#include "pack/packer_instance.h"
+
 
 class simulation {
 public:
@@ -44,17 +50,24 @@ public:
     void prepareForStart();
 
     /**
-     * \brief perform simulation.
+     * \brief perform simulation using a specific model.
+     * \tparam E type of event in kmc model.
      * \param time_limit the max simulation time.
-     * \param attempt_frequencies attempt frequency
-     * \param temperature system temperature
      */
-    void simulate(const double time_limit, const double attempt_frequency, const double temperature);
+    template<typename E>
+    void simulate(ModelAdapter<E> *p_model, const double time_limit);
 
 public:
     Box *box = nullptr;
     comm::ColoredDomain *_p_domain = nullptr;
 };
 
+template<typename E>
+void simulation::simulate(ModelAdapter<E> *p_model, const double time_limit) {
+    SubLattice sl(_p_domain, time_limit, 1.0); // todo calculate T
+
+    PackerInstance pk_ins(box->lattice_list);
+    sl.startTimeLoop<GhostSyncPacker, SimSyncPacker, PackerInstance>(pk_ins, p_model);
+}
 
 #endif //MISA_KMC_SIMULATION_H
