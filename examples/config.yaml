@@ -45,7 +45,9 @@ simulation:
   dpasm1: 3e-9 # dpa per second, unit: dpa/s
 
 output:
-  log_interval: 10 # if zero is set, it means no log.
   dump:
     interval: 100 # dump system lattice information.
     file_path: "kmc.{}.out"
+  logs:
+    interval: 10 # if zero is set, it means no log.
+    logs_file: "" # if it is empty, log to /dev/console

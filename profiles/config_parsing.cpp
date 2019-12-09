@@ -171,11 +171,17 @@ bool ConfigParsing::parseCreate(const YAML::Node &yaml_create) {
 }
 
 bool ConfigParsing::parseOutput(const YAML::Node &output) {
-    configValues.output.log_interval = output["log_interval"].as<unsigned long>(0);
     const YAML::Node yaml_dump = output["dump"];
+    const YAML::Node yaml_logs = output["logs"];
     if (yaml_dump) {
         configValues.output.dump_interval = yaml_dump["interval"].as<unsigned long>(0);
         configValues.output.dump_file_path = yaml_dump["file_path"].as<std::string>("");
     }
+    if (yaml_logs) {
+        configValues.output.logs_interval = yaml_logs["interval"].as<unsigned long>(0);
+        configValues.output.logs_file = yaml_logs["logs_file"].as<std::string>("");
+    }
+    // if it is empty, log to /dev/console
+    configValues.output.logs_to_file = !(configValues.output.logs_file.empty());
     return true;
 }
