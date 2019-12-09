@@ -21,7 +21,7 @@ typedef std::function<bool(const _type_lattice_coord x,
 
 // convert lattice id to x,y,z coordinate, and call callback function using x,y,z.
 #define ID_TO_XYZ(id, callback) {       \
-id -= local_base_id;                    \
+id -= meta.local_base_id;                    \
 _type_lattice_coord x = id % meta.size_x;    \
 id = id / meta.size_x;                       \
 _type_lattice_coord y = id % meta.size_y;    \
@@ -281,11 +281,12 @@ public:
         return meta.size_x * meta.size_y * meta.size_z;
     }
 
-protected:
     /**
      * \brief metadata of lattice list
      */
     const LatListMeta meta;
+
+protected:
 
     // global id = local id + local_base_id
     const _type_lattice_id local_base_id = 0;

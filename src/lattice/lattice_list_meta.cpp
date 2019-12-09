@@ -9,6 +9,7 @@ LatListMeta::LatListMeta(const _type_box_size bx, const _type_box_size by, const
                          const _type_box_size gx, const _type_box_size gy, const _type_box_size gz)
         : size_x(BCC_DBX * bx + BCC_DBX * 2 * gx), size_y(by + 2 * gy),
           size_z(bz + 2 * gz), _max_id(size_z * size_y * size_x - 1),
-          box_x(BCC_DBX * bx), box_y(by), box_z(bz) {
+          box_x(BCC_DBX * bx), box_y(by), box_z(bz),
+          ghost_x(BCC_DBX * gx), ghost_y(gy), ghost_z(gz) {
 
 }
