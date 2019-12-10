@@ -14,6 +14,7 @@
 #include "config_parsing.h"
 #include "pkmc.h"
 #include "device.h"
+#include "seed_relocate.h"
 
 bool PKMC::beforeCreate(int argc, char **argv) {
     // parser arguments
@@ -91,6 +92,9 @@ bool PKMC::prepare() {
     mpi_types::setInterMPIType();
     sim = new simulation();
     conf::ConfigValues config_v = ConfigParsing::getInstance()->configValues;
+    // if the seed is 0, reset the seed using random device.
+    r::seedRelocate(&config_v.seeds.create_types, &config_v.seeds.create_vacancy,
+                    &config_v.seeds.event_selection, &config_v.seeds.time_inc);
     sim->createDomain(config_v.box_size, config_v.lattice_const,
                       config_v.cutoff_radius);
 

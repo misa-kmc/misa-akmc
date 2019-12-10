@@ -21,6 +21,7 @@ add_library(${P_KMP_PROFILE_LIB_NAME} STATIC
         lattice_types_string.cpp
         lattice_types_string.h
         device.h
+        seed_relocate.h
         )
 
 target_link_libraries(${P_KMP_PROFILE_LIB_NAME} PUBLIC
