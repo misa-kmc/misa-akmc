@@ -11,7 +11,7 @@
 #include "creation.h"
 #include "building_config.h"
 #include "profile_config.h"
-#include "config_parsing.h"
+#include "config/config_parsing.h"
 #include "pkmc.h"
 #include "device.h"
 #include "seed_relocate.h"
