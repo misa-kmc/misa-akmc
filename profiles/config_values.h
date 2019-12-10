@@ -35,12 +35,20 @@ namespace conf {
         bool logs_to_file = false;
     };
 
+    struct RandomSeeds {
+        uint32_t create_types;
+        uint32_t create_vacancy;
+        uint32_t event_selection;
+        uint32_t time_inc;
+    };
+
     struct ConfigValues {
         friend std::ostream &operator<<(std::ostream &os, const ConfigValues &cv);
 
     public:
         Create create;
         Output output;
+        RandomSeeds seeds;
         // box
         unsigned long box_size[comm::DIMENSION_SIZE];
 
