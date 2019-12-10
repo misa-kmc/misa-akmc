@@ -5,12 +5,8 @@
 #include <utils/mpi_utils.h>
 #include "utils/mpi_types.h"
 #include "simulation.h"
-#include "algorithms/sl/sublattice.h"
 #include "abvi/kmc.h"
 #include "pack/ghost_init_packer.h"
-#include "pack/ghost_sync_packer.h"
-#include "pack/sim_sync_packer.h"
-#include "pack/packer_instance.h"
 #include "utils/simulation_domain.h"
 
 void simulation::createDomain(const unsigned long phase_space[comm::DIMENSION_SIZE],
@@ -64,12 +60,4 @@ void simulation::prepareForStart() {
     comm::neiSendReceive(&init_packer, SimulationDomain::comm_sim_pro,
                          mpi_types::_mpi_type_lattice_data,
                          _p_domain->rank_id_neighbours);
-}
-
-void simulation::simulate(const double time_limit, const double attempt_frequency, const double temperature) {
-    ABVIModel model(box, attempt_frequency, temperature);
-    SubLattice sl(_p_domain, time_limit, 1.0); // todo calculate T
-
-    PackerInstance pk_ins(box->lattice_list);
-    sl.startTimeLoop<GhostSyncPacker, SimSyncPacker, PackerInstance>(pk_ins, &model);
 }

@@ -19,6 +19,8 @@ add_library(${P_KMP_PROFILE_LIB_NAME} STATIC
         config/lattice_types_string.cpp
         config/lattice_types_string.h
         device.h
+        m_event_listener.h
+        m_event_listener.cpp
         pkmc.h
         pkmc.cpp
         seed_relocate.h

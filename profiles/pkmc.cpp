@@ -8,6 +8,7 @@
 #include <utils/mpi_utils.h>
 #include <lattice/lattices_list.h>
 #include <utils/mpi_types.h>
+#include <abvi/kmc.h>
 #include "creation.h"
 #include "building_config.h"
 #include "profile_config.h"
@@ -15,6 +16,7 @@
 #include "pkmc.h"
 #include "device.h"
 #include "seed_relocate.h"
+#include "m_event_listener.h"
 
 bool PKMC::beforeCreate(int argc, char **argv) {
     // parser arguments
@@ -122,8 +124,13 @@ void PKMC::onStart() {
     conf::ConfigValues config_v = ConfigParsing::getInstance()->configValues;
     //  set up ghost.
     sim->prepareForStart();
+    // setup model and run simulation
+    ABVIModel model(sim->box, config_v.attempt_freq, config_v.temperature);
+    counter m_counter; // atoms counter
+    MEventListener m_listener(m_counter);
+    model.setEventListener(&m_listener);
     // run simulation
-    sim->simulate(config_v.physics_time, config_v.attempt_freq, config_v.temperature);
+    sim->simulate(&model, config_v.physics_time);
 }
 
 void PKMC::onFinish() {

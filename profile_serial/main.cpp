@@ -12,7 +12,6 @@
 #include <counter.h>
 #include <utils/random/rng_type.h>
 
-#include "m_event_listener.h"
 
 void placeDumbbells(LatticesList *lattice_list, ItlList *itl_list, counter &m_counter,
                     const LatticeTypes::lat_type types[],
@@ -109,11 +108,8 @@ int main() {
     std::cout << "==== KMC initialized with:" << std::endl;
     logCounter(m_counter);
 
-    MEventListener m_listener(m_counter);
-
     // start simulation
     ABVIModel kmc{sim_box, env::global_env.attempt_freq, env::global_env.temperature}; // fixme init box pointer
-    kmc.setEventListener(&m_listener);
 
     double current_time = 0;
     const double total_time = 0.1;
