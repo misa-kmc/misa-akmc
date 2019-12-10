@@ -27,3 +27,19 @@ int counter::getAtomCount(const LatticeTypes::lat_type tp) {
     }
     return count;
 }
+
+counter counter::newCounter(LatticesList *p_list) {
+    counter c;
+    for (_type_lattice_coord z = 0; z < p_list->meta.box_z; z++) {
+        for (_type_lattice_coord y = 0; y < p_list->meta.box_y; y++) {
+            // note: x is already doubled.
+            for (_type_lattice_coord x = 0; x < p_list->meta.box_x; x++) {
+                Lattice &lat = p_list->getLat(p_list->meta.ghost_x + x,
+                                              p_list->meta.ghost_y + y,
+                                              p_list->meta.ghost_z + z);
+                c.add(lat.type._type);
+            }
+        }
+    }
+    return c;
+}

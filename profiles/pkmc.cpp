@@ -125,8 +125,9 @@ void PKMC::onStart() {
     //  set up ghost.
     sim->prepareForStart();
     // setup model and run simulation
+    counter m_counter = counter::newCounter(sim->box->lattice_list); // atoms counter
+
     ABVIModel model(sim->box, config_v.attempt_freq, config_v.temperature);
-    counter m_counter; // atoms counter
     MEventListener m_listener(m_counter);
     model.setEventListener(&m_listener);
     // run simulation

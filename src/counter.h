@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <cassert>
 
+#include "lattice/lattices_list.h"
 #include "lattice/lattice_types.h"
 
 struct EnumClassHash {
@@ -65,6 +66,13 @@ public:
      * \return atom count whose type is \param tp.
      */
     int getAtomCount(const LatticeTypes::lat_type tp);
+
+    /**
+     * \brief create a counter from lattice list.
+     * \param p_list lattice list
+     * \return new counter
+     */
+    static counter newCounter(LatticesList *p_list);
 
 protected:
     std::unordered_map<LatticeTypes::lat_type, int, std::hash<int>> data;
