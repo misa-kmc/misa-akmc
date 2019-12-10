@@ -10,6 +10,7 @@
 #include <utils/random/random.h>
 #include <abvi/kmc.h>
 #include <counter.h>
+#include <utils/random/rng_type.h>
 
 #include "m_event_listener.h"
 
@@ -67,8 +68,11 @@ int main() {
         // set lattice types randomly.
         const LatticeTypes::lat_type src_types[] = {LatticeTypes::Fe, LatticeTypes::Cu,
                                                     LatticeTypes::Ni, LatticeTypes::Mn};
-        const unsigned int ratio[] = {100, 0, 0, 0}; // Fe bassed lattice
-        lattice.type._type = LatticeTypes::randomAtomsType(src_types, ratio, 4);
+        const unsigned int ratio[] = {100, 0, 0, 0}; // Fe based lattice
+        const unsigned int ratio_total = 100;
+        std::uniform_int_distribution<> types_dis(1, ratio_total);
+        r::type_rng types_rng(0x100);
+        lattice.type._type = LatticeTypes::randomAtomsType(src_types, ratio, 4, types_dis(types_rng));
         m_counter.add(lattice.type._type); // add 1 for this type lattice.
         return true;
     });

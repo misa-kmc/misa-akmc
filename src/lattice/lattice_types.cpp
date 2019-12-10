@@ -7,18 +7,12 @@
 #include "lattice_types.h"
 
 LatticeTypes::lat_type
-LatticeTypes::randomAtomsType(const lat_type source_type[], const unsigned int ratio[], const int len) {
-    int ratio_total = 0;
-    for (int i = 0; i < len; i++) {
-        ratio_total += ratio[i];
-    }
-
-    const int rand_ = r::rand32(0, static_cast<const uint32_t>(ratio_total));
-
-    int rank_local = 0;
-    for (int i = 0; i < len; i++) {
+LatticeTypes::randomAtomsType(const lat_type source_type[], const unsigned int ratio[],
+                              const unsigned int len, const unsigned int hit) {
+    unsigned int rank_local = 0;
+    for (unsigned int i = 0; i < len; i++) {
         rank_local += ratio[i];
-        if (rank_local >= rand_) {
+        if (rank_local >= hit) {
             return static_cast<lat_type>(source_type[i]);
         }
     }
