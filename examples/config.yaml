@@ -36,6 +36,13 @@ create: # how the simulation box is created.
     enable: false
     file_path: 1072.xyz
 
+seeds:
+  seeds_file: "" # used for setting different seed for each MPI rank (todo)
+  create_types: 100565 # if 0 is set, random device will be used.
+  create_vacancy: 16650
+  event_selection: 563264
+  time_inc: 594689
+
 simulation:
   temperature: 673  # unit: K
   physics_time: 8e4  # physics time limit.

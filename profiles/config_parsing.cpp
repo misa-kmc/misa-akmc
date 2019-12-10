@@ -3,7 +3,10 @@
 //
 
 #include <fstream>
+#include <iostream>
+#include <random>
 #include <comm/types_define.h>
+#include <utils/random/random.h>
 #include "config_parsing.h"
 #include "lattice_types_string.h"
 
@@ -74,6 +77,16 @@ void ConfigParsing::parse(const std::string config_file) {
         return;
     }
     if (!parseCreate(create)) {
+        return;
+    }
+
+    // parse random
+    const YAML::Node seeds = config["seeds"];
+    if (!sim) {
+        setError("seeds in config is not specified.");
+        return;
+    }
+    if (!parseSeeds(seeds)) {
         return;
     }
 
@@ -167,6 +180,14 @@ bool ConfigParsing::parseCreate(const YAML::Node &yaml_create) {
         setError("no create option in config.");
         return false;
     }
+    return true;
+}
+
+bool ConfigParsing::parseSeeds(const YAML::Node &yaml_seeds) {
+    configValues.seeds.create_types = yaml_seeds["create_types"].as<uint32_t>(r::seed_auto);
+    configValues.seeds.create_vacancy = yaml_seeds["create_vacancy"].as<uint32_t>(r::seed_auto);
+    configValues.seeds.event_selection = yaml_seeds["event_selection"].as<uint32_t>(r::seed_auto);
+    configValues.seeds.time_inc = yaml_seeds["time_inc"].as<uint32_t>(r::seed_auto);
     return true;
 }
 

@@ -30,6 +30,11 @@ void conf::ConfigValues::packData(kiwi::Bundle &bundle) {
     bundle.put(size_types_r, create.types_ratio.data());
     bundle.put(create.pipe_input_box);
     bundle.put(create.restart_file);
+    // random seeds
+    bundle.put(seeds.create_types);
+    bundle.put(seeds.create_vacancy);
+    bundle.put(seeds.event_selection);
+    bundle.put(seeds.time_inc);
     // output
     bundle.put(output.dump_interval);
     bundle.put(output.dump_file_path);
@@ -63,6 +68,11 @@ void conf::ConfigValues::unpackData(kiwi::Bundle &bundle) {
     bundle.get(cursor, size_types_r, create.types_ratio.data());
     bundle.get(cursor, create.pipe_input_box);
     bundle.get(cursor, create.restart_file);
+    // random seeds
+    bundle.get(cursor, seeds.create_types);
+    bundle.get(cursor, seeds.create_vacancy);
+    bundle.get(cursor, seeds.event_selection);
+    bundle.get(cursor, seeds.time_inc);
     // output
     bundle.get(cursor, output.dump_interval);
     bundle.get(cursor, output.dump_file_path);
@@ -100,6 +110,10 @@ std::ostream &conf::operator<<(std::ostream &os, const conf::ConfigValues &cv) {
         os << "create by: restart" << std::endl;
         os << "restart file:" << cv.create.restart_file << std::endl;
     }
+    os << "seeds: create_types,\t create_vacancy,\t event_selection,\t time_inc" << std::endl;
+    os << cv.seeds.create_types << "\t" << cv.seeds.create_vacancy << "\t"
+       << cv.seeds.event_selection << "\t" << cv.seeds.time_inc << std::endl;
+
     os << "output.dump:"
        << " interval: " << cv.output.dump_interval
        << ", file_path: " << cv.output.dump_file_path << std::endl;

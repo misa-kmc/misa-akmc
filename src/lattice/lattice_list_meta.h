@@ -32,10 +32,16 @@ struct LatListMeta {
 
     /**
      * \brief the size of lattice lists array in each dimension.
-     * \note the size_x is two times then real box size (without ghost area) due to BCC structure.
-     * size_y and size_y is the same as the real lattice size (with ghost area).
+     * \note the box_x is two times then real box size (without ghost area) due to BCC structure.
+     * box_y and box_z is the same as the real lattice size (without ghost area).
      */
     const _type_lattice_coord box_x, box_y, box_z;
+
+    /**
+     * \brief the ghost lattice size of lattice lists array in each dimension
+     * \note the ghost_x is two times then real lattice size.
+     */
+    const _type_lattice_coord ghost_x, ghost_y, ghost_z;
 
     // the max lattice id in box.
     const _type_lattice_id _max_id;
