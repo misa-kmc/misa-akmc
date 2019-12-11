@@ -34,7 +34,7 @@ void Itl::beforeRatesUpdate(Lattice *list_1nn[LatticesList::MAX_1NN],
 void Itl::updateRates(Lattice &lattice, Lattice *list_1nn[LatticesList::MAX_1NN],
                       _type_neighbour_status status_1nn,
                       rateCallback callback) {
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
     assert(lattice.type.isDumbbell());
     assert(orient._ori != orientation::unknown);
 #endif

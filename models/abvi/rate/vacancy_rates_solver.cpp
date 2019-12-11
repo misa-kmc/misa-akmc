@@ -28,7 +28,7 @@ double VacRatesSolver::e0(const LatticeTypes::lat_type ghost_atom) const {
 
 double VacRatesSolver::deltaE(Lattice &source_lattice, Lattice &target_lattice,
                               const LatticeTypes::lat_type ghost_atom) {
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
     {
         const bool debug_bool_1 = target_lattice.type.isDumbbell(); // always be false.
         assert(!debug_bool_1);

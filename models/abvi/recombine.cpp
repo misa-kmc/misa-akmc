@@ -37,7 +37,7 @@ void rec::RecList::create(LatticesList *lat_list, ItlList *itl_list, const _type
     // initializing of neighbour lattices
     Lattice &center_lat = lat_list->getLat(id);
     const bool is_vac = center_lat.type.isVacancy();
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
     // it must be vacancy or interstitial
     if (!center_lat.type.isVacancy()) {
         assert(center_lat.type.isDumbbell());

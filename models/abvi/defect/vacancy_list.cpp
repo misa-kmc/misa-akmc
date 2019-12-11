@@ -12,7 +12,7 @@ _type_neighbour_status Vacancy::availTranDirs(_type_neighbour_status nei_status,
     // then set the destination as available transition direction.
     _type_dirs_status atom_nei_status = 0;
     for (int b = 0; b < LatticesList::MAX_NEI_BITS; b++) {
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
         if ((nei_status >> b) & 1) {
             // its neighbour lattice can not be dumbbell.
             bool is_db = _1nn_lats[b]->type.isDumbbell();

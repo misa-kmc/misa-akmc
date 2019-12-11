@@ -13,7 +13,7 @@ void counter::setLatTypeToStrFunc(const fn_lat_type_to_str fn_lat_type_to_str) {
 }
 
 int counter::getAtomCount(const LatticeTypes::lat_type tp) {
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
     assert(LatticeTypes{tp}.isAtom() || LatticeTypes{tp}.isVacancy());
 #endif
     if (LatticeTypes{tp}.isVacancy()) {

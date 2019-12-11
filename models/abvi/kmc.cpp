@@ -90,7 +90,7 @@ event::SelectedEvent ABVIModel::select(const lat_region region, const _type_rate
                             // convert rate index to 1nn list array index.
                             const orientation ori = box->itl_list->mp[lattice.getId()].orient;
                             const _type_dir_id _1nn_tag = Itl::get1nnIdByRatesIndex(rate_index, ori.availTransDirs());
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
                             assert(_1nn_list[_1nn_tag] != nullptr);
 #endif
                             selected_event.event_type = event::DumbbellTrans;
@@ -108,7 +108,7 @@ event::SelectedEvent ABVIModel::select(const lat_region region, const _type_rate
                         if (rate_accumulator > excepted_rate) {
                             Lattice *_1nn_list[LatticesList::MAX_1NN] = {nullptr};
                             box->lattice_list->get1nn(lattice.getId(), _1nn_list);
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
                             assert(_1nn_list[rate_index] != nullptr);
 #endif
                             selected_event.event_type = event::VacancyTrans;
@@ -123,7 +123,7 @@ event::SelectedEvent ABVIModel::select(const lat_region region, const _type_rate
             }
         }
     }
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
     //    todo assert total rates == rate_accumulator + defect_gen_rate
 #endif
     return selected_event;
@@ -134,7 +134,7 @@ void ABVIModel::perform(const event::SelectedEvent selected) {
         case event::VacancyTrans: {
             Lattice &lat_from = box->lattice_list->getLat(selected.from_id);
             Lattice &lat_to = box->lattice_list->getLat(selected.to_id);
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
             assert(lat_from.type.isVacancy());
             assert(lat_to.type.isAtom());
 #endif
@@ -163,7 +163,7 @@ void ABVIModel::perform(const event::SelectedEvent selected) {
             Lattice &lat_from = box->lattice_list->getLat(selected.from_id);
             Lattice &lat_to = box->lattice_list->getLat(selected.to_id);
             Itl itl_copy = box->itl_list->mp.at(selected.from_id);
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
             assert(lat_from.type.isDumbbell());
             assert(lat_to.type.isAtom());
 #endif

@@ -35,7 +35,7 @@ double ItlRatesSolver::e0(const LatticeTypes::lat_type ghost_atom) const {
 double ItlRatesSolver::deltaE(Lattice &source_lattice, Lattice &target_lattice,
                               const LatticeTypes::lat_type ghost_atom) {
 
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
     {
         const bool debug_bool_1 = source_lattice.type.isDumbbell();
         assert(debug_bool_1);
