@@ -36,8 +36,8 @@ void creation::createRandom(uint32_t seed_create_types, uint32_t seed_create_vac
     // create vacancy
     // to use SimulationDomain, make sure this function is called after simulation::createDomain()
     const unsigned long va_local = va_count / SimulationDomain::comm_sim_pro.all_ranks +
-                                   SimulationDomain::comm_sim_pro.own_rank <
-                                   va_count % SimulationDomain::comm_sim_pro.all_ranks ? 1 : 0;
+                                   (SimulationDomain::comm_sim_pro.own_rank <
+                                    (va_count % SimulationDomain::comm_sim_pro.all_ranks) ? 1 : 0);
     const comm::_type_lattice_size max_lattice_size = BCC_DBX * p_domain->sub_box_lattice_size[0] *
                                                       p_domain->sub_box_lattice_size[1] *
                                                       p_domain->sub_box_lattice_size[2];
