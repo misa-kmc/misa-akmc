@@ -3,8 +3,14 @@
 //
 
 #include <cassert>
+#include <iostream>
 #include "counter.h"
 #include "type_define.h"
+
+
+void counter::setLatTypeToStrFunc(const fn_lat_type_to_str fn_lat_type_to_str) {
+    this->func_lat_type_to_str = fn_lat_type_to_str;
+}
 
 int counter::getAtomCount(const LatticeTypes::lat_type tp) {
 #ifdef DEBUG_MODE
@@ -42,4 +48,17 @@ counter counter::newCounter(LatticesList *p_list) {
         }
     }
     return c;
+}
+
+std::ostream &operator<<(std::ostream &os, const counter &counter) {
+    if (counter.func_lat_type_to_str) {
+        for (const auto &c : counter.data) {
+            os << "[" << counter.func_lat_type_to_str(c.first) << "]: " << c.second << "\n";
+        }
+    } else {
+        for (const auto &c : counter.data) {
+            os << "[" << c.first << "]: " << c.second << "\n";
+        }
+    }
+    return os;
 }

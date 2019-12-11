@@ -9,10 +9,12 @@
 #include <lattice/lattices_list.h>
 #include <utils/mpi_types.h>
 #include <abvi/kmc.h>
+
 #include "creation.h"
 #include "building_config.h"
 #include "profile_config.h"
 #include "config/config_parsing.h"
+#include "config/lattice_types_string.h"
 #include "pkmc.h"
 #include "device.h"
 #include "seed_relocate.h"
@@ -126,6 +128,8 @@ void PKMC::onStart() {
     sim->prepareForStart();
     // setup model and run simulation
     counter m_counter = counter::newCounter(sim->box->lattice_list); // atoms counter
+    m_counter.setLatTypeToStrFunc(&lat::LatTypesString);
+    std::cout << m_counter;
 
     ABVIModel model(sim->box, config_v.attempt_freq, config_v.temperature);
     MEventListener m_listener(m_counter);
