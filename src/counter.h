@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <cassert>
 
+#include "lattice/lattices_list.h"
 #include "lattice/lattice_types.h"
 
 struct EnumClassHash {
@@ -23,7 +24,13 @@ struct EnumClassHash {
  */
 class counter {
 public:
-    explicit counter() {};
+    typedef std::string (*fn_lat_type_to_str)(LatticeTypes::lat_type);
+
+    /**
+     * \brief set a function pointer to convert lattice type to string
+     * \param func_lat_type_to_string function pointer
+     */
+    void setLatTypeToStrFunc(const fn_lat_type_to_str func_lat_type_to_str);
 
     /**
      * \brief set value for type specified by \param tp.
@@ -54,7 +61,7 @@ public:
      * \param tp
      */
     inline void subtract(const LatticeTypes::lat_type tp) {
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
         assert(data[tp] > 0);
 #endif
         data[tp]--;
@@ -66,8 +73,22 @@ public:
      */
     int getAtomCount(const LatticeTypes::lat_type tp);
 
+    /**
+     * \brief create a counter from lattice list.
+     * \param p_list lattice list
+     * \return new counter
+     */
+    static counter newCounter(LatticesList *p_list);
+
+    friend std::ostream &operator<<(std::ostream &os, const counter &cv);
+
 protected:
     std::unordered_map<LatticeTypes::lat_type, int, std::hash<int>> data;
+
+    /**
+     * \brief function to convert lattice type to string
+     */
+    fn_lat_type_to_str func_lat_type_to_str = nullptr;
 };
 
 
