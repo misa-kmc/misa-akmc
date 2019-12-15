@@ -63,3 +63,89 @@ TEST(lattices_list_getLat_test, lattices_list) {
 
     delete p_lat_list;
 }
+
+// tests of get2nn with ghost area
+/**
+ * \brief get id by relative coordinate to box boundary
+ * \param x,y,z the relative coordinate to box boundary (not from ghost boundary)
+ * \return lattice id
+ */
+inline _type_lattice_id ID_BOX_WITH_GHOST_4_4_4(comm::_type_lattice_coord x,
+                                                comm::_type_lattice_coord y,
+                                                comm::_type_lattice_coord z) {
+    return x + BCC_DBX * 4 * y + BCC_DBX * 4 * 4 * z;
+}
+
+TEST(lattice_list_ghost_get2nn_1, lattice_list_test) {
+    Lattice *_2nn[6] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}; // a lattice has at most 6 2nn(s).
+    PeriodLatticeList lattice_list(4, 4, 4, 8, 8, 8); // note: box_x and ghost_x are not doubled
+    auto count = lattice_list.get2nn(lattice_list.meta.ghost_x + 2,
+                                     lattice_list.meta.ghost_y + 1,
+                                     lattice_list.meta.ghost_z + 1,
+                                     _2nn);
+    // test count
+    EXPECT_EQ(count, 6);
+
+    EXPECT_EQ(_2nn[0]->getId(), ID_BOX_WITH_GHOST_4_4_4(0, 1, 1));
+    EXPECT_EQ(_2nn[1]->getId(), ID_BOX_WITH_GHOST_4_4_4(2, 0, 1));
+    EXPECT_EQ(_2nn[2]->getId(), ID_BOX_WITH_GHOST_4_4_4(2, 1, 0));
+    EXPECT_EQ(_2nn[3]->getId(), ID_BOX_WITH_GHOST_4_4_4(2, 1, 2));
+    EXPECT_EQ(_2nn[4]->getId(), ID_BOX_WITH_GHOST_4_4_4(2, 2, 1));
+    EXPECT_EQ(_2nn[5]->getId(), ID_BOX_WITH_GHOST_4_4_4(4, 1, 1));
+}
+
+TEST(lattice_list_ghost_get2nn_low_boundary, lattice_list_test) {
+    Lattice *_2nn[6] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}; // a lattice has at most 6 2nn(s).
+    PeriodLatticeList lattice_list(4, 4, 4, 8, 8, 8);
+    auto count = lattice_list.get2nn(
+            lattice_list.meta.ghost_x + 0,
+            lattice_list.meta.ghost_y + 0,
+            lattice_list.meta.ghost_z + 0,
+            _2nn);
+    // test count
+    EXPECT_EQ(count, 6);
+
+    // the first three lattices are in ghost area
+    EXPECT_EQ(_2nn[0]->getId(), 0);
+    EXPECT_EQ(_2nn[1]->getId(), 0);
+    EXPECT_EQ(_2nn[2]->getId(), 0);
+    EXPECT_EQ(_2nn[3]->getId(), ID_BOX_WITH_GHOST_4_4_4(0, 0, 1));
+    EXPECT_EQ(_2nn[4]->getId(), ID_BOX_WITH_GHOST_4_4_4(0, 1, 0));
+    EXPECT_EQ(_2nn[5]->getId(), ID_BOX_WITH_GHOST_4_4_4(2, 0, 0));
+}
+
+TEST(lattice_list_ghost_get2nn_upper_boundary, lattice_list_test) {
+    Lattice *_2nn[6] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}; // a lattice has at most 6 2nn(s).
+    PeriodLatticeList lattice_list(4, 4, 4, 8, 8, 8);
+    auto count = lattice_list.get2nn(lattice_list.meta.ghost_x + 7,
+                                     lattice_list.meta.ghost_y + 3,
+                                     lattice_list.meta.ghost_z + 3,
+                                     _2nn);
+    // test count
+    EXPECT_EQ(count, 6);
+
+    EXPECT_EQ(_2nn[0]->getId(), ID_BOX_WITH_GHOST_4_4_4(5, 3, 3));
+    EXPECT_EQ(_2nn[1]->getId(), ID_BOX_WITH_GHOST_4_4_4(7, 2, 3));
+    EXPECT_EQ(_2nn[2]->getId(), ID_BOX_WITH_GHOST_4_4_4(7, 3, 2));
+    EXPECT_EQ(_2nn[3]->getId(), 0);
+    EXPECT_EQ(_2nn[4]->getId(), 0);
+    EXPECT_EQ(_2nn[5]->getId(), 0);
+}
+
+TEST(lattice_list_ghost_get2nn_normal_boundary, lattice_list_test) {
+    Lattice *_2nn[6] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}; // a lattice has at most 6 2nn(s).
+    PeriodLatticeList lattice_list(4, 4, 4, 8, 8, 8);
+    auto count = lattice_list.get2nn(lattice_list.meta.ghost_x + 3,
+                                     lattice_list.meta.ghost_y + 3,
+                                     lattice_list.meta.ghost_z + 3,
+                                     _2nn);
+    // test count
+    EXPECT_EQ(count, 6);
+
+    EXPECT_EQ(_2nn[0]->getId(), ID_BOX_WITH_GHOST_4_4_4(1, 3, 3));
+    EXPECT_EQ(_2nn[1]->getId(), ID_BOX_WITH_GHOST_4_4_4(3, 2, 3));
+    EXPECT_EQ(_2nn[2]->getId(), ID_BOX_WITH_GHOST_4_4_4(3, 3, 2));
+    EXPECT_EQ(_2nn[3]->getId(), 0);
+    EXPECT_EQ(_2nn[4]->getId(), 0);
+    EXPECT_EQ(_2nn[5]->getId(), ID_BOX_WITH_GHOST_4_4_4(5, 3, 3));
+}
