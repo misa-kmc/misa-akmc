@@ -18,6 +18,7 @@ set(TEST_SOURCE_FILES
         algorithms/ring_test.cpp
         algorithms/sub_lattice_test.cpp
         lattice/lattice_types_test.cpp
+        lattice/lattices_list_with_ghost_test.cpp
         pack/ghost_init_packer_test.cpp
         utils/mpi_data_types_test.cpp
         counter_test.cpp
