@@ -149,3 +149,37 @@ TEST(lattice_list_ghost_get2nn_normal_boundary, lattice_list_test) {
     EXPECT_EQ(_2nn[4]->getId(), 0);
     EXPECT_EQ(_2nn[5]->getId(), ID_BOX_WITH_GHOST_4_4_4(5, 3, 3));
 }
+
+
+TEST(lattice_list_ghost_walk_test, lattice_list_test) {
+    PeriodLatticeList lattice_list(4, 4, 4, 8, 8, 8);
+    // case 1
+    Lattice *lat = lattice_list.walk(ID_BOX_WITH_GHOST_4_4_4(4, 1, 1), 1, 1, 1);
+    EXPECT_NE(lat, nullptr);
+    EXPECT_EQ(lat->getId(), ID_BOX_WITH_GHOST_4_4_4(5, 1, 1));
+
+    Lattice *lat2 = lattice_list.walk(ID_BOX_WITH_GHOST_4_4_4(5, 1, 1), 2, 2, 2);
+    EXPECT_NE(lat2, nullptr);
+    EXPECT_EQ(lat2, &(lattice_list.getLat(ID_BOX_WITH_GHOST_4_4_4(7, 2, 2))));
+
+    // invalid input
+    Lattice *lat3 = lattice_list.walk(ID_BOX_WITH_GHOST_4_4_4(4, 1, 1), 1, 1, 2);
+    EXPECT_EQ(lat3, nullptr);
+
+    // invalid input
+    Lattice *lat4 = lattice_list.walk(ID_BOX_WITH_GHOST_4_4_4(4, 1, 1), 2, 1, 2);
+    EXPECT_EQ(lat4, nullptr);
+
+    // test out of boundary(down).
+    Lattice *lat5 = lattice_list.walk(ID_BOX_WITH_GHOST_4_4_4(4, 1, 1),
+                                      -lattice_list.meta.ghost_x - 1,
+                                      -2 * lattice_list.meta.ghost_y - 3,
+                                      -2 * lattice_list.meta.ghost_z - 3);
+    EXPECT_EQ(lat5, nullptr);
+
+    // test out of boundary(up).
+    Lattice *lat6 = lattice_list.walk(
+            ID_BOX_WITH_GHOST_4_4_4(lattice_list.meta.size_x, lattice_list.meta.size_y, lattice_list.meta.size_z),
+            1, 1, 1);
+    EXPECT_EQ(lat6, nullptr);
+}

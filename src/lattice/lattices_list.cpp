@@ -118,16 +118,17 @@ Lattice &LatticesList::getLat(_type_lattice_id id) {
 
 Lattice *LatticesList::walk(_type_lattice_id id, const _type_lattice_offset offset_x,
                             const _type_lattice_offset offset_y, const _type_lattice_offset offset_z) {
-    _type_lattice_coord sx = id % meta.size_x;
-    id = id / meta.size_x;
+    // step1: xyz coordinate relative to local box boundary
+    _type_lattice_coord sx = id % meta.box_x;
+    id = id / meta.box_x;
     // use half lattice const coord.
-    _type_lattice_coord sy = sx % 2 == 0 ? 2 * (id % meta.size_y) : 2 * (id % meta.size_y) + 1;
-    _type_lattice_coord sz = sx % 2 == 0 ? 2 * (id / meta.size_y) : 2 * (id / meta.size_y) + 1;
+    _type_lattice_coord sy = sx % 2 == 0 ? 2 * (id % meta.box_y) : 2 * (id % meta.box_y) + 1;
+    _type_lattice_coord sz = sx % 2 == 0 ? 2 * (id / meta.box_y) : 2 * (id / meta.box_y) + 1;
 
-    // add offset
-    sx += offset_x;
-    sy += offset_y;
-    sz += offset_z;
+    // step 2: xyz coordinate relative to ghost boundary and add offset
+    sx += meta.ghost_x + offset_x;
+    sy += 2 * meta.ghost_y + offset_y;
+    sz += 2 * meta.ghost_z + offset_z;
 
     //if out of index
     if (sx >= meta.size_x || sy >= 2 * meta.size_y || sz >= 2 * meta.size_z) {
