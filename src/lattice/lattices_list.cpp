@@ -109,10 +109,10 @@ _type_neighbour_status LatticesList::get2nnBoundaryStatus(_type_lattice_coord x,
 }
 
 Lattice &LatticesList::getLat(_type_lattice_id id) {
-    _type_lattice_coord x = id % meta.size_x;
-    id = id / meta.size_x;
-    _type_lattice_coord y = id % meta.size_y;
-    _type_lattice_coord z = id / meta.size_y;
+    _type_lattice_coord x = id % meta.box_x + meta.ghost_x;
+    id = id / meta.box_x;
+    _type_lattice_coord y = id % meta.box_y + meta.ghost_y;
+    _type_lattice_coord z = id / meta.box_y + meta.ghost_z;
     return _lattices[z][y][x];
 }
 
