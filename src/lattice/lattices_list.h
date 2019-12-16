@@ -21,11 +21,11 @@ typedef std::function<bool(const _type_lattice_coord x,
 
 // convert lattice id to x,y,z coordinate, and call callback function using x,y,z.
 #define ID_TO_XYZ(id, callback) {       \
-id -= meta.local_base_id;                    \
-_type_lattice_coord x = id % meta.size_x;    \
-id = id / meta.size_x;                       \
-_type_lattice_coord y = id % meta.size_y;    \
-_type_lattice_coord z = id / meta.size_y;    \
+id -= meta.local_base_id;                               \
+_type_lattice_coord x = id % meta.box_x + meta.ghost_x; \
+id = id / meta.box_x;                                   \
+_type_lattice_coord y = id % meta.box_y + meta.ghost_y; \
+_type_lattice_coord z = id / meta.box_y + meta.ghost_z; \
 callback;                               \
 }
 
@@ -228,11 +228,13 @@ public:
     }
 
     /*!
-     * \brief calculate the corresponding id of coordinate
-     * \return Id
+     * \brief calculate the lattice id by lattice coordinate
+     * \param x,y,z the index of lattice in lattice list 3d array starting from ghost boundary
+     * \return the id of the found lattice
      */
     inline _type_lattice_id getId(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
-        return x + y * meta.size_x + z * meta.size_x * meta.size_y; // todo return from Lattice object.
+        // todo return from Lattice object.
+        return (x - meta.ghost_x) + meta.box_x * ((y - meta.ghost_y) + (z - meta.ghost_z) * meta.box_y);
     }
 
     /**
@@ -244,7 +246,7 @@ public:
 
     /**
      * \brief get a lattice reference by lattice coordinate
-     * \param x,y,z lattice coordinate
+     * \param x,y,z lattice coordinate from ghost boundary (not simulation box boundary)
      * \return the reference of the matched lattice.
      */
     inline Lattice &getLat(const _type_lattice_coord x, const _type_lattice_coord y,

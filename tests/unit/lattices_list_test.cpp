@@ -6,6 +6,10 @@
 #include <lattice/lattice.h>
 #include <lattice/normal_lattice_list.h>
 
+/**
+ * in this test file, the lattice is tested without ghost area.
+ */
+
 #define ID_BOX_4_4_4(x, y, z) (x + y*8+z*4*8)
 
 // tests of get1nn
