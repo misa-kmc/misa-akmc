@@ -22,6 +22,7 @@ set(TEST_SOURCE_FILES
         pack/ghost_init_packer_test.cpp
         utils/mpi_data_types_test.cpp
         counter_test.cpp
+        creation_test.cpp
         main.cpp
         )
 
