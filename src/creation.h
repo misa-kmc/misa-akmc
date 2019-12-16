@@ -28,6 +28,18 @@ public:
                              const std::vector<LatticeTypes::lat_type> types,
                              const std::vector<unsigned int> types_ratio, const unsigned long va_count,
                              const comm::ColoredDomain *p_domain);
+
+    /**
+     * \brief set global id for lattices in simulation box on current process.
+     * \param lats_list lattice list
+     * \param lbr region of current sub-box in local coordinate system
+     * \param gbr region of current sub-box in global coordinate system
+     * \param phase_space the total lattice size at each dimension
+     */
+    static void setGlobalId(LatticesList *lats_list, const comm::Region<comm::_type_lattice_coord> lbr,
+                            const comm::Region<comm::_type_lattice_coord> gbr,
+                            std::array<uint64_t, comm::DIMENSION_SIZE> phase_space);
+
 };
 
 #endif //MISA_KMC_CREATION_H
