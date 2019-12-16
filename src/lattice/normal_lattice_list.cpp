@@ -5,10 +5,7 @@
 #include "../utils/macros.h"
 #include "normal_lattice_list.h"
 
-NormalLatticeList::NormalLatticeList(_type_box_size box_x, _type_box_size box_y,
-                                     _type_box_size box_z, _type_box_size ghost_x,
-                                     _type_box_size ghost_y, _type_box_size ghost_z)
-        : LatticesList(box_x, box_y, box_z, ghost_x, ghost_y, ghost_z) {}
+NormalLatticeList::NormalLatticeList(const LatListMeta meta): LatticesList(meta) {}
 
 _type_neighbour_status
 NormalLatticeList::get1nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {

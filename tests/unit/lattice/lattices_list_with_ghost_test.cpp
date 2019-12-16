@@ -21,7 +21,7 @@ TEST(lattices_list_getId_test, lattices_list) {
             BCC_DBX * g_x, g_y, g_z,
             BCC_DBX * (g_x + box_x), g_y + box_y, g_z + box_z
     };
-    auto *p_lat_list = new PeriodLatticeList(box_x, box_y, box_z, g_x, g_y, g_z);
+    auto *p_lat_list = new PeriodLatticeList(LatListMeta{box_x, box_y, box_z, g_x, g_y, g_z});
 
     // compare results of Lattice::getId() and LatticesList::getId(x, y, z)
     // we can also say: test xyz to id
@@ -46,7 +46,7 @@ TEST(lattices_list_getLat_test, lattices_list) {
             BCC_DBX * g_x, g_y, g_z,
             BCC_DBX * (g_x + box_x), g_y + box_y, g_z + box_z
     };
-    auto *p_lat_list = new PeriodLatticeList(box_x, box_y, box_z, g_x, g_y, g_z);
+    auto *p_lat_list = new PeriodLatticeList(LatListMeta{box_x, box_y, box_z, g_x, g_y, g_z});
 
     for (comm::_type_lattice_size z = tr.z_low; z < tr.z_high; z++) {
         for (comm::_type_lattice_size y = tr.y_low; y < tr.y_high; y++) {
@@ -78,7 +78,8 @@ inline _type_lattice_id ID_BOX_WITH_GHOST_4_4_4(comm::_type_lattice_coord x,
 
 TEST(lattice_list_ghost_get2nn_1, lattice_list_test) {
     Lattice *_2nn[6] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}; // a lattice has at most 6 2nn(s).
-    PeriodLatticeList lattice_list(4, 4, 4, 8, 8, 8); // note: box_x and ghost_x are not doubled
+    // note: box_x and ghost_x are not doubled
+    PeriodLatticeList lattice_list(LatListMeta{4, 4, 4, 8, 8, 8});
     auto count = lattice_list.get2nn(lattice_list.meta.ghost_x + 2,
                                      lattice_list.meta.ghost_y + 1,
                                      lattice_list.meta.ghost_z + 1,
@@ -96,7 +97,7 @@ TEST(lattice_list_ghost_get2nn_1, lattice_list_test) {
 
 TEST(lattice_list_ghost_get2nn_low_boundary, lattice_list_test) {
     Lattice *_2nn[6] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}; // a lattice has at most 6 2nn(s).
-    PeriodLatticeList lattice_list(4, 4, 4, 8, 8, 8);
+    PeriodLatticeList lattice_list(LatListMeta{4, 4, 4, 8, 8, 8});
     auto count = lattice_list.get2nn(
             lattice_list.meta.ghost_x + 0,
             lattice_list.meta.ghost_y + 0,
@@ -116,7 +117,7 @@ TEST(lattice_list_ghost_get2nn_low_boundary, lattice_list_test) {
 
 TEST(lattice_list_ghost_get2nn_upper_boundary, lattice_list_test) {
     Lattice *_2nn[6] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}; // a lattice has at most 6 2nn(s).
-    PeriodLatticeList lattice_list(4, 4, 4, 8, 8, 8);
+    PeriodLatticeList lattice_list(LatListMeta{4, 4, 4, 8, 8, 8});
     auto count = lattice_list.get2nn(lattice_list.meta.ghost_x + 7,
                                      lattice_list.meta.ghost_y + 3,
                                      lattice_list.meta.ghost_z + 3,
@@ -134,7 +135,7 @@ TEST(lattice_list_ghost_get2nn_upper_boundary, lattice_list_test) {
 
 TEST(lattice_list_ghost_get2nn_normal_boundary, lattice_list_test) {
     Lattice *_2nn[6] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}; // a lattice has at most 6 2nn(s).
-    PeriodLatticeList lattice_list(4, 4, 4, 8, 8, 8);
+    PeriodLatticeList lattice_list(LatListMeta{4, 4, 4, 8, 8, 8});
     auto count = lattice_list.get2nn(lattice_list.meta.ghost_x + 3,
                                      lattice_list.meta.ghost_y + 3,
                                      lattice_list.meta.ghost_z + 3,
@@ -152,7 +153,7 @@ TEST(lattice_list_ghost_get2nn_normal_boundary, lattice_list_test) {
 
 
 TEST(lattice_list_ghost_walk_test, lattice_list_test) {
-    PeriodLatticeList lattice_list(4, 4, 4, 8, 8, 8);
+    PeriodLatticeList lattice_list(LatListMeta{4, 4, 4, 8, 8, 8});
     // case 1
     Lattice *lat = lattice_list.walk(ID_BOX_WITH_GHOST_4_4_4(4, 1, 1), 1, 1, 1);
     EXPECT_NE(lat, nullptr);

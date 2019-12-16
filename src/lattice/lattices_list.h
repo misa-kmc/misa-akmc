@@ -63,18 +63,10 @@ public:
     friend class SimSyncPacker;
 
     /*!
-     * \brief initialize the lattice_lists array(allocate memory) with box size in x,y,z direction.
-     * besides, the lattice id will be set in this constructor.
-     * \param box_x box size/lattice count in x direction without ghost area.
-     * \param box_y box size/lattice count in y direction without ghost area.
-     * \param box_z box size/lattice count in z direction without ghost area.
-     * \param ghost_x ghost size/lattice at x dimension.
-     * \param ghost_y ghost size/lattice at y dimension.
-     * \param ghost_z ghost size/lattice at z dimension.
+     * \brief initialize the lattice_lists array(allocate memory) with meta data(including box size, ghost size etc.).
+     * besides, the local lattice id will be set in this constructor.
      */
-    LatticesList(const _type_box_size box_x, const _type_box_size box_y, const _type_box_size box_z,
-                 const _type_box_size ghost_x, const _type_box_size ghost_y,
-                 const _type_box_size ghost_z);
+    LatticesList(const LatListMeta meta);
 
     virtual ~LatticesList();
 

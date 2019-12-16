@@ -28,9 +28,13 @@ TEST(creation_setGlobalId_allreduce_test, creation_setGlobalId_test) {
             .setLatticeConst(lattice_const)
             .build();
 
-    PeriodLatticeList lattice_list(p_domain->sub_box_lattice_size[0], p_domain->sub_box_lattice_size[1],
-                                   p_domain->sub_box_lattice_size[2], p_domain->lattice_size_ghost[0],
-                                   p_domain->lattice_size_ghost[1], p_domain->lattice_size_ghost[2]);
+    PeriodLatticeList lattice_list(LatListMeta{
+            static_cast<_type_box_size>(p_domain->sub_box_lattice_size[0]),
+            static_cast<_type_box_size>(p_domain->sub_box_lattice_size[1]),
+            static_cast<_type_box_size>(p_domain->sub_box_lattice_size[2]),
+            static_cast<_type_box_size>(p_domain->lattice_size_ghost[0]),
+            static_cast<_type_box_size>(p_domain->lattice_size_ghost[1]),
+            static_cast<_type_box_size>(p_domain->lattice_size_ghost[2])});
     creation::setGlobalId(&lattice_list, p_domain->local_sub_box_lattice_region,
                           p_domain->sub_box_lattice_region,
                           {p_domain->phase_space[0],

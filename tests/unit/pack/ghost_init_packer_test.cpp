@@ -15,9 +15,17 @@ class TestNormalLatticeList : public NormalLatticeList {
 public:
     TestNormalLatticeList(comm::_type_lattice_size box_size_x, comm::_type_lattice_size box_size_y,
                           comm::_type_lattice_size box_size_z, comm::_type_lattice_size ghost_size_x,
-                          comm::_type_lattice_size ghost_size_y, comm::_type_lattice_size ghost_size_z)
-            : NormalLatticeList(box_size_x, box_size_y, box_size_z,
-                                ghost_size_x, ghost_size_y, ghost_size_z) {}
+                          comm::_type_lattice_size ghost_size_y, comm::_type_lattice_size ghost_size_z,
+                          uint64_t global_size_x, uint64_t global_size_y, uint64_t global_size_z,
+                          comm::_type_lattice_size global_base_x, comm::_type_lattice_size global_base_y,
+                          comm::_type_lattice_size global_base_z)
+            : NormalLatticeList(LatListMeta{
+            static_cast<_type_box_size>(box_size_x), static_cast<_type_box_size>(box_size_y),
+            static_cast<_type_box_size>(box_size_z), static_cast<_type_box_size>(ghost_size_x),
+            static_cast<_type_box_size>(ghost_size_y), static_cast<_type_box_size>(ghost_size_z),
+            static_cast<_type_box_size>(global_size_x), static_cast<_type_box_size>(global_size_y),
+            static_cast<_type_box_size>(global_size_z), static_cast<_type_box_size>(global_base_x),
+            static_cast<_type_box_size>(global_base_y), static_cast<_type_box_size>(global_base_z)}) {}
 
     FRIEND_TEST(ghost_init_packer_id_test, ghost_init_packer_test);
 };
@@ -47,8 +55,12 @@ TEST(ghost_init_packer_id_test, ghost_init_packer_test) {
     // set lattice list
     auto lattice_list = new TestNormalLatticeList{
             _p_domain->sub_box_lattice_size[0], _p_domain->sub_box_lattice_size[1],
-            _p_domain->sub_box_lattice_size[0], _p_domain->lattice_size_ghost[0],
-            _p_domain->lattice_size_ghost[1], _p_domain->lattice_size_ghost[2]
+            _p_domain->sub_box_lattice_size[2], _p_domain->lattice_size_ghost[0],
+            _p_domain->lattice_size_ghost[1], _p_domain->lattice_size_ghost[2],
+            _p_domain->phase_space[0], _p_domain->phase_space[1], _p_domain->phase_space[2],
+            _p_domain->sub_box_lattice_region.x_low,
+            _p_domain->sub_box_lattice_region.y_low,
+            _p_domain->sub_box_lattice_region.z_low,
     };
     // set lattice id.
     for (comm::_type_lattice_coord z = 0; z < _p_domain->local_ghost_ext_lattice_region.z_high; z++) {

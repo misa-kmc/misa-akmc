@@ -45,11 +45,18 @@ void simulation::createLattice() {
     builder.setBoxSize(
             static_cast<_type_box_size>(_p_domain->sub_box_lattice_size[0]),
             static_cast<_type_box_size>(_p_domain->sub_box_lattice_size[1]),
-            static_cast<_type_box_size>(_p_domain->sub_box_lattice_size[0]));
+            static_cast<_type_box_size>(_p_domain->sub_box_lattice_size[2]));
     builder.setGhostSize(
             static_cast<_type_box_size>(_p_domain->lattice_size_ghost[0]),
             static_cast<_type_box_size>(_p_domain->lattice_size_ghost[1]),
             static_cast<_type_box_size>(_p_domain->lattice_size_ghost[2]));
+
+    builder.setGlobalLatSize(_p_domain->phase_space[0],
+                             _p_domain->phase_space[1],
+                             _p_domain->phase_space[2]);
+    builder.setGlobalBaseLat(_p_domain->sub_box_lattice_region.x_low,
+                             _p_domain->sub_box_lattice_region.y_low,
+                             _p_domain->sub_box_lattice_region.z_low);
     // create empty lattice list(lattice types are not specified) and defects list.
     box = builder.build(); // todo delete pointer
 }
