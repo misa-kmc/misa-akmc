@@ -68,11 +68,46 @@ struct LatListMeta {
      */
     const _type_lattice_coord ghost_x, ghost_y, ghost_z;
 
-    // the max lattice id in box.
+    // the max local lattice id in box.
     const _type_lattice_id _max_id;
 
     // global id = local id + local_base_id
     const _type_lattice_id local_base_id = 0;
+
+public:
+    /*!
+     * \brief calculate global lattice id by lattice coordinate
+     * \param x,y,z the index of lattice in lattice list 3d array starting from global box boundary
+     * \note the lattice specified by \param x,y,z must be located at simulation area of current process,
+     *   which means only the lattices in simulation area have global id, ghost lattices do not have global id.
+     *   Global id usually be used between processes communication.
+     * \return The global id of the corresponding lattice in simulation area.
+     */
+    inline _type_lattice_id getGId(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
+        // todo return from Lattice object.
+        return (x - ghost_x + g_base_x) + g_box_x * ((y - ghost_y + g_base_y) + (z - ghost_z + g_base_z) * g_box_y);
+    }
+
+    /**
+     * \brief calculate local lattice id by lattice coordinate
+     * \param x,y,z the index of lattice in lattice list 3d array starting from local ghost boundary
+     * \return local id of the corresponding lattice in simulation area and ghost area.
+     */
+    inline _type_lattice_id getLId(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
+        return x + size_x * (y + z * size_y);
+    }
+
+    /**
+     * \brief convert coordinate by local id.
+     */
+    inline void getCoordByLId(_type_lattice_id lid, _type_lattice_coord *x,
+                              _type_lattice_coord *y, _type_lattice_coord *z) const {
+        *x = lid % size_x;
+        lid = lid / size_x;
+        *y = lid % size_y;
+        *z = lid / size_y;
+    }
+
 };
 
 #endif //MISA_KMC_LATTICE_LIST_META_H

@@ -16,16 +16,11 @@ LatticesList::LatticesList(const LatListMeta meta) : meta(meta) {
             _lattices[z][y] = new Lattice[meta.size_x];
         }
     }
-    // set id (skip ghost area id setting)
+    // set id (including setting local ids for ghost area)
     _type_lattice_id id = 0;
-    comm::Region <_type_lattice_size> box_region{
-            BCC_DBX * meta.ghost_x, meta.ghost_y, meta.ghost_z,
-            BCC_DBX * meta.ghost_x + BCC_DBX * meta.box_x,
-            meta.ghost_y + meta.box_y, meta.ghost_z + meta.box_z,
-    }; // note: index at x dimension is doubled.
-    for (_type_lattice_size z = box_region.z_low; z < box_region.z_high; z++) {
-        for (_type_lattice_size y = box_region.y_low; y < box_region.y_high; y++) {
-            for (_type_lattice_size x = box_region.x_low; x < box_region.x_high; x++) {
+    for (_type_lattice_size z = 0; z < meta.size_z; z++) {
+        for (_type_lattice_size y = 0; y < meta.size_y; y++) {
+            for (_type_lattice_size x = 0; x < meta.size_x; x++) {
                 _lattices[z][y][x].id = id++;
             }
         }
@@ -106,12 +101,18 @@ _type_neighbour_status LatticesList::get2nnBoundaryStatus(_type_lattice_coord x,
     return status;
 }
 
-Lattice &LatticesList::getLat(_type_lattice_id id) {
-    _type_lattice_coord x = id % meta.box_x + meta.ghost_x;
-    id = id / meta.box_x;
-    _type_lattice_coord y = id % meta.box_y + meta.ghost_y;
-    _type_lattice_coord z = id / meta.box_y + meta.ghost_z;
+ Lattice &LatticesList::getLat(_type_lattice_id lid) {
+    _type_lattice_coord x, y, z;
+    meta.getCoordByLId(lid, &x, &y, &z);
     return _lattices[z][y][x];
+}
+
+Lattice &LatticesList::getLatByGid(_type_lattice_id gid) {
+    _type_lattice_coord lx = gid % meta.g_box_x - meta.g_base_x;
+    gid = gid / meta.g_box_x;
+    _type_lattice_coord ly = gid % meta.g_box_y - meta.g_base_y;
+    _type_lattice_coord lz = gid / meta.g_box_y - meta.g_base_z;
+    return _lattices[lz][ly][lx];
 }
 
 Lattice *LatticesList::walk(_type_lattice_id id, const _type_lattice_offset offset_x,
