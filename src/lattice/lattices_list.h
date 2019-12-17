@@ -19,16 +19,6 @@ typedef std::function<bool(const _type_lattice_coord x,
                            const _type_lattice_coord z,
                            Lattice &lattice)> func_lattices_callback;
 
-// convert lattice id to x,y,z coordinate, and call callback function using x,y,z.
-#define ID_TO_XYZ(id, callback) {       \
-id -= meta.local_base_id;                               \
-_type_lattice_coord x = id % meta.size_x; \
-id = id / meta.size_x;                                   \
-_type_lattice_coord y = id % meta.size_y; \
-_type_lattice_coord z = id / meta.size_y; \
-callback;                               \
-}
-
 /**
  * \brief type of neighbour status.
  *
@@ -108,7 +98,9 @@ public:
      * \deprecated only for legacy serial code, because in parallel version, lattice can found all its neighbor lattice
      */
     _type_neighbour_status get1nnBoundaryStatus(_type_lattice_id lid) {
-        ID_TO_XYZ(lid, return get1nnBoundaryStatus(x, y, z));
+        _type_lattice_coord x, y, z;
+        meta.getCoordByLId(lid, &x, &y, &z);
+        return get1nnBoundaryStatus(x, y, z);
     }
 
     /**
@@ -131,7 +123,9 @@ public:
      * \return bits for status of "2nn out-of-boundary lattices"
      */
     _type_neighbour_status get2nnBoundaryStatus(_type_lattice_id lid) {
-        ID_TO_XYZ(lid, return get2nnBoundaryStatus(x, y, z));
+        _type_lattice_coord x, y, z;
+        meta.getCoordByLId(lid, &x, &y, &z);
+        return get2nnBoundaryStatus(x, y, z);
     }
 
     /**
@@ -155,7 +149,9 @@ public:
      * \deprecated only for legacy serial code, because in parallel version, lattice can found all its neighbor lattice
      */
     _type_neighbour_status get1nnStatus(_type_lattice_id lid) {
-        ID_TO_XYZ(lid, return get1nnStatus(x, y, z));
+        _type_lattice_coord x, y, z;
+        meta.getCoordByLId(lid, &x, &y, &z);
+        return get1nnStatus(x, y, z);
     }
 
     /**
@@ -174,7 +170,9 @@ public:
      * \deprecated only for legacy serial code, because in parallel version, lattice can found all its neighbor lattice
      */
     _type_neighbour_status get2nnStatus(_type_lattice_id lid) {
-        ID_TO_XYZ(lid, return get2nnStatus(x, y, z));
+        _type_lattice_coord x, y, z;
+        meta.getCoordByLId(lid, &x, &y, &z);
+        return get2nnStatus(x, y, z);
     }
 
     /*!
@@ -196,8 +194,10 @@ public:
      * \param lid local lattice id to specific lattice position.
      * \return the lattice pointers count in 1nn list.
      */
-    int get1nn(_type_lattice_id id, Lattice *_1nn_list[MAX_1NN]) {
-        ID_TO_XYZ(id, return get1nn(x, y, z, _1nn_list));
+    int get1nn(_type_lattice_id lid, Lattice *_1nn_list[MAX_1NN]) {
+        _type_lattice_coord x, y, z;
+        meta.getCoordByLId(lid, &x, &y, &z);
+        return get1nn(x, y, z, _1nn_list);
     }
 
     /*!
@@ -216,7 +216,9 @@ public:
     * \return the lattice pointers count in 2nn list.
     */
     int get2nn(_type_lattice_id lid, Lattice *_2nn_list[MAX_2NN]) {
-        ID_TO_XYZ(lid, return get2nn(x, y, z, _2nn_list));
+        _type_lattice_coord x, y, z;
+        meta.getCoordByLId(lid, &x, &y, &z);
+        return get2nn(x, y, z, _2nn_list);
     }
 
     /*!
@@ -270,6 +272,7 @@ public:
      * \param x,y,z the offset in each dimension x,y,z.
      *      \note the \param x,y,z is based on the half lattice constance: offset = real distance/lattice constance/2.
      * \return a lattice pointer with offset(x,y,z) to the lattice specified by \param id.
+     * \deprecated
      */
     Lattice *walk(_type_lattice_id id, const _type_lattice_offset offset_x,
                   const _type_lattice_offset offset_y, const _type_lattice_offset offset_z);
