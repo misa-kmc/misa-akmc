@@ -15,7 +15,7 @@ _type_neighbour_status PeriodLatticeList::get1nnStatus(_type_lattice_coord x,
 _type_neighbour_status PeriodLatticeList::get2nnStatus(_type_lattice_coord x,
                                                        _type_lattice_coord y,
                                                        _type_lattice_coord z) {
-    return 0xFF;
+    return 0x2F;
 }
 
 int PeriodLatticeList::get1nn(_type_lattice_coord x, _type_lattice_coord y,
