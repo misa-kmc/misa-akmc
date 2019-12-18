@@ -17,13 +17,13 @@ struct SectorMeta {
     type_sectors_ring sectors{
             {
                     type_sector{comm::X_LOW | comm::Y_LOW | comm::Z_LOW, 0.0},
-                    type_sector{comm::X_LOW | comm::Y_HIGH | comm::Z_LOW, 0.0},
-                    type_sector{comm::X_LOW | comm::Y_LOW | comm::Z_HIGH, 0.0},
-                    type_sector{comm::X_LOW | comm::Y_HIGH | comm::Z_HIGH, 0.0},
-                    type_sector{comm::X_HIGH | comm::Y_LOW | comm::Z_LOW, 0.0},
-                    type_sector{comm::X_HIGH | comm::Y_HIGH | comm::Z_LOW, 0.0},
-                    type_sector{comm::X_HIGH | comm::Y_LOW | comm::Z_HIGH, 0.0},
                     type_sector{comm::X_HIGH | comm::Y_HIGH | comm::Z_HIGH, 0.0},
+                    type_sector{comm::X_LOW | comm::Y_HIGH | comm::Z_LOW, 0.0},
+                    type_sector{comm::X_HIGH | comm::Y_LOW | comm::Z_HIGH, 0.0},
+                    type_sector{comm::X_HIGH | comm::Y_HIGH | comm::Z_LOW, 0.0},
+                    type_sector{comm::X_LOW | comm::Y_LOW | comm::Z_HIGH, 0.0},
+                    type_sector{comm::X_HIGH | comm::Y_LOW | comm::Z_LOW, 0.0},
+                    type_sector{comm::X_LOW | comm::Y_HIGH | comm::Z_HIGH, 0.0},
             }};
 
     type_sectors_ring::iterator sector_itl;
