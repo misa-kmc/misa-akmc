@@ -93,7 +93,7 @@ public:
      * \param x,y,z the index of lattice in lattice list 3d array starting from local ghost boundary
      * \return local id of the corresponding lattice in simulation area and ghost area.
      */
-    inline _type_lattice_id getLId(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
+    inline _type_lattice_id getLId(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) const {
         return x + size_x * (y + z * size_y);
     }
 
@@ -106,6 +106,19 @@ public:
         lid = lid / size_x;
         *y = lid % size_y;
         *z = lid / size_y;
+    }
+
+    /**
+     * \brief return true if it is a ghost lattice
+     * \return return true if it is a ghost lattice, false for otherwise.
+     */
+    inline bool isGhostLat(_type_lattice_id lid) const {
+        _type_lattice_coord x = 0, y = 0, z = 0;
+        getCoordByLId(lid, &x, &y, &z);
+        x -= ghost_x;
+        y -= ghost_y;
+        z -= ghost_z;
+        return x < 0 || y < 0 || z < 0 || x >= box_x || y >= box_y || z >= box_z;
     }
 
 };

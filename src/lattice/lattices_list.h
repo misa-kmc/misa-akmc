@@ -222,13 +222,14 @@ public:
     }
 
     /*!
-     * \brief calculate the lattice id by lattice coordinate
+     * \brief calculate the local lattice id by lattice coordinate
      * \param x,y,z the index of lattice in lattice list 3d array starting from ghost boundary
-     * \return the id of the found lattice
+     * \return the local id of the corresponding lattice
+     * \deprecated only for compatibility, please use LatListMeta::getLId.
      */
     inline _type_lattice_id getId(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
         // todo return from Lattice object.
-        return (x - meta.ghost_x) + meta.box_x * ((y - meta.ghost_y) + (z - meta.ghost_z) * meta.box_y);
+        return meta.getLId(x, y, z);
     }
 
     /**
