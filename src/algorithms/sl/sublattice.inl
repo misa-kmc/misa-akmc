@@ -5,8 +5,10 @@
 #ifndef MISA_KMC_SUB_LATTICE_INC
 #define MISA_KMC_SUB_LATTICE_INC
 
+#include <cmath>
 #include <comm/comm.hpp>
 #include <comm/preset/sector_forwarding_region.h>
+#include <logs/logs.h>
 #include "utils/simulation_domain.h"
 #include "utils/random/random.h"
 #include "comm_dirs.h"
@@ -19,9 +21,9 @@ void SubLattice::startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model) {
         for (int sect = 0; sect < SECTORS_NUM; sect++) { // sector loop
             const double step_threshold_time = static_cast<double>(step + 1) * T - sec_meta.sector_itl->evolution_time;
             double sector_time = 0.0;
-            do {
+            while (sector_time < step_threshold_time) { // note: step_threshold_time may be less then 0.0
                 const double total_rates = calcRatesWrapper(p_model, (*sec_meta.sector_itl).id);
-                if (total_rates == 0.0 || abs(total_rates) < std::numeric_limits<_type_rate>::epsilon()) {
+                if (total_rates == 0.0 || std::abs(total_rates) < std::numeric_limits<_type_rate>::epsilon()) {
                     // If there is no defect, use synchronous parallel kMC algorithm.
                     // Because there is no kMC event, just increase time.
                     sector_time = step_threshold_time;
@@ -31,7 +33,7 @@ void SubLattice::startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model) {
                     sector_time += delta_t;
                 }
                 // todo: time comparing, nearest principle based on predicting next delta t.
-            } while (sector_time < step_threshold_time);
+            }
             // kmc simulation on this sector is finished
             // we store evolution time of current sector when the sector loop finishes.
             sec_meta.sector_itl->evolution_time += sector_time;
