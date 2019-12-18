@@ -83,10 +83,13 @@ TEST(sublattice_template_compile_test, sublattice_test) {
             .setCutoffRadius(cutoff_radius_factor)
             .setLatticeConst(lattice_const)
             .build();
+    kiwi::mpiUtils::onGlobalCommChanged(new_comm);
+    SimulationDomain::setSimDomain(kiwi::mpiUtils::global_process);
 
     TestSLModel model;
     SubLattice sl(p_domain, 1.0, 1.0);
 
     TestPackerInstance pk_ins;
     sl.startTimeLoop<TestPks, TestPks, TestPackerInstance>(pk_ins, &model);
+    delete p_domain;
 }
