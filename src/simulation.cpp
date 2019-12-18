@@ -29,9 +29,9 @@ void simulation::createDomain(const unsigned long phase_space[comm::DIMENSION_SI
     _p_domain = comm::ColoredDomain::Builder()
             .setComm(pro, &new_comm)
             .setPhaseSpace(phase_space_int64)
-            .setCutoffRadius(cutoff_radius)
+            .setCutoffRadius(cutoff_radius/lattice_const)
             .setLatticeConst(lattice_const)
-//            .setGhostSize(static_cast<int>(ceil(cutoff_radius)))
+//            .setGhostSize(static_cast<int>(ceil(cutoff_radius/lattice_const)))
             .build();
     kiwi::mpiUtils::onGlobalCommChanged(new_comm); // set new domain.
     SimulationDomain::setSimDomain(kiwi::mpiUtils::global_process);
