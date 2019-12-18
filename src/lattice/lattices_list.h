@@ -19,16 +19,6 @@ typedef std::function<bool(const _type_lattice_coord x,
                            const _type_lattice_coord z,
                            Lattice &lattice)> func_lattices_callback;
 
-// convert lattice id to x,y,z coordinate, and call callback function using x,y,z.
-#define ID_TO_XYZ(id, callback) {       \
-id -= meta.local_base_id;                               \
-_type_lattice_coord x = id % meta.box_x + meta.ghost_x; \
-id = id / meta.box_x;                                   \
-_type_lattice_coord y = id % meta.box_y + meta.ghost_y; \
-_type_lattice_coord z = id / meta.box_y + meta.ghost_z; \
-callback;                               \
-}
-
 /**
  * \brief type of neighbour status.
  *
@@ -63,18 +53,10 @@ public:
     friend class SimSyncPacker;
 
     /*!
-     * \brief initialize the lattice_lists array(allocate memory) with box size in x,y,z direction.
-     * besides, the lattice id will be set in this constructor.
-     * \param box_x box size/lattice count in x direction without ghost area.
-     * \param box_y box size/lattice count in y direction without ghost area.
-     * \param box_z box size/lattice count in z direction without ghost area.
-     * \param ghost_x ghost size/lattice at x dimension.
-     * \param ghost_y ghost size/lattice at y dimension.
-     * \param ghost_z ghost size/lattice at z dimension.
+     * \brief initialize the lattice_lists array(allocate memory) with meta data(including box size, ghost size etc.).
+     * besides, the local lattice id will be set in this constructor.
      */
-    LatticesList(const _type_box_size box_x, const _type_box_size box_y, const _type_box_size box_z,
-                 const _type_box_size ghost_x, const _type_box_size ghost_y,
-                 const _type_box_size ghost_z);
+    LatticesList(const LatListMeta meta);
 
     virtual ~LatticesList();
 
@@ -102,7 +84,7 @@ public:
      * In which c is lattice constant, and phrase like "position of (-c/2,-c/2,-c/2)" means
      * the relative coordinates from center lattice(specified by \param x,y,z) to neighbour lattice.
      *
-     * \param x,y,z the coordinate of the source lattice point.
+     * \param x,y,z the coordinate of the source lattice point starting from ghost boundary.
      * \return bits for status of "1nn out-of-boundary lattices"
      * \deprecated only for legacy serial code, because in paralle version, lattice can found all its neighbor lattice
      */
@@ -111,12 +93,14 @@ public:
 
     /**
      * \brief similar as above one (use x,y,z to specific a lattice), but it receives a lattice id.
-     * \param id global lattice id to specific lattice position.
+     * \param lid local lattice id to specific lattice position.
      * \return bits for status of "1nn out-of-boundary lattices"
-     * \deprecated only for legacy serial code, because in paralle version, lattice can found all its neighbor lattice
+     * \deprecated only for legacy serial code, because in parallel version, lattice can found all its neighbor lattice
      */
-    _type_neighbour_status get1nnBoundaryStatus(_type_lattice_id id) {
-        ID_TO_XYZ(id, return get1nnBoundaryStatus(x, y, z));
+    _type_neighbour_status get1nnBoundaryStatus(_type_lattice_id lid) {
+        _type_lattice_coord x, y, z;
+        meta.getCoordByLId(lid, &x, &y, &z);
+        return get1nnBoundaryStatus(x, y, z);
     }
 
     /**
@@ -126,20 +110,22 @@ public:
      * We call those lattices "2nn out-of-boundary lattices".
      * This method will return bits status for "2nn out-of-boundary lattices".
      *
-     * \param x the coordinate of the source lattice point.
+     * \param x,y,z the coordinate of the source lattice point starting from ghost boundary.
      * \return bits for status of "2nn out-of-boundary lattices"
-     * \deprecated only for legacy serial code, because in paralle version, lattice can found all its neighbor lattice
+     * \deprecated only for legacy serial code, because in parallel version, lattice can found all its neighbor lattice
      */
     virtual _type_neighbour_status
     get2nnBoundaryStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z);
 
     /**
      * \brief similar as above one (use x,y,z to specific a lattice), but it receives a lattice id.
-     * \param id global lattice id to specific lattice position.
+     * \param lid local lattice id to specific lattice position.
      * \return bits for status of "2nn out-of-boundary lattices"
      */
-    _type_neighbour_status get2nnBoundaryStatus(_type_lattice_id id) {
-        ID_TO_XYZ(id, return get2nnBoundaryStatus(x, y, z));
+    _type_neighbour_status get2nnBoundaryStatus(_type_lattice_id lid) {
+        _type_lattice_coord x, y, z;
+        meta.getCoordByLId(lid, &x, &y, &z);
+        return get2nnBoundaryStatus(x, y, z);
     }
 
     /**
@@ -149,40 +135,44 @@ public:
      * If 1nn neighbour lattice at some direction is not available,
      * the corresponding bit in return value will be set to 0, otherwise it will be set to 1.
      *
-     * \param x,y,z the coordinate of the source lattice point.
+     * \param x,y,z the coordinate of the source lattice point starting from ghost boundary.
      * \return bits for status of 1nn neighbour lattices.
-     * \deprecated only for legacy serial code, because in paralle version, lattice can found all its neighbor lattice
+     * \deprecated only for legacy serial code, because in parallel version, lattice can found all its neighbor lattice
      */
     virtual _type_neighbour_status
     get1nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) = 0;
 
     /**
      * \brief similar as above one (use x,y,z to specific a lattice), but it receives a lattice id.
-     * \param id global lattice id to specific lattice position.
+     * \param lid local lattice id to specific lattice position.
      * \return bits for status of 1nn neighbour lattices.
-     * \deprecated only for legacy serial code, because in paralle version, lattice can found all its neighbor lattice
+     * \deprecated only for legacy serial code, because in parallel version, lattice can found all its neighbor lattice
      */
-    _type_neighbour_status get1nnStatus(_type_lattice_id id) {
-        ID_TO_XYZ(id, return get1nnStatus(x, y, z));
+    _type_neighbour_status get1nnStatus(_type_lattice_id lid) {
+        _type_lattice_coord x, y, z;
+        meta.getCoordByLId(lid, &x, &y, &z);
+        return get1nnStatus(x, y, z);
     }
 
     /**
      * \brief similar as get1nnStatus, it returns the bits status of 2nn neighbour lattices.
-     * \param x the coordinate of the source lattice point.
+     * \param x,y,z the coordinate of the source lattice point starting from ghost boundary.
      * \return bits for status of 2nn neighbour lattices
-     * \deprecated only for legacy serial code, because in paralle version, lattice can found all its neighbor lattice
+     * \deprecated only for legacy serial code, because in parallel version, lattice can found all its neighbor lattice
      */
     virtual _type_neighbour_status
     get2nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) = 0;
 
     /**
      * \brief similar as above one (use x,y,z to specific a lattice), but it receives a lattice id.
-     * \param id global lattice id to specific lattice position.
+     * \param lid local lattice id to specific lattice position.
      * \return bits for status of 2nn neighbour lattices.
-     * \deprecated only for legacy serial code, because in paralle version, lattice can found all its neighbor lattice
+     * \deprecated only for legacy serial code, because in parallel version, lattice can found all its neighbor lattice
      */
-    _type_neighbour_status get2nnStatus(_type_lattice_id id) {
-        ID_TO_XYZ(id, return get2nnStatus(x, y, z));
+    _type_neighbour_status get2nnStatus(_type_lattice_id lid) {
+        _type_lattice_coord x, y, z;
+        meta.getCoordByLId(lid, &x, &y, &z);
+        return get2nnStatus(x, y, z);
     }
 
     /*!
@@ -201,16 +191,18 @@ public:
 
     /**
      * \brief similar as above one (use x,y,z to specific a lattice), but it receives a lattice id.
-     * \param id global lattice id to specific lattice position.
+     * \param lid local lattice id to specific lattice position.
      * \return the lattice pointers count in 1nn list.
      */
-    int get1nn(_type_lattice_id id, Lattice *_1nn_list[MAX_1NN]) {
-        ID_TO_XYZ(id, return get1nn(x, y, z, _1nn_list));
+    int get1nn(_type_lattice_id lid, Lattice *_1nn_list[MAX_1NN]) {
+        _type_lattice_coord x, y, z;
+        meta.getCoordByLId(lid, &x, &y, &z);
+        return get1nn(x, y, z, _1nn_list);
     }
 
     /*!
      * \brief get all lattice near 2nn
-     * \param x,y,z the coordinate of the lattice point.
+     * \param x,y,z the coordinate of the lattice point starting from ghost boundary.
      * \param _2nn_list a array to store all pointers of Lattices in the distance of 2nn.
      * \note note that the coordinate specified by [x,y,z] must be in the lattice box, or "index out of bounds" may happen.
      * \return the lattice pointers count in 2nn list.
@@ -220,21 +212,24 @@ public:
 
     /**
     * \brief similar as above one (use x,y,z to specific a lattice), but it receives a lattice id.
-    * \param id global lattice id to specific lattice position.
+    * \param lid global lattice id to specific lattice position.
     * \return the lattice pointers count in 2nn list.
     */
-    int get2nn(_type_lattice_id id, Lattice *_2nn_list[MAX_2NN]) {
-        ID_TO_XYZ(id, return get2nn(x, y, z, _2nn_list));
+    int get2nn(_type_lattice_id lid, Lattice *_2nn_list[MAX_2NN]) {
+        _type_lattice_coord x, y, z;
+        meta.getCoordByLId(lid, &x, &y, &z);
+        return get2nn(x, y, z, _2nn_list);
     }
 
     /*!
-     * \brief calculate the lattice id by lattice coordinate
+     * \brief calculate the local lattice id by lattice coordinate
      * \param x,y,z the index of lattice in lattice list 3d array starting from ghost boundary
-     * \return the id of the found lattice
+     * \return the local id of the corresponding lattice
+     * \deprecated only for compatibility, please use LatListMeta::getLId.
      */
     inline _type_lattice_id getId(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
         // todo return from Lattice object.
-        return (x - meta.ghost_x) + meta.box_x * ((y - meta.ghost_y) + (z - meta.ghost_z) * meta.box_y);
+        return meta.getLId(x, y, z);
     }
 
     /**
@@ -255,15 +250,22 @@ public:
     };
 
     /**
-     * \brief get Lattice object by lattice id
+     * \brief get Lattice object by local lattice id
      *
      * \note in the implementations, we does not Guarantee the lattices array boundary.
      * If the lattice specified the \param id is out of box, your program may crash.
      *
-     * \param id the given lattice id.
+     * \param lid the given local id of a lattice.
      * \return the reference of the matched lattice.
      */
-    Lattice &getLat(_type_lattice_id id);
+    Lattice &getLat(_type_lattice_id lid);
+
+    /**
+     * \brief get Lattice object by global lattice id.
+     * \param gid global lattice id
+     * \return the reference of the matched lattice.
+     */
+    Lattice &getLatByGid(_type_lattice_id gid);
 
     /**
      * \brief get a lattice point with offset(x,y,z) to the lattice specified by \param id.
@@ -271,6 +273,7 @@ public:
      * \param x,y,z the offset in each dimension x,y,z.
      *      \note the \param x,y,z is based on the half lattice constance: offset = real distance/lattice constance/2.
      * \return a lattice pointer with offset(x,y,z) to the lattice specified by \param id.
+     * \deprecated
      */
     Lattice *walk(_type_lattice_id id, const _type_lattice_offset offset_x,
                   const _type_lattice_offset offset_y, const _type_lattice_offset offset_z);
@@ -289,10 +292,6 @@ public:
     const LatListMeta meta;
 
 protected:
-
-    // global id = local id + local_base_id
-    const _type_lattice_id local_base_id = 0;
-
     /*!
      * \brief the 3d array of all lattices.
      * the first dimension of this array represent x index of lattice in box,

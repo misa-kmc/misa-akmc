@@ -41,6 +41,30 @@ public:
     }
 
     /**
+     * \brief set lattice size of global simulation box for builder
+     * \param gls_x lattice size(not doubled) of global simulation box at x dimension
+     * \param gls_y lattice size of global simulation box at y dimension
+     * \param gls_z lattice size of global simulation box at z dimension
+     */
+    inline void setGlobalLatSize(const _type_box_size gls_x, const _type_box_size gls_y, const _type_box_size gls_z) {
+        global_box_x = gls_x;
+        global_box_y = gls_y;
+        global_box_z = gls_z;
+    }
+
+    /**
+     * \brief set beginning lattice coordinate of global simulation box for builder
+     * \param gls_x base lattice coordinate(not doubled) of global simulation box at x dimension
+     * \param gls_y base lattice coordinate of global simulation box at y dimension
+     * \param gls_z base lattice coordinate of global simulation box at z dimension
+     */
+    inline void setGlobalBaseLat(const _type_box_size gbs_x, const _type_box_size gbs_y, const _type_box_size gbs_z) {
+        global_base_x = gbs_x;
+        global_base_y = gbs_y;
+        global_base_z = gbs_z;
+    }
+
+    /**
      * \brief build the simulation box, and initialize lattice list,
      *        including lattice list, vacancy list and itl list.
      * \return the pointer to new box.
@@ -48,9 +72,12 @@ public:
     Box *build();
 
 private:
-    // the box size (x dimension is not doubled, just lattice size)
+    // the box size on current  process (x dimension is not doubled, just lattice size)
     _type_box_size box_x = 0, box_y = 0, box_z = 0;
     _type_box_size ghost_x = 0, ghost_y = 0, ghost_z = 0;
+    // the global box size
+    _type_box_size global_box_x = 0, global_box_y = 0, global_box_z = 0;
+    _type_box_size global_base_x = 0, global_base_y = 0, global_base_z = 0;
 
     double v, T;
 };
@@ -92,13 +119,10 @@ protected:
 
     /*!
      * \brief in this method, the member \var lattice_list,itl_list,va_list will be created
-     * from box size and ghost size parameter.
-     * \param box_x,box_y,box_z the box lattice size of current process at each dimension
-     * \param ghost_x,ghost_y,ghost_z the ghost lattice size of current process at each dimension
-     * \note the box size and ghost size at x dimension is not BCC doubled.
+     * from box size and ghost size parameter (lattice metadata).
+     * \note the box size, base coordinate and ghost size in metadata at x dimension is BCC doubled.
      */
-    void createBox(const _type_box_size box_x, const _type_box_size box_y, const _type_box_size box_z,
-                   const _type_box_size ghost_x, const _type_box_size ghost_y, const _type_box_size ghost_z);
+    void createBox(const LatListMeta lattice_meta);
 
 private:
     //跃迁事件列表

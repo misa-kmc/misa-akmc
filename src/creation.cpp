@@ -62,3 +62,21 @@ void creation::createRandom(uint32_t seed_create_types, uint32_t seed_create_vac
     // todo init interval list
     va_list->reindex(lats, p_domain->local_sub_box_lattice_region);
 }
+
+void creation::setGlobalId(LatticesList *lats_list, const comm::Region<comm::_type_lattice_coord> lbr,
+                           const comm::Region<comm::_type_lattice_coord> gbr,
+                           std::array<uint64_t, comm::DIMENSION_SIZE> phase_space) {
+    for (comm::_type_lattice_coord z = lbr.z_low; z < lbr.z_high; z++) {
+        for (comm::_type_lattice_coord y = lbr.y_low; y < lbr.y_high; y++) {
+            for (comm::_type_lattice_coord x = BCC_DBX * lbr.x_low; x < BCC_DBX * lbr.x_high; x++) {
+                Lattice &lattice = lats_list->getLat(x, y, z);
+                const comm::_type_lattice_coord gx = (x - lats_list->meta.ghost_x) + BCC_DBX * gbr.x_low;
+                const comm::_type_lattice_coord gy = (y - lats_list->meta.ghost_y) + gbr.y_low;
+                const comm::_type_lattice_coord gz = (z - lats_list->meta.ghost_z) + gbr.z_low;
+                // convert xyz to global id.
+                const comm::_type_lattice_coord gid = gx + BCC_DBX * phase_space[0] * (gy + gz * phase_space[1]);
+                lattice.id = gid;
+            }
+        }
+    }
+}

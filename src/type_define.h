@@ -11,9 +11,9 @@
  * the type of lattice position in cartesian coordinate system
  */
 typedef unsigned long _type_box_size;
-typedef unsigned long _type_lattice_coord;
+typedef unsigned long _type_lattice_size;
 typedef long _type_lattice_offset;
-typedef _type_lattice_coord _type_lattice_size;
+typedef long _type_lattice_coord;
 typedef unsigned long _type_lattice_id;
 typedef unsigned long _type_lattice_count;
 
