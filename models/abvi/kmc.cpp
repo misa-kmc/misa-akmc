@@ -145,7 +145,7 @@ void ABVIModel::perform(const event::SelectedEvent selected) {
             // update vacancies list: remove lat_from, add lat_to.
             box->va_list->replace(lat_from.getId(), lat_to.getId());
             if (p_event_listener) {
-                p_event_listener->onVacancyTrans(0, lat_from.type);
+                p_event_listener->onVacancyTrans(0, selected.from_id, selected.to_id, lat_from.type);
             }
             // recombination
             rec::RecList rec_list;
@@ -182,7 +182,8 @@ void ABVIModel::perform(const event::SelectedEvent selected) {
             // todo update avail tran dirs, not in beforeRatesUpdate.
             box->itl_list->replace(lat_from.getId(), lat_to.getId(), itl);
             if (p_event_listener) {
-                p_event_listener->onDumbbellTrans(0, old_from_type, old_to_type, lat_from.type, lat_to.type);
+                p_event_listener->onDumbbellTrans(0, selected.from_id, selected.to_id,
+                                                  old_from_type, old_to_type, lat_from.type, lat_to.type);
             }
             // recombination
             rec::RecList rec_list;

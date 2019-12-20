@@ -132,7 +132,7 @@ void PKMC::onStart() {
     std::cout << m_counter;
 
     ABVIModel model(sim->box, config_v.attempt_freq, config_v.temperature);
-    MEventListener m_listener(m_counter);
+    MEventListener m_listener(m_counter, sim->box->lattice_list->meta);
     model.setEventListener(&m_listener);
     // run simulation
     sim->simulate(&model, config_v.seeds.time_inc, config_v.physics_time);
