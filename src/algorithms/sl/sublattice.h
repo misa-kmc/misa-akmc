@@ -7,6 +7,7 @@
 
 #include <array>
 #include <comm/domain/colored_domain.h>
+#include "utils/random/rng_type.h"
 #include "models/model_adapter.h"
 #include "../selector.h"
 
@@ -34,11 +35,11 @@ public:
     /**
      * \brief initialize sub-lattice algorithm with a specific kMC model.
      * \param p_domain simulation domain.
-     * \param p_model kMC model
+     * \param seed_time_inc random number generation seed for kmc time increasing.
      * \param time_limit the max evolution time.
      * \param T threshold time for communication.
      */
-    explicit SubLattice(const comm::ColoredDomain *p_domain,
+    explicit SubLattice(const comm::ColoredDomain *p_domain, const uint32_t seed_time_inc,
                         const double time_limit, const double T);
 
     /**
@@ -103,6 +104,14 @@ public:
     typedef std::array<std::vector<comm::Region<comm::_type_lattice_coord>>, comm::DIMENSION_SIZE> type_comm_lat_regions;
 
 private:
+    /**
+     * \brief distribution to produce random numbers in range (0,1) for kmc time increasing.
+     */
+    std::uniform_real_distribution<double> time_inc_dis;
+    /**
+     * \brief random number generation for kmc time increasing
+     */
+    r::type_rng time_inc_rng;
 
     const comm::ColoredDomain *p_domain = nullptr;
 

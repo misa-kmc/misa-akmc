@@ -135,7 +135,7 @@ void PKMC::onStart() {
     MEventListener m_listener(m_counter);
     model.setEventListener(&m_listener);
     // run simulation
-    sim->simulate(&model, config_v.physics_time);
+    sim->simulate(&model, config_v.seeds.time_inc, config_v.physics_time);
 }
 
 void PKMC::onFinish() {
