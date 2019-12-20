@@ -87,7 +87,7 @@ TEST(sublattice_template_compile_test, sublattice_test) {
     SimulationDomain::setSimDomain(kiwi::mpiUtils::global_process);
 
     TestSLModel model;
-    SubLattice sl(p_domain, 1.0, 1.0);
+    SubLattice sl(p_domain, 0x1024, 1.0, 1.0);
 
     TestPackerInstance pk_ins;
     sl.startTimeLoop<TestPks, TestPks, TestPackerInstance>(pk_ins, &model);
