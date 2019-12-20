@@ -29,7 +29,7 @@ void SubLattice::startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model) {
                     sector_time = step_threshold_time;
                 } else {
                     selectPerformWrapper(p_model, total_rates, (*sec_meta.sector_itl).id);
-                    const double delta_t = -log(r::random() / total_rates);
+                    const double delta_t = -std::log(r::random()) / total_rates;
                     sector_time += delta_t;
                 }
                 // todo: time comparing, nearest principle based on predicting next delta t.
