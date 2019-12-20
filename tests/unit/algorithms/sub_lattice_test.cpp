@@ -59,7 +59,7 @@ class TestSLModel : public ModelAdapter<int> {
 
     void perform(const int) override {}
 
-    void reindex(const lat_region region) override{}
+    void reindex(const lat_region region) override {}
 
     unsigned long defectSize() override { return 0; }
 };

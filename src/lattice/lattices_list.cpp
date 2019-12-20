@@ -101,7 +101,7 @@ _type_neighbour_status LatticesList::get2nnBoundaryStatus(_type_lattice_coord x,
     return status;
 }
 
- Lattice &LatticesList::getLat(_type_lattice_id lid) {
+Lattice &LatticesList::getLat(_type_lattice_id lid) {
     _type_lattice_coord x, y, z;
     meta.getCoordByLId(lid, &x, &y, &z);
     return _lattices[z][y][x];

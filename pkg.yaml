@@ -50,5 +50,5 @@ build:
     - RUN {{.CACHE}} cmake {{.SRC_DIR}} -DCMAKE_INSTALL_PREFIX={{.PKG_DIR}}; make -j {{.CORES}}; make install
 
 cmake_build: |
-  include_directories({{C.MAKE_VENDOR_PATH_PKG}}/include)
+  include_directories({{.CMAKE_VENDOR_PATH_PKG}}/include)
   link_directories({{.CMAKE_VENDOR_PATH_PKG}}/lib)
