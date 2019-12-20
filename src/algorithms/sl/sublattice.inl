@@ -15,7 +15,7 @@
 
 
 template<class PKg, class PKs, class Ins, typename E>
-void SubLattice::startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model) {
+void SubLattice::startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model, EventHooks *p_event_hooks) {
     const unsigned long time_steps = ceil(time_limit / T);
     for (unsigned long step = 0; step < time_steps; step++) { // time steps loop
         for (int sect = 0; sect < SECTORS_NUM; sect++) { // sector loop
@@ -45,7 +45,9 @@ void SubLattice::startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model) {
             ++sec_meta.sector_itl; // update sector id.
             nextSector(); // some post operations after moved to next sector.
         }
+        p_event_hooks->onStepFinished(step);
     }
+    p_event_hooks->onAllDone();
 }
 
 template<typename E>

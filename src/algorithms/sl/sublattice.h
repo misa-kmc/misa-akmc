@@ -9,6 +9,7 @@
 #include <comm/domain/colored_domain.h>
 #include "utils/random/rng_type.h"
 #include "models/model_adapter.h"
+#include "hook/event_hooks.hpp"
 #include "../selector.h"
 
 struct SectorMeta {
@@ -50,10 +51,11 @@ public:
      * \tparam E type of event in kmc model.
      * \param pk_inst to instant the packer for communication.
      * \param p_model kmc model to perform event selecting and execution.
+     * \param event_hooks pointer of event hooks or callbacks for handing each algorithm event.
      * todo make sure RegionPacker is PKf, PKg, PKs's base class at compiling time.
      */
     template<class PKg, class PKs, class Ins, typename E>
-    void startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model);
+    void startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model, EventHooks *p_event_hooks);
 
     /**
      * \brief calculate rates in a region

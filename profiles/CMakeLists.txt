@@ -21,6 +21,8 @@ add_library(${P_KMP_PROFILE_LIB_NAME} STATIC
         device.h
         m_event_listener.h
         m_event_listener.cpp
+        m_event_hook.cpp
+        m_event_hook.h
         pkmc.h
         pkmc.cpp
         seed_relocate.h

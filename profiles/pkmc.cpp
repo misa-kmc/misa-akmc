@@ -19,6 +19,7 @@
 #include "device.h"
 #include "seed_relocate.h"
 #include "m_event_listener.h"
+#include "m_event_hook.h"
 
 bool PKMC::beforeCreate(int argc, char **argv) {
     // parser arguments
@@ -135,7 +136,8 @@ void PKMC::onStart() {
     MEventListener m_listener(m_counter);
     model.setEventListener(&m_listener);
     // run simulation
-    sim->simulate(&model, config_v.seeds.time_inc, config_v.physics_time);
+    MEventHook m_event_hook;
+    sim->simulate(&model, &m_event_hook, config_v.seeds.time_inc, config_v.physics_time);
 }
 
 void PKMC::onFinish() {

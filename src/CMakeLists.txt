@@ -41,6 +41,7 @@ set(SOURCE_FILES
         lattice/lattices_list.cpp
         lattice/normal_lattice_list.cpp
         lattice/period_lattice_list.cpp
+        hook/event_hooks.hpp
         pack/ghost_init_packer.cpp
         pack/ghost_sync_packer.cpp
         pack/packer_instance.cpp

@@ -64,6 +64,14 @@ class TestSLModel : public ModelAdapter<int> {
     unsigned long defectSize() override { return 0; }
 };
 
+
+class TestEventHooks : public EventHooks {
+public:
+    void onStepFinished(unsigned long step) override {};
+
+    void onAllDone() override {};
+};
+
 TEST(sublattice_template_compile_test, sublattice_test) {
     const int grid_size[3] = {2, 2, 2};
     const int64_t space[3] = {50 * grid_size[0], 60 * grid_size[1], 71 * grid_size[2]};
@@ -90,6 +98,7 @@ TEST(sublattice_template_compile_test, sublattice_test) {
     SubLattice sl(p_domain, 0x1024, 1.0, 1.0);
 
     TestPackerInstance pk_ins;
-    sl.startTimeLoop<TestPks, TestPks, TestPackerInstance>(pk_ins, &model);
+    TestEventHooks test_event_hook;
+    sl.startTimeLoop<TestPks, TestPks, TestPackerInstance>(pk_ins, &model, &test_event_hook);
     delete p_domain;
 }
