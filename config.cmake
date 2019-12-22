@@ -13,6 +13,10 @@ set(KMC_RAND "MT" CACHE STRING "random number generating algorithm") # random nu
 #   xoshiro: http://xoshiro.di.unimi.it
 #   REAL: real random number privided by linux OS.
 
+# use `-fprofile-instr-generate -fcoverage-mapping` in clang,
+# and `--coverage` or `-fprofile-arcs -ftest-coverage` in gnu.
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall --coverage")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall --coverage")
 
 if (CMAKE_BUILD_TYPE MATCHES "^(Debug|DEBUG|debug)$")
     set(KMC_DEBUG_ENABLE_FLAG ON)
