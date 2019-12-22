@@ -18,21 +18,30 @@ public:
      * \note this func is called after performing transition.
      *
      * \param time_step current time steps
+     * \param source_id local lattice id of source lattice
+     * \param target_id local lattice id of target lattice
      * \param trans_atom the atom moves from target lattice to source lattice.
      */
-    virtual void onVacancyTrans(const unsigned long time_step, const LatticeTypes trans_atom) = 0;
+    virtual void onVacancyTrans(const unsigned long time_step,
+                                const comm::_type_lattice_coord source_id,
+                                const comm::_type_lattice_coord target_id,
+                                const LatticeTypes trans_atom) = 0;
 
     /**
      * \brief this function will be call when dumbbell transition occurs if it is correctly set.
      * \note this func is called after performing transition.
      *
      * \param time_step current time steps.
+     * \param g_source_id local lattice id of source lattice
+     * \param g_target_id local lattice id of target lattice
      * \param old_type_src type of source lattice before transition (it should be vacancy)
      * \param old_type_target type of target lattice before transition (it should be an single atom)
      * \param new_type_src type of source lattice after transition (it should be an atom)
      * \param new_type_target type of target lattice after transition (it should be vacancy)
      */
     virtual void onDumbbellTrans(const unsigned long time_step,
+                                 const comm::_type_lattice_coord source_id,
+                                 const comm::_type_lattice_coord target_id,
                                  const LatticeTypes old_type_src,
                                  const LatticeTypes old_type_target,
                                  const LatticeTypes new_type_src,

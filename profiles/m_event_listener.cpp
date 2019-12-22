@@ -5,13 +5,19 @@
 #include <iostream>
 #include "m_event_listener.h"
 
-MEventListener::MEventListener(counter &m_counter) : m_counter(m_counter) {}
+MEventListener::MEventListener(counter &m_counter, LatListMeta meta)
+        : m_counter(m_counter), meta(meta) {}
 
-void MEventListener::onVacancyTrans(const unsigned long time_step, const LatticeTypes trans_atom) {
+void MEventListener::onVacancyTrans(const unsigned long time_step,
+                                    const comm::_type_lattice_coord source_id,
+                                    const comm::_type_lattice_coord target_id,
+                                    const LatticeTypes trans_atom) {
     // lattice count not change.
 }
 
 void MEventListener::onDumbbellTrans(const unsigned long time_step,
+                                     const comm::_type_lattice_coord source_id,
+                                     const comm::_type_lattice_coord target_id,
                                      const LatticeTypes old_type_src,
                                      const LatticeTypes old_type_target,
                                      const LatticeTypes new_type_src,
