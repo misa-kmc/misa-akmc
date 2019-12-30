@@ -23,6 +23,7 @@ set(TEST_SOURCE_FILES
         utils/mpi_data_types_test.cpp
         counter_test.cpp
         creation_test.cpp
+        domain_test_fixtures.h
         main.cpp
         )
 
