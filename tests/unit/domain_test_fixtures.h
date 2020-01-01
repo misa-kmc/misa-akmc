@@ -63,7 +63,7 @@ protected:
     }
 
     // set domain
-    const int64_t phase_space_int64[comm::DIMENSION_SIZE] = {40, 40, 40};
+    const int64_t phase_space_int64[comm::DIMENSION_SIZE] = {40, 50, 60};
     const double lattice_const = 2.85532;
     const double cutoff_radius = 5.6 / lattice_const;
 

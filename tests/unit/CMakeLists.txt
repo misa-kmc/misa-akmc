@@ -20,6 +20,7 @@ set(TEST_SOURCE_FILES
         lattice/lattice_types_test.cpp
         lattice/lattices_list_with_ghost_test.cpp
         pack/ghost_init_packer_test.cpp
+        pack/sim_sync_packer_test.cpp
         utils/mpi_data_types_test.cpp
         counter_test.cpp
         creation_test.cpp
