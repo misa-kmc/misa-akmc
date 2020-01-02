@@ -67,12 +67,15 @@ protected:
 
     /**
      * \brief calculate the difference of system energy after and before transition.
+     * \param source_id local id of source lattice
+     * \param target_id local id of target lattice
      * \param source_lattice ref of source lattice
      * \param target_lattice ref of target lattice
      * \param ghost_atom nature of atom exchanged with vacancy or moving in dumbbell.
      * \return the difference of system energy after and before transition.
      */
-    virtual double deltaE(Lattice &source_lattice, Lattice &target_lattice,
+    virtual double deltaE(_type_lattice_id source_id, _type_lattice_id target_id,
+                          Lattice &source_lattice, Lattice &target_lattice,
                           const LatticeTypes::lat_type ghost_atom) = 0;
 
     /**

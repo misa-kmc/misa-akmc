@@ -121,6 +121,14 @@ public:
         return x < 0 || y < 0 || z < 0 || x >= box_x || y >= box_y || z >= box_z;
     }
 
+    /**
+     * \brief calculate a lattice id by a base lattice id and a 1nn offset.
+     * \param lat_id base local lattice id
+     * \param _1nn_offset 1nn offset
+     * \return the lattice id based on lattice id(specified by \param lat_id) with a offset specified by \param _1nn_offset
+     */
+    _type_lattice_id getIdBy1nnOffset(const _type_lattice_id lat_id, const _type_dir_id _1nn_offset) const;
+
 };
 
 #endif //MISA_KMC_LATTICE_LIST_META_H

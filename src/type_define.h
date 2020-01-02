@@ -22,12 +22,11 @@ typedef unsigned long _type_lattice_count;
  */
 typedef double _type_rate;
 
-/*!
- * the number of all the lattices
+/**
+ * \brief neighbor types
  */
-#define MAX_X 100
-#define MAX_Y 100
-#define MAX_Z 100
-#define MAX_ITL 100
+typedef unsigned char _type_dirs_status; // todo compatible with _type_neighbour_status
+typedef unsigned char _type_dir_id;
+typedef unsigned char _type_dirs_size;
 
 #endif //MISA_KMC_TYPE_DEFINE_H
