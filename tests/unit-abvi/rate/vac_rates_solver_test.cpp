@@ -35,7 +35,7 @@ TEST(vac_deltaE_test_null, vac_rates_solver_deltaE_tests) {
     const auto delta_e = vac_rate.deltaE(src_lat.getId(), tar_lat.getId(), src_lat, tar_lat, tar_lat.type._type);
     ASSERT_NEAR(delta_e, 0.0, 1e-10);
     // delta E is 0, but rate may not be 0.
-    const auto rate = vac_rate.rate(src_lat, tar_lat, tar_lat.type._type, 1);
+    const auto rate = vac_rate.rate(src_lat, tar_lat, tar_lat.type._type, 7);
     const double expected_rate = attempt_freq *
                                  exp(-vac_rate.e0(tar_lat.type._type) / (BoltzmannConstant * temperature));
     // we use relative error here, because the absolute numerical error is too big(can be 1e-6).
