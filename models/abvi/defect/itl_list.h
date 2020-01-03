@@ -115,9 +115,11 @@ public:
      *  remove the old one and add the new one.
      * \param old_lat_id lattice id of old interstitial.
      * \param new_lat_id lattice id of new interstitial.
+     * \param p_meta metadata of lattice list
      * \param new_itl reference of new interstitial.
      */
-    void replace(const _type_lattice_id old_lat_id, const _type_lattice_id new_lat_id, const Itl &new_itl);
+    void replace(const _type_lattice_id old_lat_id, const _type_lattice_id new_lat_id,
+                 const LatListMeta *p_meta, const Itl &new_itl);
 };
 
 

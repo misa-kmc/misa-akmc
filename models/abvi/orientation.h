@@ -10,10 +10,6 @@
 #include "lattice/lattice_types.h"
 #include "lattice/lattices_list.h"
 
-typedef unsigned char _type_dirs_status; // todo compatible with _type_neighbour_status
-typedef unsigned char _type_dir_id;
-typedef unsigned char _type_dirs_size;
-
 struct orientation {
     typedef enum {
         unknown = 0,

@@ -45,10 +45,16 @@ void Vacancy::updateRates(Lattice &lattice, Lattice *list_1nn[LatticesList::MAX_
     }
 }
 
-void VacancyList::replace(const _type_lattice_id old_lat_id, const _type_lattice_id new_lat_id) {
+void VacancyList::replace(const _type_lattice_id old_lat_id, const _type_lattice_id new_lat_id,
+                          const LatListMeta *p_meta) {
+#ifdef KMC_DEBUG_MODE
+    assert(!p_meta->isGhostLat(old_lat_id));
+#endif
     mp.erase(old_lat_id);
     // todo init vacancy
-    mp.insert(std::make_pair(new_lat_id, Vacancy{}));
+    if (!p_meta->isGhostLat(old_lat_id)) {
+        mp.insert(std::make_pair(new_lat_id, Vacancy{}));
+    }
 }
 
 void VacancyList::reindex(LatticesList *lats, const comm::Region<comm::_type_lattice_size> region) {

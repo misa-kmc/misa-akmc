@@ -143,7 +143,7 @@ void ABVIModel::perform(const event::SelectedEvent selected) {
             lat_from.type = lat_to.type;
             lat_to.type = tp_temp;
             // update vacancies list: remove lat_from, add lat_to.
-            box->va_list->replace(lat_from.getId(), lat_to.getId());
+            box->va_list->replace(selected.from_id, selected.to_id, &(box->lattice_list->meta));
             if (p_event_listener) {
                 p_event_listener->onVacancyTrans(0, selected.from_id, selected.to_id, lat_from.type);
             }
@@ -180,7 +180,7 @@ void ABVIModel::perform(const event::SelectedEvent selected) {
                                                lat_to.type.isHighEnd(jump_atom._type),
                                                selected.rotate_direction);
             // todo update avail tran dirs, not in beforeRatesUpdate.
-            box->itl_list->replace(lat_from.getId(), lat_to.getId(), itl);
+            box->itl_list->replace(selected.from_id, selected.to_id, &(box->lattice_list->meta), itl);
             if (p_event_listener) {
                 p_event_listener->onDumbbellTrans(0, selected.from_id, selected.to_id,
                                                   old_from_type, old_to_type, lat_from.type, lat_to.type);
