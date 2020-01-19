@@ -1,54 +1,28 @@
 # KMC simulation program, version: 1.0.0
 # authors: genshen <genshenchu@gmail.com>, USTB; zhaorunchu, USTB
 
-version: 1
+version: 2
 
 args:
 
 replace:
   - |
-    https://git.gensh.me/HPCer/misa-kmc/xoshinro => https://github.com/misa-kmc/xoshinro
+    git.gensh.me/HPCer/misa-kmc/xoshinro => github.com/misa-kmc/xoshinro
 
-packages:
-  git:
-    yaml-cpp:
-      path: https://github.com/jbeder/yaml-cpp.git
-      tag: yaml-cpp-0.6.2
-      build:
-        - RUN {{.CACHE}} cmake {{.SRC_DIR}} -DCMAKE_INSTALL_PREFIX={{.PKG_DIR}}; make -j {{.CORES}}; make install
-      cmake_lib: |
-        find_package(yaml-cpp PATHS {{.CMAKE_VENDOR_PATH_PKG}})
-        include_directories(${YAML_CPP_INCLUDE_DIR})
-    googletest:
-      path: https://github.com/google/googletest.git
-      tag: release-1.10.0
-      build:
-        - RUN {{.CACHE}} cmake {{.SRC_DIR}} -DCMAKE_INSTALL_PREFIX={{.PKG_DIR}}; make -j {{.CORES}}; make install
-      cmake_lib: |
-        find_package(GTest PATHS {{.CMAKE_VENDOR_PATH_PKG}})
-    libcomm:
-      path: https://git.hpcer.dev/HPCer/CrystalMD/libcomm.git
-      tag: v0.3.2
-    kiwi:
-      path: https://git.hpcer.dev/genshen/kiwi.git
-      tag: v0.2.0
-    xoshiro:
-      path: https://github.com/misa-kmc/xoshiro.git
-      tag: v0.1.0
-      cmake_lib: |
-        find_package(xoshiro REQUIRED PATHS {{.CMAKE_VENDOR_PATH_PKG}})
-    args:
-      path: https://github.com/Taywee/args.git
-      tag: 6.2.2
-      build:
-        - CP args.hxx {{.INCLUDE}}/args.hpp
 
-build:
-  linux:
-    - RUN {{.CACHE}} cmake {{.SRC_DIR}} -DCMAKE_INSTALL_PREFIX={{.PKG_DIR}}; make -j {{.CORES}}; make install
-  darwin:
-    - RUN {{.CACHE}} cmake {{.SRC_DIR}} -DCMAKE_INSTALL_PREFIX={{.PKG_DIR}}; make -j {{.CORES}}; make install
+pkg: "https://git.gensh.me/HPCer/misa-kmc/kmc"
+target: "kmc"
 
-cmake_build: |
-  include_directories({{.CMAKE_VENDOR_PATH_PKG}}/include)
-  link_directories({{.CMAKE_VENDOR_PATH_PKG}}/lib)
+dependencies:
+  packages:
+    github.com/Taywee/args@6.2.2@args: {build: ["CP args.hxx {{.INCLUDE}}/args.hpp"]}
+    github.com/jbeder/yaml-cpp@yaml-cpp-0.6.2@yaml-cpp:
+      build:
+        - CMAKE
+      cmake_lib: |
+        find_package(yaml-cpp PATHS {{.PKG_FIND_PATH}})
+        include_directories({{.PKG_FIND_PATH}}/include)
+    github.com/google/googletest: {version: release-1.10.0, target: GTest}
+    git.hpcer.dev/genshen/kiwi: {version: v0.3.0, target: kiwi}
+    git.hpcer.dev/HPCer/CrystalMD/libcomm: {version: v0.3.3, target: comm}
+    github.com/misa-kmc/xoshiro: {version: v0.1.1, target: xoshiro}
