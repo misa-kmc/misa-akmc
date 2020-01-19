@@ -97,11 +97,12 @@ void SubLattice::syncSimRegions(Ins &pk_inst) {
     };
 
     PKs packer = pk_inst.newSimCommPacker();
-    // todo communication order from Z to Y, and X.
-    comm::singleSideForwardComm(&packer, SimulationDomain::comm_sim_pro,
-                                packer.getMPI_DataType(),
-                                send_regions, recv_regions,
-                                ranks_send, ranks_recv);
+    // note here, communication order is from Z to Y, and X.
+    comm::singleSideForwardComm<typename PKs::pack_date_type, typename PKs::pack_region_type, true>(
+            &packer, SimulationDomain::comm_sim_pro,
+            packer.getMPI_DataType(),
+            send_regions, recv_regions,
+            ranks_send, ranks_recv);
 }
 
 template<class PKg, class Ins>

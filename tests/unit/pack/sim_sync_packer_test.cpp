@@ -71,10 +71,11 @@ TEST_F(SimSyncPackerTest, sim_sync_packer_test) {
     mpi_types::setInterMPIType();
 
     // note here, communication order is from Z to Y, and X.
-    comm::singleSideForwardComm(&packer, SimulationDomain::comm_sim_pro,
-                                SimSyncPacker::getMPI_DataType(),
-                                send_regions, recv_regions,
-                                ranks_send, ranks_recv);
+    comm::singleSideForwardComm<SimSyncPacker::pack_date_type, SimSyncPacker::pack_region_type, true>(
+            &packer, SimulationDomain::comm_sim_pro,
+            SimSyncPacker::getMPI_DataType(),
+            send_regions, recv_regions,
+            ranks_send, ranks_recv);
     mpi_types::unsetInterMPIType();
 
     // check received regions in section 0's simulation region communication.
