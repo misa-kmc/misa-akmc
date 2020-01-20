@@ -52,7 +52,7 @@ void VacancyList::replace(const _type_lattice_id old_lat_id, const _type_lattice
 #endif
     mp.erase(old_lat_id);
     // todo init vacancy
-    if (!p_meta->isGhostLat(old_lat_id)) {
+    if (!p_meta->isGhostLat(new_lat_id)) {
         mp.insert(std::make_pair(new_lat_id, Vacancy{}));
     }
 }
