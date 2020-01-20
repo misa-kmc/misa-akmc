@@ -18,6 +18,8 @@ add_library(${P_KMP_PROFILE_LIB_NAME} STATIC
         config/config_values.h
         config/lattice_types_string.cpp
         config/lattice_types_string.h
+        io/lattice_dump.cpp
+        io/lattice_dump.h
         device.h
         m_event_listener.h
         m_event_listener.cpp
