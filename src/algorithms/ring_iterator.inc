@@ -22,5 +22,5 @@ RingIterator<T, N, Ref, Ptr>::RingIterator(RingIterator::data_type *p_ring_data)
 
 template<class T, type_ring_size N, class Ref, class Ptr>
 typename RingIterator<T, N, Ref, Ptr>::value_type RingIterator<T, N, Ref, Ptr>::next() const {
-    return (*p_ring_data)[cursor];
+    return (*p_ring_data)[(cursor + 1) % N];
 }
