@@ -21,6 +21,7 @@ void SubLattice::startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model, EventHooks
         for (int sect = 0; sect < SECTORS_NUM; sect++) { // sector loop
             const double step_threshold_time = static_cast<double>(step + 1) * T - sec_meta.sector_itl->evolution_time;
             double sector_time = 0.0;
+            p_model->reindex(p_domain->local_sector_region[(*sec_meta.sector_itl).id]); // reindex defects lists
             while (sector_time < step_threshold_time) { // note: step_threshold_time may be less then 0.0
                 const double total_rates = calcRatesWrapper(p_model, (*sec_meta.sector_itl).id);
                 if (total_rates == 0.0 || std::abs(total_rates) < std::numeric_limits<_type_rate>::epsilon()) {
@@ -41,7 +42,6 @@ void SubLattice::startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model, EventHooks
             // communicate ghost area of current process to sync simulation regions of neighbor process.
             syncSimRegions<PKs>(pk_inst);
             syncNextSectorGhostRegions<PKg>(pk_inst); // communicate ghost area data of next sector in current process.
-            p_model->reindex(p_domain->local_sector_region[(*sec_meta.sector_itl).id]); // reindex defects lists
             ++sec_meta.sector_itl; // update sector id.
             nextSector(); // some post operations after moved to next sector.
         }
