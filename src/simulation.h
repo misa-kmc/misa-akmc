@@ -69,7 +69,7 @@ public:
 template<typename E>
 void simulation::simulate(ModelAdapter<E> *p_model, EventHooks *p_event_hooks,
                           const double seed_time_inc, const double time_limit) {
-    SubLattice sl(_p_domain, seed_time_inc, time_limit, 1.0); // todo calculate T
+    SubLattice sl(_p_domain, seed_time_inc, time_limit, 3.0e-7); // todo calculate T
 
     PackerInstance pk_ins(box->lattice_list);
     sl.startTimeLoop<GhostSyncPacker, SimSyncPacker, PackerInstance>(pk_ins, p_model, p_event_hooks);
