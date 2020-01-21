@@ -95,7 +95,7 @@ event::SelectedEvent ABVIModel::select(const lat_region region, const _type_rate
 #endif
                             selected_event.event_type = event::DumbbellTrans;
                             selected_event.from_id = lattice.getId();
-                            selected_event.to_id = _1nn_list[_1nn_tag]->getId();
+                            selected_event.to_id = box->lattice_list->meta.getIdBy1nnOffset(lattice.getId(), _1nn_tag);
                             selected_event.target_tag = _1nn_tag;
                             selected_event.rotate_direction = rate_index % 2 != 0;
                             break; // event found
@@ -113,7 +113,8 @@ event::SelectedEvent ABVIModel::select(const lat_region region, const _type_rate
 #endif
                             selected_event.event_type = event::VacancyTrans;
                             selected_event.from_id = lattice.getId();
-                            selected_event.to_id = _1nn_list[rate_index]->getId();
+                            selected_event.to_id = box->lattice_list->meta.getIdBy1nnOffset(
+                                    lattice.getId(), rate_index);
                             selected_event.target_tag = static_cast<_type_dir_id>(rate_index);
                             break; // event found
                         }
@@ -133,7 +134,10 @@ void ABVIModel::perform(const event::SelectedEvent selected) {
     switch (selected.event_type) {
         case event::VacancyTrans: {
             Lattice &lat_from = box->lattice_list->getLat(selected.from_id);
-            Lattice &lat_to = box->lattice_list->getLat(selected.to_id);
+            const _type_lattice_id lat_to_lid = box->lattice_list->meta.getIdBy1nnOffset(
+                    selected.from_id, selected.target_tag);
+            Lattice &lat_to = box->lattice_list->getLat(lat_to_lid);
+
 #ifdef KMC_DEBUG_MODE
             assert(lat_from.type.isVacancy());
             assert(lat_to.type.isAtom());
@@ -149,7 +153,7 @@ void ABVIModel::perform(const event::SelectedEvent selected) {
             }
             // recombination
             rec::RecList rec_list;
-            rec_list.create(box->lattice_list, box->itl_list, lat_to.getId());
+            rec_list.create(box->lattice_list, box->itl_list, lat_to_lid);
             if (!rec_list.rec_list.empty()) {
                 rec::Rec picked_rec = rec_list.pickMinimum();
                 if (p_event_listener) {
@@ -161,7 +165,9 @@ void ABVIModel::perform(const event::SelectedEvent selected) {
             break;
         case event::DumbbellTrans: {
             Lattice &lat_from = box->lattice_list->getLat(selected.from_id);
-            Lattice &lat_to = box->lattice_list->getLat(selected.to_id);
+            const _type_lattice_id lat_to_lid = box->lattice_list->meta.getIdBy1nnOffset(
+                    selected.from_id, selected.target_tag);
+            Lattice &lat_to = box->lattice_list->getLat(lat_to_lid);
             Itl itl_copy = box->itl_list->mp.at(selected.from_id);
 #ifdef KMC_DEBUG_MODE
             assert(lat_from.type.isDumbbell());
@@ -187,7 +193,7 @@ void ABVIModel::perform(const event::SelectedEvent selected) {
             }
             // recombination
             rec::RecList rec_list;
-            rec_list.create(box->lattice_list, box->itl_list, lat_to.getId());
+            rec_list.create(box->lattice_list, box->itl_list, lat_to_lid);
             if (!rec_list.rec_list.empty()) {
                 rec::Rec picked_rec = rec_list.pickMinimum();
                 if (p_event_listener) {
