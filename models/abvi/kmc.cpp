@@ -98,7 +98,7 @@ event::SelectedEvent ABVIModel::select(const lat_region region, const _type_rate
                             selected_event.to_id = box->lattice_list->meta.getIdBy1nnOffset(lattice.getId(), _1nn_tag);
                             selected_event.target_tag = _1nn_tag;
                             selected_event.rotate_direction = rate_index % 2 != 0;
-                            break; // event found
+                            goto EVENT_FOUND; // event found
                         }
                     }
                 } else if (lattice.type.isVacancy()) {
@@ -116,7 +116,7 @@ event::SelectedEvent ABVIModel::select(const lat_region region, const _type_rate
                             selected_event.to_id = box->lattice_list->meta.getIdBy1nnOffset(
                                     lattice.getId(), rate_index);
                             selected_event.target_tag = static_cast<_type_dir_id>(rate_index);
-                            break; // event found
+                            goto EVENT_FOUND; // event found
                         }
                     }
                 }
@@ -124,6 +124,7 @@ event::SelectedEvent ABVIModel::select(const lat_region region, const _type_rate
             }
         }
     }
+    EVENT_FOUND:
 #ifdef KMC_DEBUG_MODE
     //    todo assert total rates == rate_accumulator + defect_gen_rate
 #endif
