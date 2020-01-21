@@ -38,9 +38,7 @@ void creation::createRandom(uint32_t seed_create_types, uint32_t seed_create_vac
     const unsigned long va_local = va_count / SimulationDomain::comm_sim_pro.all_ranks +
                                    (SimulationDomain::comm_sim_pro.own_rank <
                                     (va_count % SimulationDomain::comm_sim_pro.all_ranks) ? 1 : 0);
-    const comm::_type_lattice_size max_lattice_size = BCC_DBX * p_domain->sub_box_lattice_size[0] *
-                                                      p_domain->sub_box_lattice_size[1] *
-                                                      p_domain->sub_box_lattice_size[2];
+    const comm::_type_lattice_size max_lattice_size = lats->meta.box_x * lats->meta.box_y * lats->meta.box_z;
     std::uniform_int_distribution<> va_dis(0, max_lattice_size - 1);
     r::type_rng va_rng(seed_create_vacancy);
 #ifdef KMC_DEBUG_MODE
