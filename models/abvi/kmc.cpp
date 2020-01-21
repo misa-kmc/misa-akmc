@@ -42,6 +42,9 @@ _type_rate ABVIModel::calcRates(const comm::Region<comm::_type_lattice_size> reg
                                             return rate;
                                         });
                 } else if (lattice.type.isVacancy()) { // vacancy
+#ifdef KMC_DEBUG_MODE
+                    assert(box->va_list->mp.find(lattice.getId()) != box->va_list->mp.end());
+#endif
                     Vacancy &vacancy = box->va_list->mp.at(lattice.getId());
 
                     Lattice *lat_list[LatticesList::MAX_1NN] = {nullptr}; // todo new array many times.
@@ -116,6 +119,12 @@ event::SelectedEvent ABVIModel::select(const lat_region region, const _type_rate
                             selected_event.to_id = box->lattice_list->meta.getIdBy1nnOffset(
                                     lattice.getId(), rate_index);
                             selected_event.target_tag = static_cast<_type_dir_id>(rate_index);
+#ifdef KMC_DEBUG_MODE
+                            auto from_lat = box->lattice_list->getLat(selected_event.from_id);
+                            auto to_lat = box->lattice_list->getLat(selected_event.to_id);
+                            assert(from_lat.type.isVacancy());
+                            assert(to_lat.type.isAtom());
+#endif
                             goto EVENT_FOUND; // event found
                         }
                     }
@@ -140,6 +149,7 @@ void ABVIModel::perform(const event::SelectedEvent selected) {
             Lattice &lat_to = box->lattice_list->getLat(lat_to_lid);
 
 #ifdef KMC_DEBUG_MODE
+            assert(lat_to_lid == selected.to_id);
             assert(lat_from.type.isVacancy());
             assert(lat_to.type.isAtom());
 #endif
@@ -171,6 +181,7 @@ void ABVIModel::perform(const event::SelectedEvent selected) {
             Lattice &lat_to = box->lattice_list->getLat(lat_to_lid);
             Itl itl_copy = box->itl_list->mp.at(selected.from_id);
 #ifdef KMC_DEBUG_MODE
+            assert(lat_to_lid == selected.to_id);
             assert(lat_from.type.isDumbbell());
             assert(lat_to.type.isAtom());
 #endif
