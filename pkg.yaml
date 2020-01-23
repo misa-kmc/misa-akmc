@@ -17,11 +17,12 @@ dependencies:
   packages:
     github.com/Taywee/args@6.2.2@args: {build: ["CP args.hxx {{.INCLUDE}}/args.hpp"]}
     github.com/jbeder/yaml-cpp@yaml-cpp-0.6.2@yaml-cpp:
+      features: ["YAML_CPP_BUILD_TESTS=OFF"]
       build:
         - CMAKE
       cmake_lib: |
-        find_package(yaml-cpp PATHS {{.PKG_FIND_PATH}})
-        include_directories({{.PKG_FIND_PATH}}/include)
+        find_package(yaml-cpp PATHS {{.PKG_DIR}})
+        include_directories({{.PKG_DIR}}/include)
     github.com/google/googletest: {version: release-1.10.0, target: GTest}
     git.hpcer.dev/genshen/kiwi: {version: v0.3.0, target: kiwi}
     git.hpcer.dev/HPCer/CrystalMD/libcomm: {version: v0.3.3, target: comm}
