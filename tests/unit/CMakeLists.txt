@@ -39,9 +39,17 @@ add_executable(${PKMC_UINT_TEST_NAME} ${TEST_SOURCE_FILES} ${TEST_HEADER_FILES})
 #set(PNOHS_EXTRA_LIBS ${PNOHS_LIB_NAME} ${PNOHS_EXTRA_LIBS})
 
 # Extra linking for the project.
-target_link_libraries(${PKMC_UINT_TEST_NAME}
-        PRIVATE GTest::gtest GTest::gtest_main kiwi::kiwi ${PKMC_LIB_NAME} ${KMC_EXTRA_LIBS}
-        )
+if (TARGET GTest::gtest AND TARGET GTest::gtest_main)
+    # googletest is added by `find_package(GTest)`
+    target_link_libraries(${PKMC_UINT_TEST_NAME}
+            PRIVATE GTest::gtest GTest::gtest_main kiwi::kiwi ${PKMC_LIB_NAME} ${KMC_EXTRA_LIBS}
+            )
+else ()
+    # googletest is added by `add_subdirectory`
+    target_link_libraries(${PKMC_UINT_TEST_NAME}
+            PRIVATE gtest gtest_main kiwi::kiwi ${PKMC_LIB_NAME} ${KMC_EXTRA_LIBS}
+            )
+endif ()
 
 # This is so you can do 'make test' to see all your tests run, instead of
 # manually running the executable runUnitTests to see those specific tests.
