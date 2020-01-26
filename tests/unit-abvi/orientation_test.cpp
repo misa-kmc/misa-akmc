@@ -34,7 +34,7 @@ TEST(orientation_availTransDirs_test, orientation_test) {
     EXPECT_EQ(ori.tranAtom(LatticeTypes{LatticeTypes::FeCu}, 7)._type, LatticeTypes::Cu);
 
     // fixme this only be true in debug mode.
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
     EXPECT_THROW(ori.tranAtom(LatticeTypes{LatticeTypes::FeCu}, 2), std::runtime_error);
     EXPECT_THROW(ori.tranAtom(LatticeTypes{LatticeTypes::FeCu}, 3), std::runtime_error);
     EXPECT_THROW(ori.tranAtom(LatticeTypes{LatticeTypes::FeCu}, 4), std::runtime_error);

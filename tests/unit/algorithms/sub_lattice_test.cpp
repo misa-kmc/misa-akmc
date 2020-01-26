@@ -59,7 +59,17 @@ class TestSLModel : public ModelAdapter<int> {
 
     void perform(const int) override {}
 
+    void reindex(const lat_region region) override {}
+
     unsigned long defectSize() override { return 0; }
+};
+
+
+class TestEventHooks : public EventHooks {
+public:
+    void onStepFinished(unsigned long step) override {};
+
+    void onAllDone() override {};
 };
 
 TEST(sublattice_template_compile_test, sublattice_test) {
@@ -81,10 +91,14 @@ TEST(sublattice_template_compile_test, sublattice_test) {
             .setCutoffRadius(cutoff_radius_factor)
             .setLatticeConst(lattice_const)
             .build();
+    kiwi::mpiUtils::onGlobalCommChanged(new_comm);
+    SimulationDomain::setSimDomain(kiwi::mpiUtils::global_process);
 
     TestSLModel model;
-    SubLattice sl(p_domain, 1.0, 1.0);
+    SubLattice sl(p_domain, 0x1024, 1.0, 1.0);
 
     TestPackerInstance pk_ins;
-    sl.startTimeLoop<TestPks, TestPks, TestPackerInstance>(pk_ins, &model);
+    TestEventHooks test_event_hook;
+    sl.startTimeLoop<TestPks, TestPks, TestPackerInstance>(pk_ins, &model, &test_event_hook);
+    delete p_domain;
 }

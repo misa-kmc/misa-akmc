@@ -3,6 +3,7 @@
 //
 
 #include <cassert>
+#include "utils/macros.h"
 #include "vacancy_list.h"
 
 _type_neighbour_status Vacancy::availTranDirs(_type_neighbour_status nei_status, Lattice **_1nn_lats) {
@@ -11,7 +12,7 @@ _type_neighbour_status Vacancy::availTranDirs(_type_neighbour_status nei_status,
     // then set the destination as available transition direction.
     _type_dirs_status atom_nei_status = 0;
     for (int b = 0; b < LatticesList::MAX_NEI_BITS; b++) {
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
         if ((nei_status >> b) & 1) {
             // its neighbour lattice can not be dumbbell.
             bool is_db = _1nn_lats[b]->type.isDumbbell();
@@ -44,8 +45,34 @@ void Vacancy::updateRates(Lattice &lattice, Lattice *list_1nn[LatticesList::MAX_
     }
 }
 
-void VacancyList::replace(const _type_lattice_id old_lat_id, const _type_lattice_id new_lat_id) {
+void VacancyList::replace(const _type_lattice_id old_lat_id, const _type_lattice_id new_lat_id,
+                          const LatListMeta *p_meta) {
+#ifdef KMC_DEBUG_MODE
+    assert(!p_meta->isGhostLat(old_lat_id));
+#endif
     mp.erase(old_lat_id);
     // todo init vacancy
-    mp.insert(std::make_pair(new_lat_id, Vacancy{}));
+    if (!p_meta->isGhostLat(new_lat_id)) {
+        mp.insert(std::make_pair(new_lat_id, Vacancy{}));
+    }
+}
+
+void VacancyList::reindex(LatticesList *lats, const comm::Region<comm::_type_lattice_size> region) {
+    for (int z = region.z_low; z < region.z_high; z++) {
+        for (int y = region.y_low; y < region.y_high; y++) {
+            for (int x = BCC_DBX * region.x_low; x < BCC_DBX * region.x_high; x++) {
+                auto it = mp.find(lats->getId(x, y, z));
+                Lattice &lattice = lats->getLat(x, y, z);
+                if (lattice.type.isVacancy()) {
+                    if (it == mp.end()) {
+                        mp.insert(std::make_pair(lats->getId(x, y, z), Vacancy{}));
+                    }
+                } else {
+                    if (it != mp.end()) {
+                        mp.erase(it);
+                    }
+                }
+            }
+        }
+    }
 }

@@ -5,35 +5,49 @@
 #ifndef MISA_KMC_SUB_LATTICE_INC
 #define MISA_KMC_SUB_LATTICE_INC
 
+#include <cmath>
 #include <comm/comm.hpp>
 #include <comm/preset/sector_forwarding_region.h>
+#include <logs/logs.h>
 #include "utils/simulation_domain.h"
 #include "utils/random/random.h"
 #include "comm_dirs.h"
 
+
 template<class PKg, class PKs, class Ins, typename E>
-void SubLattice::startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model) {
+void SubLattice::startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model, EventHooks *p_event_hooks) {
     const unsigned long time_steps = ceil(time_limit / T);
     for (unsigned long step = 0; step < time_steps; step++) { // time steps loop
         for (int sect = 0; sect < SECTORS_NUM; sect++) { // sector loop
-            const double init_overflow_time = sec_meta.sector_itl->evolution_time - step * T;
-            double sector_time = init_overflow_time;
-            while (p_model->defectSize() != 0 && sector_time < T) {
+            const double step_threshold_time = static_cast<double>(step + 1) * T - sec_meta.sector_itl->evolution_time;
+            double sector_time = 0.0;
+            p_model->reindex(p_domain->local_sector_region[(*sec_meta.sector_itl).id]); // reindex defects lists
+            while (sector_time < step_threshold_time) { // note: step_threshold_time may be less then 0.0
                 const double total_rates = calcRatesWrapper(p_model, (*sec_meta.sector_itl).id);
-                selectPerformWrapper(p_model, total_rates, (*sec_meta.sector_itl).id);
-                const double delta_t = -log(r::random() / total_rates);
-                sector_time += delta_t;
+                if (total_rates == 0.0 || std::abs(total_rates) < std::numeric_limits<_type_rate>::epsilon()) {
+                    // If there is no defect, use synchronous parallel kMC algorithm.
+                    // Because there is no kMC event, just increase time.
+                    sector_time = step_threshold_time;
+                } else {
+                    selectPerformWrapper(p_model, total_rates, (*sec_meta.sector_itl).id);
+                    const double rand = time_inc_dis(time_inc_rng);
+                    const double delta_t = -std::log(rand) / total_rates;
+                    sector_time += delta_t;
+                }
+                // todo: time comparing, nearest principle based on predicting next delta t.
             }
             // kmc simulation on this sector is finished
             // we store evolution time of current sector when the sector loop finishes.
-            sec_meta.sector_itl->evolution_time += sector_time - init_overflow_time;
+            sec_meta.sector_itl->evolution_time += sector_time;
             // communicate ghost area of current process to sync simulation regions of neighbor process.
             syncSimRegions<PKs>(pk_inst);
             syncNextSectorGhostRegions<PKg>(pk_inst); // communicate ghost area data of next sector in current process.
             ++sec_meta.sector_itl; // update sector id.
             nextSector(); // some post operations after moved to next sector.
         }
+        p_event_hooks->onStepFinished(step);
     }
+    p_event_hooks->onAllDone();
 }
 
 template<typename E>
@@ -83,11 +97,12 @@ void SubLattice::syncSimRegions(Ins &pk_inst) {
     };
 
     PKs packer = pk_inst.newSimCommPacker();
-    // todo communication order from Z to Y, and X.
-    comm::singleSideForwardComm(&packer, SimulationDomain::comm_sim_pro,
-                                packer.getMPI_DataType(),
-                                send_regions, recv_regions,
-                                ranks_send, ranks_recv);
+    // note here, communication order is from Z to Y, and X.
+    comm::singleSideForwardComm<typename PKs::pack_date_type, typename PKs::pack_region_type, true>(
+            &packer, SimulationDomain::comm_sim_pro,
+            packer.getMPI_DataType(),
+            send_regions, recv_regions,
+            ranks_send, ranks_recv);
 }
 
 template<class PKg, class Ins>

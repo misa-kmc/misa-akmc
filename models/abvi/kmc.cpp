@@ -42,6 +42,9 @@ _type_rate ABVIModel::calcRates(const comm::Region<comm::_type_lattice_size> reg
                                             return rate;
                                         });
                 } else if (lattice.type.isVacancy()) { // vacancy
+#ifdef KMC_DEBUG_MODE
+                    assert(box->va_list->mp.find(lattice.getId()) != box->va_list->mp.end());
+#endif
                     Vacancy &vacancy = box->va_list->mp.at(lattice.getId());
 
                     Lattice *lat_list[LatticesList::MAX_1NN] = {nullptr}; // todo new array many times.
@@ -90,15 +93,15 @@ event::SelectedEvent ABVIModel::select(const lat_region region, const _type_rate
                             // convert rate index to 1nn list array index.
                             const orientation ori = box->itl_list->mp[lattice.getId()].orient;
                             const _type_dir_id _1nn_tag = Itl::get1nnIdByRatesIndex(rate_index, ori.availTransDirs());
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
                             assert(_1nn_list[_1nn_tag] != nullptr);
 #endif
                             selected_event.event_type = event::DumbbellTrans;
                             selected_event.from_id = lattice.getId();
-                            selected_event.to_id = _1nn_list[_1nn_tag]->getId();
+                            selected_event.to_id = box->lattice_list->meta.getIdBy1nnOffset(lattice.getId(), _1nn_tag);
                             selected_event.target_tag = _1nn_tag;
                             selected_event.rotate_direction = rate_index % 2 != 0;
-                            break; // event found
+                            goto EVENT_FOUND; // event found
                         }
                     }
                 } else if (lattice.type.isVacancy()) {
@@ -108,14 +111,21 @@ event::SelectedEvent ABVIModel::select(const lat_region region, const _type_rate
                         if (rate_accumulator > excepted_rate) {
                             Lattice *_1nn_list[LatticesList::MAX_1NN] = {nullptr};
                             box->lattice_list->get1nn(lattice.getId(), _1nn_list);
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
                             assert(_1nn_list[rate_index] != nullptr);
 #endif
                             selected_event.event_type = event::VacancyTrans;
                             selected_event.from_id = lattice.getId();
-                            selected_event.to_id = _1nn_list[rate_index]->getId();
+                            selected_event.to_id = box->lattice_list->meta.getIdBy1nnOffset(
+                                    lattice.getId(), rate_index);
                             selected_event.target_tag = static_cast<_type_dir_id>(rate_index);
-                            break; // event found
+#ifdef KMC_DEBUG_MODE
+                            auto from_lat = box->lattice_list->getLat(selected_event.from_id);
+                            auto to_lat = box->lattice_list->getLat(selected_event.to_id);
+                            assert(from_lat.type.isVacancy());
+                            assert(to_lat.type.isAtom());
+#endif
+                            goto EVENT_FOUND; // event found
                         }
                     }
                 }
@@ -123,7 +133,8 @@ event::SelectedEvent ABVIModel::select(const lat_region region, const _type_rate
             }
         }
     }
-#ifdef DEBUG_MODE
+    EVENT_FOUND:
+#ifdef KMC_DEBUG_MODE
     //    todo assert total rates == rate_accumulator + defect_gen_rate
 #endif
     return selected_event;
@@ -133,8 +144,12 @@ void ABVIModel::perform(const event::SelectedEvent selected) {
     switch (selected.event_type) {
         case event::VacancyTrans: {
             Lattice &lat_from = box->lattice_list->getLat(selected.from_id);
-            Lattice &lat_to = box->lattice_list->getLat(selected.to_id);
-#ifdef DEBUG_MODE
+            const _type_lattice_id lat_to_lid = box->lattice_list->meta.getIdBy1nnOffset(
+                    selected.from_id, selected.target_tag);
+            Lattice &lat_to = box->lattice_list->getLat(lat_to_lid);
+
+#ifdef KMC_DEBUG_MODE
+            assert(lat_to_lid == selected.to_id);
             assert(lat_from.type.isVacancy());
             assert(lat_to.type.isAtom());
 #endif
@@ -143,13 +158,13 @@ void ABVIModel::perform(const event::SelectedEvent selected) {
             lat_from.type = lat_to.type;
             lat_to.type = tp_temp;
             // update vacancies list: remove lat_from, add lat_to.
-            box->va_list->replace(lat_from.getId(), lat_to.getId());
+            box->va_list->replace(selected.from_id, selected.to_id, &(box->lattice_list->meta));
             if (p_event_listener) {
-                p_event_listener->onVacancyTrans(0, lat_from.type);
+                p_event_listener->onVacancyTrans(0, selected.from_id, selected.to_id, lat_from.type);
             }
             // recombination
             rec::RecList rec_list;
-            rec_list.create(box->lattice_list, box->itl_list, lat_to.getId());
+            rec_list.create(box->lattice_list, box->itl_list, lat_to_lid);
             if (!rec_list.rec_list.empty()) {
                 rec::Rec picked_rec = rec_list.pickMinimum();
                 if (p_event_listener) {
@@ -161,9 +176,12 @@ void ABVIModel::perform(const event::SelectedEvent selected) {
             break;
         case event::DumbbellTrans: {
             Lattice &lat_from = box->lattice_list->getLat(selected.from_id);
-            Lattice &lat_to = box->lattice_list->getLat(selected.to_id);
+            const _type_lattice_id lat_to_lid = box->lattice_list->meta.getIdBy1nnOffset(
+                    selected.from_id, selected.target_tag);
+            Lattice &lat_to = box->lattice_list->getLat(lat_to_lid);
             Itl itl_copy = box->itl_list->mp.at(selected.from_id);
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
+            assert(lat_to_lid == selected.to_id);
             assert(lat_from.type.isDumbbell());
             assert(lat_to.type.isAtom());
 #endif
@@ -180,13 +198,14 @@ void ABVIModel::perform(const event::SelectedEvent selected) {
                                                lat_to.type.isHighEnd(jump_atom._type),
                                                selected.rotate_direction);
             // todo update avail tran dirs, not in beforeRatesUpdate.
-            box->itl_list->replace(lat_from.getId(), lat_to.getId(), itl);
+            box->itl_list->replace(selected.from_id, selected.to_id, &(box->lattice_list->meta), itl);
             if (p_event_listener) {
-                p_event_listener->onDumbbellTrans(0, old_from_type, old_to_type, lat_from.type, lat_to.type);
+                p_event_listener->onDumbbellTrans(0, selected.from_id, selected.to_id,
+                                                  old_from_type, old_to_type, lat_from.type, lat_to.type);
             }
             // recombination
             rec::RecList rec_list;
-            rec_list.create(box->lattice_list, box->itl_list, lat_to.getId());
+            rec_list.create(box->lattice_list, box->itl_list, lat_to_lid);
             if (!rec_list.rec_list.empty()) {
                 rec::Rec picked_rec = rec_list.pickMinimum();
                 if (p_event_listener) {
@@ -277,6 +296,11 @@ void ABVIModel::perform(const event::SelectedEvent selected) {
         }
             break;
     }
+}
+
+void ABVIModel::reindex(const lat_region region) {
+    box->va_list->reindex(box->lattice_list, region);
+    // todo reindex interval list
 }
 
 void ABVIModel::setEventListener(EventListener *p_listener) {

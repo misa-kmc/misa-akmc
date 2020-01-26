@@ -4,8 +4,6 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
 # make binary
 add_executable(${KMC_EXECUTE_BIN_NAME}
-        m_event_listener.h
-        m_event_listener.cpp
         main.cpp
         )
 

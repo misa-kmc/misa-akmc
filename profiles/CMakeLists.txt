@@ -12,14 +12,20 @@ set(P_KMC_EXECUTE_BIN_NAME pmisa-kmc)
 set(P_KMP_PROFILE_LIB_NAME profile)
 
 add_library(${P_KMP_PROFILE_LIB_NAME} STATIC
+        config/config_parsing.cpp
+        config/config_parsing.h
+        config/config_values.cpp
+        config/config_values.h
+        config/lattice_types_string.cpp
+        config/lattice_types_string.h
+        device.h
+        m_event_listener.h
+        m_event_listener.cpp
+        m_event_hook.cpp
+        m_event_hook.h
         pkmc.h
         pkmc.cpp
-        config_parsing.cpp
-        config_parsing.h
-        config_values.cpp
-        config_values.h
-        lattice_types_string.cpp
-        lattice_types_string.h
+        seed_relocate.h
         )
 
 target_link_libraries(${P_KMP_PROFILE_LIB_NAME} PUBLIC

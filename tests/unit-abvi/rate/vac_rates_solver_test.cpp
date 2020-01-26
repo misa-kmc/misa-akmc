@@ -32,10 +32,10 @@ TEST(vac_deltaE_test_null, vac_rates_solver_deltaE_tests) {
 
     VacRatesSolver vac_rate(lattice_list, attempt_freq, temperature);
     // test delta e and rate.
-    const auto delta_e = vac_rate.deltaE(src_lat, tar_lat, tar_lat.type._type);
+    const auto delta_e = vac_rate.deltaE(src_lat.getId(), tar_lat.getId(), src_lat, tar_lat, tar_lat.type._type);
     ASSERT_NEAR(delta_e, 0.0, 1e-10);
     // delta E is 0, but rate may not be 0.
-    const auto rate = vac_rate.rate(src_lat, tar_lat, tar_lat.type._type, 1);
+    const auto rate = vac_rate.rate(src_lat, tar_lat, tar_lat.type._type, 7);
     const double expected_rate = attempt_freq *
                                  exp(-vac_rate.e0(tar_lat.type._type) / (BoltzmannConstant * temperature));
     // we use relative error here, because the absolute numerical error is too big(can be 1e-6).
@@ -63,7 +63,7 @@ TEST(vac_deltaE_test_both_neighbour, vac_rates_solver_deltaE_tests) {
     // diff: after-before = (1nnFeFe+1nnVNi+2nnFeNi+2nnVFe) - (1nnVFe + 1nnFeNi +2nnVNi+2nnFeFe)
 
     // test delta e and rate.
-    const auto delta_e = vac_rate.deltaE(src_lat, tar_lat, tar_lat.type._type);
+    const auto delta_e = vac_rate.deltaE(src_lat.getId(), tar_lat.getId(), src_lat, tar_lat, tar_lat.type._type);
     ASSERT_NEAR(delta_e,
                 bondDataForTest::_1nn_bonds.at(bonds::PairBond::FeFe) +
                 bondDataForTest::_1nn_bonds.at(bonds::PairBond::VNi) +
@@ -95,7 +95,7 @@ TEST(vac_deltaE_test_src_1nn_neighbour, vac_rates_solver_deltaE_tests) {
     // after: 6FeFe+FeV+FeNi  6FeFe   | VFe+7VFe  6VFe
     // diff: after-before = (1nnFeV + 1nnFeNi) - (1nnVNi + 1nnFeFe)
 
-    const auto delta_e = vac_rate.deltaE(src_lat, tar_lat, tar_lat.type._type);
+    const auto delta_e = vac_rate.deltaE(src_lat.getId(), tar_lat.getId(), src_lat, tar_lat, tar_lat.type._type);
     // use user defined precision.
     ASSERT_NEAR(delta_e, (bondDataForTest::_1nn_bonds.at(bonds::PairBond::VFe) +
                           bondDataForTest::_1nn_bonds.at(bonds::PairBond::FeNi)) -

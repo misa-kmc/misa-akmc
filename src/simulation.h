@@ -12,6 +12,12 @@
 
 #include "lattice/period_lattice_list.h"
 #include "abvi/box.h"
+#include "models/model_adapter.h"
+#include "algorithms/sl/sublattice.h"
+#include "pack/ghost_sync_packer.h"
+#include "pack/sim_sync_packer.h"
+#include "pack/packer_instance.h"
+
 
 class simulation {
 public:
@@ -44,15 +50,29 @@ public:
     void prepareForStart();
 
     /**
-     * \brief perform simulation.
+     * \brief perform simulation using a specific model.
+     * \tparam E type of event in kmc model.
+     * \param p_model pointer of kmc model.
+     * \param event_hooks pointer of event hooks or callbacks for handing each algorithm event.
+     * \param seed_time_inc random number generation seed for kmc time increasing.
      * \param time_limit the max simulation time.
      */
-    void simulate(const double time_limit);
+    template<typename E>
+    void simulate(ModelAdapter<E> *p_model, EventHooks *p_event_hooks,
+                  const double seed_time_inc, const double time_limit);
 
 public:
     Box *box = nullptr;
     comm::ColoredDomain *_p_domain = nullptr;
 };
 
+template<typename E>
+void simulation::simulate(ModelAdapter<E> *p_model, EventHooks *p_event_hooks,
+                          const double seed_time_inc, const double time_limit) {
+    SubLattice sl(_p_domain, seed_time_inc, time_limit, 3.0e-7); // todo calculate T
+
+    PackerInstance pk_ins(box->lattice_list);
+    sl.startTimeLoop<GhostSyncPacker, SimSyncPacker, PackerInstance>(pk_ins, p_model, p_event_hooks);
+}
 
 #endif //MISA_KMC_SIMULATION_H

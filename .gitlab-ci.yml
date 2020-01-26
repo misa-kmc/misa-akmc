@@ -22,6 +22,7 @@ fetch:
   script:
     - pkg fetch
     - pkg install --verbose
+    - rm -rf vendor/cache
   artifacts:
     untracked: true
 
@@ -44,7 +45,8 @@ test:
     - cpp
     - pkg
   script:
-    - GTEST_OUTPUT=xml:report.xml GTEST_COLOR=yes ./cmake-build/bin/abvi-model-unit-tests
+    - GTEST_OUTPUT=xml:report-abvi.xml GTEST_COLOR=yes ./cmake-build/bin/abvi-model-unit-tests
+    - GTEST_OUTPUT=xml:report-pkmc.xml GTEST_COLOR=yes ./cmake-build/bin/pkmc-unit-tests
     # - cd cmake-build
     # - GTEST_COLOR=yes make test ARGS=-V
     - gcovr --exclude tests --exclude vendor
@@ -57,7 +59,9 @@ test:
     paths:
       - coverage/  # save coverage report html files.
     reports:
-      junit: report.xml
+      junit:
+        - report-abvi.xml
+        - report-pkmc.xml
 
 # code_quality: https://docs.gitlab.com/ee/ci/examples/code_quality.html#previous-job-definitions
 

@@ -5,12 +5,8 @@
 #include <utils/mpi_utils.h>
 #include "utils/mpi_types.h"
 #include "simulation.h"
-#include "algorithms/sl/sublattice.h"
 #include "abvi/kmc.h"
 #include "pack/ghost_init_packer.h"
-#include "pack/ghost_sync_packer.h"
-#include "pack/sim_sync_packer.h"
-#include "pack/packer_instance.h"
 #include "utils/simulation_domain.h"
 
 void simulation::createDomain(const unsigned long phase_space[comm::DIMENSION_SIZE],
@@ -33,9 +29,9 @@ void simulation::createDomain(const unsigned long phase_space[comm::DIMENSION_SI
     _p_domain = comm::ColoredDomain::Builder()
             .setComm(pro, &new_comm)
             .setPhaseSpace(phase_space_int64)
-            .setCutoffRadius(cutoff_radius)
+            .setCutoffRadius(cutoff_radius/lattice_const)
             .setLatticeConst(lattice_const)
-//            .setGhostSize(static_cast<int>(ceil(cutoff_radius)))
+//            .setGhostSize(static_cast<int>(ceil(cutoff_radius/lattice_const)))
             .build();
     kiwi::mpiUtils::onGlobalCommChanged(new_comm); // set new domain.
     SimulationDomain::setSimDomain(kiwi::mpiUtils::global_process);
@@ -49,11 +45,18 @@ void simulation::createLattice() {
     builder.setBoxSize(
             static_cast<_type_box_size>(_p_domain->sub_box_lattice_size[0]),
             static_cast<_type_box_size>(_p_domain->sub_box_lattice_size[1]),
-            static_cast<_type_box_size>(_p_domain->sub_box_lattice_size[0]));
+            static_cast<_type_box_size>(_p_domain->sub_box_lattice_size[2]));
     builder.setGhostSize(
             static_cast<_type_box_size>(_p_domain->lattice_size_ghost[0]),
             static_cast<_type_box_size>(_p_domain->lattice_size_ghost[1]),
             static_cast<_type_box_size>(_p_domain->lattice_size_ghost[2]));
+
+    builder.setGlobalLatSize(_p_domain->phase_space[0],
+                             _p_domain->phase_space[1],
+                             _p_domain->phase_space[2]);
+    builder.setGlobalBaseLat(_p_domain->sub_box_lattice_region.x_low,
+                             _p_domain->sub_box_lattice_region.y_low,
+                             _p_domain->sub_box_lattice_region.z_low);
     // create empty lattice list(lattice types are not specified) and defects list.
     box = builder.build(); // todo delete pointer
 }
@@ -64,12 +67,4 @@ void simulation::prepareForStart() {
     comm::neiSendReceive(&init_packer, SimulationDomain::comm_sim_pro,
                          mpi_types::_mpi_type_lattice_data,
                          _p_domain->rank_id_neighbours);
-}
-
-void simulation::simulate(const double time_limit) {
-    ABVIModel model(box, 0, 378); // todo param from config
-    SubLattice sl(_p_domain, time_limit, 1.0); // todo calculate T
-
-    PackerInstance pk_ins(box->lattice_list);
-    sl.startTimeLoop<GhostSyncPacker, SimSyncPacker, PackerInstance>(pk_ins, &model);
 }

@@ -56,6 +56,8 @@ public:
      */
     void perform(const event::SelectedEvent event) override;
 
+    void reindex(const lat_region region) override;
+
     /**
      * \brief set kmc event listener.
      * \param p_listener pointer to the event listener.

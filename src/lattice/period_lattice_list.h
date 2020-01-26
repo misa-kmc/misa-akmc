@@ -14,16 +14,10 @@
 class PeriodLatticeList : public LatticesList {
 public:
     /**
-    * \brief create the lattice list of period-boundary with box arguments.
-    * \param box_x box size/lattice count in x direction(not doubled).
-    * \param box_y box size/lattice count in y direction.
-    * \param box_z box size/lattice count in z direction.
-    * \param ghost_x ghost size/lattice at x dimension(not doubled)
-    * \param ghost_y ghost size/lattice at y dimension
-    * \param ghost_z ghost size/lattice at z dimension
+    * \brief create the lattice list of period-boundary with box metadata parameters.
+    * (including global and local box size, ghost size and global base coordinate).
     */
-    PeriodLatticeList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z,
-                      _type_box_size ghost_x, _type_box_size ghost_y, _type_box_size ghost_z);
+    explicit PeriodLatticeList(const LatListMeta meta);
 
     _type_neighbour_status get1nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) override;
 

@@ -3,7 +3,10 @@
 //
 
 #include <fstream>
+#include <iostream>
+#include <random>
 #include <comm/types_define.h>
+#include <utils/random/random.h>
 #include "config_parsing.h"
 #include "lattice_types_string.h"
 
@@ -77,6 +80,16 @@ void ConfigParsing::parse(const std::string config_file) {
         return;
     }
 
+    // parse random
+    const YAML::Node seeds = config["seeds"];
+    if (!sim) {
+        setError("seeds in config is not specified.");
+        return;
+    }
+    if (!parseSeeds(seeds)) {
+        return;
+    }
+
     // parse output
     const YAML::Node output = config["output"];
     if (output) { // it does not matter if output term in config file is not specified.
@@ -118,6 +131,7 @@ bool ConfigParsing::parseSim(const YAML::Node &yaml_sim) {
     configValues.steps_limit = yaml_sim["steps_limit"].as<unsigned long>(0);
     configValues.is_def_gen = yaml_sim["isgenr"].as<bool>(false);
     configValues.dpa_ps = yaml_sim["dpasm1"].as<double>(0.0);
+    configValues.attempt_freq = yaml_sim["attempt_freq"].as<double>(0.0);
     return true;
 }
 
@@ -169,12 +183,26 @@ bool ConfigParsing::parseCreate(const YAML::Node &yaml_create) {
     return true;
 }
 
+bool ConfigParsing::parseSeeds(const YAML::Node &yaml_seeds) {
+    configValues.seeds.create_types = yaml_seeds["create_types"].as<uint32_t>(r::seed_auto);
+    configValues.seeds.create_vacancy = yaml_seeds["create_vacancy"].as<uint32_t>(r::seed_auto);
+    configValues.seeds.event_selection = yaml_seeds["event_selection"].as<uint32_t>(r::seed_auto);
+    configValues.seeds.time_inc = yaml_seeds["time_inc"].as<uint32_t>(r::seed_auto);
+    return true;
+}
+
 bool ConfigParsing::parseOutput(const YAML::Node &output) {
-    configValues.output.log_interval = output["log_interval"].as<unsigned long>(0);
     const YAML::Node yaml_dump = output["dump"];
+    const YAML::Node yaml_logs = output["logs"];
     if (yaml_dump) {
         configValues.output.dump_interval = yaml_dump["interval"].as<unsigned long>(0);
         configValues.output.dump_file_path = yaml_dump["file_path"].as<std::string>("");
     }
+    if (yaml_logs) {
+        configValues.output.logs_interval = yaml_logs["interval"].as<unsigned long>(0);
+        configValues.output.logs_file = yaml_logs["logs_file"].as<std::string>("");
+    }
+    // if it is empty, log to /dev/console
+    configValues.output.logs_to_file = !(configValues.output.logs_file.empty());
     return true;
 }

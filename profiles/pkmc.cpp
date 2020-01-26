@@ -7,13 +7,19 @@
 #include <logs/logs.h>
 #include <utils/mpi_utils.h>
 #include <lattice/lattices_list.h>
-#include <lattice/normal_lattice_list.h>
 #include <utils/mpi_types.h>
+#include <abvi/kmc.h>
+
 #include "creation.h"
 #include "building_config.h"
 #include "profile_config.h"
-#include "config_parsing.h"
+#include "config/config_parsing.h"
+#include "config/lattice_types_string.h"
 #include "pkmc.h"
+#include "device.h"
+#include "seed_relocate.h"
+#include "m_event_listener.h"
+#include "m_event_hook.h"
 
 bool PKMC::beforeCreate(int argc, char **argv) {
     // parser arguments
@@ -77,12 +83,23 @@ void PKMC::onCreate() {
         std::cout << p_config->configValues;
     }
 #endif
+
+    // prepare logs.
+    if (istty() && !(p_config->configValues.output.logs_to_file)) {
+        // set colorful log if we output to console and it is a real tty(no io redirection).
+        kiwi::logs::setCorlorFul(true);
+    } else if (p_config->configValues.output.logs_to_file) {
+        kiwi::logs::setLogFile(p_config->configValues.output.logs_file);
+    }
 }
 
 bool PKMC::prepare() {
     mpi_types::setInterMPIType();
     sim = new simulation();
     conf::ConfigValues config_v = ConfigParsing::getInstance()->configValues;
+    // if the seed is 0, reset the seed using random device.
+    r::seedRelocate(&config_v.seeds.create_types, &config_v.seeds.create_vacancy,
+                    &config_v.seeds.event_selection, &config_v.seeds.time_inc);
     sim->createDomain(config_v.box_size, config_v.lattice_const,
                       config_v.cutoff_radius);
 
@@ -93,9 +110,10 @@ bool PKMC::prepare() {
             // todo log error
             return false;
         case conf::Random:
-            creation::createRandom(sim->box->lattice_list, config_v.create.types,
-                                   config_v.create.types_ratio, config_v.create.va_count,
-                                   sim->_p_domain);
+            creation::createRandom(config_v.seeds.create_types, config_v.seeds.create_vacancy,
+                                   sim->box->lattice_list, sim->box->va_list,
+                                   config_v.create.types, config_v.create.types_ratio,
+                                   config_v.create.va_count, sim->_p_domain);
             break;
         case conf::Pipe:
             break;
@@ -109,8 +127,17 @@ void PKMC::onStart() {
     conf::ConfigValues config_v = ConfigParsing::getInstance()->configValues;
     //  set up ghost.
     sim->prepareForStart();
+    // setup model and run simulation
+    counter m_counter = counter::newCounter(sim->box->lattice_list); // atoms counter
+    m_counter.setLatTypeToStrFunc(&lat::LatTypesString);
+    std::cout << m_counter;
+
+    ABVIModel model(sim->box, config_v.attempt_freq, config_v.temperature);
+    MEventListener m_listener(m_counter, sim->box->lattice_list->meta);
+    model.setEventListener(&m_listener);
     // run simulation
-    sim->simulate(config_v.physics_time);
+    MEventHook m_event_hook;
+    sim->simulate(&model, &m_event_hook, config_v.seeds.time_inc, config_v.physics_time);
 }
 
 void PKMC::onFinish() {

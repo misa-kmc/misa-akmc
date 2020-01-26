@@ -20,6 +20,7 @@ set(HEADER_FILES
         utils/mpi_types.h
         utils/random/rand_generators.h
         utils/random/random.h
+        utils/random/rng_type.h
         utils/simulation_domain.h
         type_define.h
         creation.h
@@ -40,6 +41,7 @@ set(SOURCE_FILES
         lattice/lattices_list.cpp
         lattice/normal_lattice_list.cpp
         lattice/period_lattice_list.cpp
+        hook/event_hooks.hpp
         pack/ghost_init_packer.cpp
         pack/ghost_sync_packer.cpp
         pack/packer_instance.cpp

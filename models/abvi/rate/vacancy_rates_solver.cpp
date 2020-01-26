@@ -26,9 +26,10 @@ double VacRatesSolver::e0(const LatticeTypes::lat_type ghost_atom) const {
     }
 }
 
-double VacRatesSolver::deltaE(Lattice &source_lattice, Lattice &target_lattice,
+double VacRatesSolver::deltaE(_type_lattice_id source_id, _type_lattice_id target_id,
+                              Lattice &source_lattice, Lattice &target_lattice,
                               const LatticeTypes::lat_type ghost_atom) {
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
     {
         const bool debug_bool_1 = target_lattice.type.isDumbbell(); // always be false.
         assert(!debug_bool_1);
@@ -46,13 +47,9 @@ double VacRatesSolver::deltaE(Lattice &source_lattice, Lattice &target_lattice,
     double e_before = 0;
     {
         // bonds energy of src lattice contributed by its 1nn/2nn neighbour lattice.
-        bonds::_type_pair_ia e_src = bonds::BondsCounter::count(&lattice_list,
-                                                                source_lattice.getId(),
-                                                                source_lattice.type);
+        bonds::_type_pair_ia e_src = bonds::BondsCounter::count(&lattice_list, source_id, source_lattice.type);
         // bonds energy of des lattice contributed by its 1nn/2nn neighbour lattice(it is an atom).
-        bonds::_type_pair_ia e_des = bonds::BondsCounter::count(&lattice_list,
-                                                                target_lattice.getId(),
-                                                                target_lattice.type);
+        bonds::_type_pair_ia e_des = bonds::BondsCounter::count(&lattice_list, target_id, target_lattice.type);
         e_before = e_src + e_des;
     }
 
@@ -64,12 +61,8 @@ double VacRatesSolver::deltaE(Lattice &source_lattice, Lattice &target_lattice,
     // calculate system energy after transition.
     double e_after = 0;
     {
-        bonds::_type_pair_ia e_src = bonds::BondsCounter::count(&lattice_list,
-                                                                source_lattice.getId(),
-                                                                source_lattice.type);
-        bonds::_type_pair_ia e_des = bonds::BondsCounter::count(&lattice_list,
-                                                                target_lattice.getId(),
-                                                                target_lattice.type);
+        bonds::_type_pair_ia e_src = bonds::BondsCounter::count(&lattice_list, source_id, source_lattice.type);
+        bonds::_type_pair_ia e_des = bonds::BondsCounter::count(&lattice_list, target_id, target_lattice.type);
         e_after = e_src + e_des;
     }
 

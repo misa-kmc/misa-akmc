@@ -7,7 +7,9 @@
 
 #include <array>
 #include <comm/domain/colored_domain.h>
+#include "utils/random/rng_type.h"
 #include "models/model_adapter.h"
+#include "hook/event_hooks.hpp"
 #include "../selector.h"
 
 struct SectorMeta {
@@ -17,13 +19,13 @@ struct SectorMeta {
     type_sectors_ring sectors{
             {
                     type_sector{comm::X_LOW | comm::Y_LOW | comm::Z_LOW, 0.0},
-                    type_sector{comm::X_LOW | comm::Y_HIGH | comm::Z_LOW, 0.0},
-                    type_sector{comm::X_LOW | comm::Y_LOW | comm::Z_HIGH, 0.0},
-                    type_sector{comm::X_LOW | comm::Y_HIGH | comm::Z_HIGH, 0.0},
-                    type_sector{comm::X_HIGH | comm::Y_LOW | comm::Z_LOW, 0.0},
-                    type_sector{comm::X_HIGH | comm::Y_HIGH | comm::Z_LOW, 0.0},
-                    type_sector{comm::X_HIGH | comm::Y_LOW | comm::Z_HIGH, 0.0},
                     type_sector{comm::X_HIGH | comm::Y_HIGH | comm::Z_HIGH, 0.0},
+                    type_sector{comm::X_LOW | comm::Y_HIGH | comm::Z_LOW, 0.0},
+                    type_sector{comm::X_HIGH | comm::Y_LOW | comm::Z_HIGH, 0.0},
+                    type_sector{comm::X_HIGH | comm::Y_HIGH | comm::Z_LOW, 0.0},
+                    type_sector{comm::X_LOW | comm::Y_LOW | comm::Z_HIGH, 0.0},
+                    type_sector{comm::X_HIGH | comm::Y_LOW | comm::Z_LOW, 0.0},
+                    type_sector{comm::X_LOW | comm::Y_HIGH | comm::Z_HIGH, 0.0},
             }};
 
     type_sectors_ring::iterator sector_itl;
@@ -34,11 +36,11 @@ public:
     /**
      * \brief initialize sub-lattice algorithm with a specific kMC model.
      * \param p_domain simulation domain.
-     * \param p_model kMC model
+     * \param seed_time_inc random number generation seed for kmc time increasing.
      * \param time_limit the max evolution time.
      * \param T threshold time for communication.
      */
-    explicit SubLattice(const comm::ColoredDomain *p_domain,
+    explicit SubLattice(const comm::ColoredDomain *p_domain, const uint32_t seed_time_inc,
                         const double time_limit, const double T);
 
     /**
@@ -49,10 +51,11 @@ public:
      * \tparam E type of event in kmc model.
      * \param pk_inst to instant the packer for communication.
      * \param p_model kmc model to perform event selecting and execution.
+     * \param event_hooks pointer of event hooks or callbacks for handing each algorithm event.
      * todo make sure RegionPacker is PKf, PKg, PKs's base class at compiling time.
      */
     template<class PKg, class PKs, class Ins, typename E>
-    void startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model);
+    void startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model, EventHooks *p_event_hooks);
 
     /**
      * \brief calculate rates in a region
@@ -103,6 +106,14 @@ public:
     typedef std::array<std::vector<comm::Region<comm::_type_lattice_coord>>, comm::DIMENSION_SIZE> type_comm_lat_regions;
 
 private:
+    /**
+     * \brief distribution to produce random numbers in range (0,1) for kmc time increasing.
+     */
+    std::uniform_real_distribution<double> time_inc_dis;
+    /**
+     * \brief random number generation for kmc time increasing
+     */
+    r::type_rng time_inc_rng;
 
     const comm::ColoredDomain *p_domain = nullptr;
 

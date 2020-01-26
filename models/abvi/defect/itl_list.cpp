@@ -34,7 +34,7 @@ void Itl::beforeRatesUpdate(Lattice *list_1nn[LatticesList::MAX_1NN],
 void Itl::updateRates(Lattice &lattice, Lattice *list_1nn[LatticesList::MAX_1NN],
                       _type_neighbour_status status_1nn,
                       rateCallback callback) {
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
     assert(lattice.type.isDumbbell());
     assert(orient._ori != orientation::unknown);
 #endif
@@ -103,7 +103,13 @@ Itl ItlList::getItlnum(_type_lattice_id id) {
     return mp[id];
 }
 
-void ItlList::replace(const _type_lattice_id old_lat_id, const _type_lattice_id new_lat_id, const Itl &new_itl) {
+void ItlList::replace(const _type_lattice_id old_lat_id, const _type_lattice_id new_lat_id,
+                      const LatListMeta *p_meta, const Itl &new_itl) {
+#ifdef KMC_DEBUG_MODE
+    assert(!p_meta->isGhostLat(old_lat_id));
+#endif
     mp.erase(old_lat_id);
-    mp.insert(std::make_pair(new_lat_id, new_itl));
+    if (!p_meta->isGhostLat(new_lat_id)) {
+        mp.insert(std::make_pair(new_lat_id, new_itl));
+    }
 }

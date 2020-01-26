@@ -6,7 +6,7 @@ title: "parallel kMC configure file"
 version: "0.1.0"
 
 box:
-  size: [80, 80, 80]
+  size: [40, 40, 40]
   lattice_const: 2.85532   # lattice constance
   cutoff_radius: 5.6
 
@@ -15,10 +15,10 @@ create: # how the simulation box is created.
     enable: true
     va_count: 1   # vacancy number, not percent.
     alloy:
-      Fe: 9598
-      Cu: 134
-      Mn: 134
-      Ni: 134
+      Fe: 985
+      Cu: 15
+      Mn: 0
+      Ni: 0
       FeFe: 0 # pair number of [110] dumbbell.
       FeCu: 0
       FeMn: 0

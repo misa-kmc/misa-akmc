@@ -78,6 +78,8 @@ private:
 
     bool parseCreate(const YAML::Node &yaml_create);
 
+    bool parseSeeds(const YAML::Node &yaml_seeds);
+
     bool parseOutput(const YAML::Node &output);
 };
 

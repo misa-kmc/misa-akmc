@@ -246,7 +246,7 @@ LatticeTypes orientation::tranAtom(const LatticeTypes type, const _type_dir_id _
             return LatticeTypes{type.getLowEnd()};
         case _:
         default:
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
             throw std::runtime_error("unexpected 1nn tag");
 #endif
             return type;
@@ -256,7 +256,7 @@ LatticeTypes orientation::tranAtom(const LatticeTypes type, const _type_dir_id _
 // todo test
 orientation orientation::trans(const _type_dir_id _1nn_tag, const bool new_higher, const bool rotate) const {
     if (_ori == 0) {
-#ifdef DEBUG_MODE
+#ifdef KMC_DEBUG_MODE
         throw std::runtime_error("unexpected 1nn tag");
 #endif
         return orientation{unknown};

@@ -8,6 +8,8 @@
 
 #include <array>
 #include <map>
+#include <comm/types_define.h>
+#include <comm/domain/region.hpp>
 #include "type_define.h"
 #include "defect.hpp"
 
@@ -51,9 +53,16 @@ public:
      *  remove the old one and add the new one.
      * \param old_lat_id the lattice id of the old vacancy
      * \param new_lat_id the lattice id of the new vacancy
+     *  \param p_meta metadata of lattice list
      */
-    void replace(const _type_lattice_id old_lat_id, const _type_lattice_id new_lat_id);
+    void replace(const _type_lattice_id old_lat_id, const _type_lattice_id new_lat_id, const LatListMeta *p_meta);
 
+    /**
+     * \brief reindex the vacancy list in a given region.
+     * \param lats lattice list
+     * \param region region
+     */
+    void reindex(LatticesList *lats, const comm::Region<comm::_type_lattice_size> region);
 };
 
 

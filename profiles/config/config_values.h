@@ -28,9 +28,18 @@ namespace conf {
     };
 
     struct Output {
-        unsigned long log_interval = 0;
         unsigned long dump_interval = 0;
         std::string dump_file_path = "";
+        unsigned long logs_interval = 0;
+        std::string logs_file = "";
+        bool logs_to_file = false;
+    };
+
+    struct RandomSeeds {
+        uint32_t create_types;
+        uint32_t create_vacancy;
+        uint32_t event_selection;
+        uint32_t time_inc;
     };
 
     struct ConfigValues {
@@ -39,6 +48,7 @@ namespace conf {
     public:
         Create create;
         Output output;
+        RandomSeeds seeds;
         // box
         unsigned long box_size[comm::DIMENSION_SIZE];
 
@@ -50,6 +60,7 @@ namespace conf {
         double temperature = 0.0;
         double physics_time = 0.0;
         unsigned long steps_limit = 0;
+        double attempt_freq = 0.0;
         // isgenr in config file.
         bool is_def_gen = false;
         // dpasm1 in config file

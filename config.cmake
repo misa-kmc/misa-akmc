@@ -13,6 +13,9 @@ set(KMC_RAND "MT" CACHE STRING "random number generating algorithm") # random nu
 #   xoshiro: http://xoshiro.di.unimi.it
 #   REAL: real random number privided by linux OS.
 
+# use `-fprofile-instr-generate -fcoverage-mapping` in clang,
+# and `--coverage` or `-fprofile-arcs -ftest-coverage` in gnu.
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall --coverage")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -Wall --coverage")
 
 if (CMAKE_BUILD_TYPE MATCHES "^(Debug|DEBUG|debug)$")
@@ -20,7 +23,7 @@ if (CMAKE_BUILD_TYPE MATCHES "^(Debug|DEBUG|debug)$")
 endif ()
 
 # features
-option(EAM_POT_EBNABLE_FLAG "Enable using eam potential to calculate system energy" OFF)
+option(EAM_POT_ENABLE_FLAG "Enable using eam potential to calculate system energy" OFF)
 
 ## architecture ralated values.
 # option(ARCH_SW "Enable sunway athread" OFF) # enable sunway athread if its running on sunway system.
