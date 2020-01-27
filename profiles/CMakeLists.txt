@@ -28,6 +28,11 @@ add_library(${P_KMP_PROFILE_LIB_NAME} STATIC
         seed_relocate.h
         )
 
+target_include_directories(${P_KMP_PROFILE_LIB_NAME} PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include>
+        )
+
 target_link_libraries(${P_KMP_PROFILE_LIB_NAME} PUBLIC
         kiwi::kiwi
         yaml-cpp
