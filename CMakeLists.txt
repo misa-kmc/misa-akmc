@@ -12,6 +12,10 @@ add_subdirectory(models)
 add_subdirectory(src)
 add_subdirectory(profiles)
 add_subdirectory(profile_serial)
+# tools
+if (KMC_TOOLS_BUILD_FLAG)
+    add_subdirectory(tools)
+endif ()
 
 #if (KMC_TOOLS_BUILD_ENABLE_FLAG)
 #    add_subdirectory(tools)
