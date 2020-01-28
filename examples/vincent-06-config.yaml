@@ -44,7 +44,7 @@ seeds:
   time_inc: 594689
 
 simulation:
-  temperature: 673  # unit: K
+  temperature: 573.15  # unit: K
   physics_time: 8e4  # physics time limit.
   steps_limit: 1000 # limit of kMC steps.
   attempt_freq: 6e12 #  unit:  1/s
@@ -53,8 +53,8 @@ simulation:
 
 output:
   dump:
-    interval: 100 # dump system lattice information.
-    file_path: "kmc.{}.out"
+    interval: 1000 # dump system lattice information.
+    file_path: "kmc.{}.xyz"
   logs:
     interval: 10 # if zero is set, it means no log.
     logs_file: "" # if it is empty, log to /dev/console
