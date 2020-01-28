@@ -136,7 +136,7 @@ void PKMC::onStart() {
     MEventListener m_listener(m_counter, sim->box->lattice_list->meta);
     model.setEventListener(&m_listener);
     // run simulation
-    MEventHook m_event_hook;
+    MEventHook m_event_hook(config_v.output, sim->box->lattice_list, &m_counter);
     sim->simulate(&model, &m_event_hook, config_v.seeds.time_inc, config_v.physics_time);
 }
 
