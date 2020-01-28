@@ -13,12 +13,12 @@ LatticeDump::LatticeDump() {
 
 }
 
-void LatticeDump::dump(LatticesList *lattice_list, kiwi::mpi_process process, unsigned long step) {
-    char outfileName[20];
-    sprintf(outfileName, "dump_%d_%ld.xyz", process.own_rank, step);
-
+void LatticeDump::dump(const std::string dump_file_path, LatticesList *lattice_list, unsigned long step) {
     std::ofstream outfile;
-    outfile.open(outfileName);
+    outfile.open(dump_file_path);
+    if (!outfile.good()) {
+        throw std::invalid_argument("invalid file path " + dump_file_path);
+    }
 
     outfile << (lattice_list->meta.box_x * lattice_list->meta.box_y * lattice_list->meta.box_z) << std::endl;
     outfile << std::endl;

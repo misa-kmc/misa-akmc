@@ -17,7 +17,7 @@ public:
      * \brief dump lattice information at current step
      * \param step  current step
      */
-    void dump(LatticesList *lattice_list, kiwi::mpi_process process, unsigned long step);
+    void dump(const std::string dump_file_path, LatticesList *lattice_list, unsigned long step);
 };
 
 
