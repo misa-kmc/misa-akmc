@@ -5,22 +5,17 @@
 #ifndef MISA_KMC_DEVICE_H
 #define MISA_KMC_DEVICE_H
 
-
-#include <unistd.h>   // for isatty()
-#include <stdio.h>    // for fileno()
+#include <stdio.h>  // for fileno()
+#include <unistd.h> // for isatty()
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
-int istty() {
-    return isatty(fileno(stdout));
-}
+int istty() { return isatty(fileno(stdout)); }
 
 #ifdef __cplusplus
 } // extern "C"
 #endif
 
-
-#endif //MISA_KMC_DEVICE_H
+#endif // MISA_KMC_DEVICE_H

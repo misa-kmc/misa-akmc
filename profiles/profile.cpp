@@ -5,6 +5,6 @@
 #include "pkmc.h"
 
 int main(int argc, char *argv[]) {
-    (new PKMC())->run(argc, argv);
-    return 0;
+  (new PKMC())->run(argc, argv);
+  return 0;
 }
