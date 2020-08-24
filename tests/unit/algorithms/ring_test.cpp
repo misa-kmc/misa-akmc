@@ -10,12 +10,12 @@ TEST(ring_itl_test_next, ring_test) {
   ring<int, 2> r{{1, 2}};
   ring<int, 2>::iterator itr = r.begin();
 
-  EXPECT_EQ(itr.next(), 1);
-  ++itr;
-  EXPECT_EQ(itr.next(), 2);
   EXPECT_EQ(itr.next(), 2);
   ++itr;
   EXPECT_EQ(itr.next(), 1);
+  EXPECT_EQ(itr.next(), 1);
+  ++itr;
+  EXPECT_EQ(itr.next(), 2);
 
   ring<int, 1> r2{{1}};
   ring<int, 1>::iterator itr2 = r2.begin();
