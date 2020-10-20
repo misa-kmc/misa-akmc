@@ -59,7 +59,7 @@ test:
     COV_IGNORE_FILES: "--ignore-filename-regex=/usr/local/* --ignore-filename-regex=.*test/unit/*. --ignore-filename-regex=.*vendor/*."
   script:
     - mkdir -p coverage
-    - mkdir -p cmake-build-debug/test/unit # for saving temp files in tests
+    - mkdir -p cmake-build-debug/tests/unit # for saving temp files in tests
     - LLVM_PROFILE_FILE="pkmc-test.profraw" ./cmake-build-debug/bin/pkmc-unit-tests
     - llvm-profdata merge -sparse pkmc-test.profraw -o pkmc-test.profdata
     - llvm-cov report ./cmake-build-debug/bin/pkmc-unit-tests  -instr-profile=pkmc-test.profdata ${COV_IGNORE_FILES}
