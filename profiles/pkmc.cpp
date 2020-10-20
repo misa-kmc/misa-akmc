@@ -90,7 +90,7 @@ void PKMC::onCreate() {
   if (istty() && !(p_config->configValues.output.logs_to_file)) {
     // set colorful log if we output to console and it is a real tty(no io
     // redirection).
-    kiwi::logs::setCorlorFul(true);
+    kiwi::logs::setColorFul(true);
   } else if (p_config->configValues.output.logs_to_file) {
     kiwi::logs::setLogFile(p_config->configValues.output.logs_file);
   }
