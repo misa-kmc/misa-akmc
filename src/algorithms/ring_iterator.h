@@ -5,6 +5,7 @@
 #ifndef MISA_KMC_RING_ITERATOR_H
 #define MISA_KMC_RING_ITERATOR_H
 
+#include <array>
 #include <iterator>
 
 typedef unsigned int type_ring_index; // todo size_t of N

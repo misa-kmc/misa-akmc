@@ -7,6 +7,7 @@
 
 #include "ring_iterator.h"
 #include <vector>
+#include <array>
 
 /**
  * \brief  fixed size ring.
