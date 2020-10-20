@@ -108,14 +108,14 @@ public:
      */
     ItlList *itl_list;
 
+    // destroy lattice list, vacancy list and itl list.
+    ~Box();
+
 protected:
 
     // make it private, so you can not create an Box object using new Box() outside its friend class/function.
     // we can only create a Box object by using BoxBuilder.
     Box();
-
-    // destroy lattice list, vacancy list and itl list.
-    ~Box();
 
     /*!
      * \brief in this method, the member \var lattice_list,itl_list,va_list will be created
