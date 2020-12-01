@@ -11,4 +11,4 @@ typedef unsigned char _type_avail_trans_dir;
 
 typedef unsigned char _type_rates_status;
 
-#endif //MISA_KMC_DEF_TYPES_H
+#endif // MISA_KMC_DEF_TYPES_H
