@@ -8,8 +8,8 @@
 #include <lattice/lattices_list.h>
 
 namespace ans {
-// do analysis
-void analysis(LatticesList *lats_list);
+  // do analysis
+  void analysis(LatticesList *lats_list);
 
 }; // namespace ans
 

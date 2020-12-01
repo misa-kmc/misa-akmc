@@ -30,8 +30,7 @@ public:
    * \param excepted_rate excepted rate
    * \param sum_rates the total rates
    */
-  virtual E select(const lat_region region, const _type_rate excepted_rate,
-                   const _type_rate sum_rates) = 0;
+  virtual E select(const lat_region region, const _type_rate excepted_rate, const _type_rate sum_rates) = 0;
 
   virtual unsigned long defectSize() = 0;
 
@@ -64,9 +63,7 @@ public:
 
 template <typename E> ModelAdapter<E>::ModelAdapter() {}
 
-template <class E>
-void ModelAdapter<E>::selectAndPerform(const lat_region region,
-                                       const _type_rate sum_rates) {
+template <class E> void ModelAdapter<E>::selectAndPerform(const lat_region region, const _type_rate sum_rates) {
   E e = select(region, rand() * sum_rates, sum_rates);
   perform(e);
 }

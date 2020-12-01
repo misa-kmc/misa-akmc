@@ -7,9 +7,8 @@
 
 SimSyncPacker::SimSyncPacker(LatticesList *lattice_list) : lats(lattice_list) {}
 
-const unsigned long SimSyncPacker::sendLength(
-    const std::vector<comm::Region<pack_region_type>> send_regions,
-    const int dimension, const int direction) {
+const unsigned long SimSyncPacker::sendLength(const std::vector<comm::Region<pack_region_type>> send_regions,
+                                              const int dimension, const int direction) {
   unsigned long size_send = 0;
   for (auto r : send_regions) {
     size_send += r.volume();
@@ -17,10 +16,8 @@ const unsigned long SimSyncPacker::sendLength(
   return BCC_DBX * size_send;
 }
 
-void SimSyncPacker::onSend(
-    Lattice *buffer,
-    const std::vector<comm::Region<pack_region_type>> send_regions,
-    const unsigned long send_len, const int dimension, const int direction) {
+void SimSyncPacker::onSend(Lattice *buffer, const std::vector<comm::Region<pack_region_type>> send_regions,
+                           const unsigned long send_len, const int dimension, const int direction) {
   unsigned long len = 0;
   for (auto &r : send_regions) {
     for (int z = r.z_low; z < r.z_high; z++) {
@@ -34,10 +31,8 @@ void SimSyncPacker::onSend(
   }
 }
 
-void SimSyncPacker::onReceive(
-    Lattice *buffer,
-    const std::vector<comm::Region<pack_region_type>> recv_regions,
-    const unsigned long receive_len, const int dimension, const int direction) {
+void SimSyncPacker::onReceive(Lattice *buffer, const std::vector<comm::Region<pack_region_type>> recv_regions,
+                              const unsigned long receive_len, const int dimension, const int direction) {
   unsigned long len = 0;
   for (auto &r : recv_regions) {
     for (int z = r.z_low; z < r.z_high; z++) {

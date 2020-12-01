@@ -7,9 +7,8 @@
 
 GhostSyncPacker::GhostSyncPacker(LatticesList *lats_list) : lats(lats_list) {}
 
-const unsigned long GhostSyncPacker::sendLength(
-    const std::vector<comm::Region<pack_region_type>> send_regions,
-    const int dimension, const int direction) {
+const unsigned long GhostSyncPacker::sendLength(const std::vector<comm::Region<pack_region_type>> send_regions,
+                                                const int dimension, const int direction) {
   unsigned long size_ghost = 0;
   for (auto r : send_regions) {
     size_ghost += r.volume();
@@ -17,10 +16,8 @@ const unsigned long GhostSyncPacker::sendLength(
   return BCC_DBX * size_ghost;
 }
 
-void GhostSyncPacker::onSend(
-    pack_date_type *buffer,
-    const std::vector<comm::Region<pack_region_type>> send_regions,
-    const unsigned long send_len, const int dimension, const int direction) {
+void GhostSyncPacker::onSend(pack_date_type *buffer, const std::vector<comm::Region<pack_region_type>> send_regions,
+                             const unsigned long send_len, const int dimension, const int direction) {
   unsigned long len = 0;
   for (auto &r : send_regions) {
     for (int z = r.z_low; z < r.z_high; z++) {
@@ -34,10 +31,8 @@ void GhostSyncPacker::onSend(
   }
 }
 
-void GhostSyncPacker::onReceive(
-    pack_date_type *buffer,
-    const std::vector<comm::Region<pack_region_type>> recv_regions,
-    const unsigned long receive_len, const int dimension, const int direction) {
+void GhostSyncPacker::onReceive(pack_date_type *buffer, const std::vector<comm::Region<pack_region_type>> recv_regions,
+                                const unsigned long receive_len, const int dimension, const int direction) {
   unsigned long len = 0;
   for (auto &r : recv_regions) {
     for (int z = r.z_low; z < r.z_high; z++) {

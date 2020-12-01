@@ -6,26 +6,19 @@
 #include "utils/macros.h"
 #include <comm/preset/comm_forwarding_region.h>
 
-GhostInitPacker::GhostInitPacker(const comm::ColoredDomain *p_domain,
-                                 LatticesList *lats_list)
+GhostInitPacker::GhostInitPacker(const comm::ColoredDomain *p_domain, LatticesList *lats_list)
     : p_domain(p_domain), lats(lats_list) {}
 
-const unsigned long GhostInitPacker::sendLength(const int dimension,
-                                                const int direction) {
-  comm::Region<comm::_type_lattice_size> send_region =
-      comm::fwCommLocalSendRegion(p_domain->lattice_size_ghost,
-                                  p_domain->local_sub_box_lattice_region,
-                                  dimension, direction);
+const unsigned long GhostInitPacker::sendLength(const int dimension, const int direction) {
+  comm::Region<comm::_type_lattice_size> send_region = comm::fwCommLocalSendRegion(
+      p_domain->lattice_size_ghost, p_domain->local_sub_box_lattice_region, dimension, direction);
   return BCC_DBX * send_region.volume();
 }
 
-void GhostInitPacker::onSend(buffer_data_type *buffer,
-                             const unsigned long send_len, const int dimension,
+void GhostInitPacker::onSend(buffer_data_type *buffer, const unsigned long send_len, const int dimension,
                              const int direction) {
-  const comm::Region<comm::_type_lattice_size> send_region =
-      comm::fwCommLocalSendRegion(p_domain->lattice_size_ghost,
-                                  p_domain->local_sub_box_lattice_region,
-                                  dimension, direction);
+  const comm::Region<comm::_type_lattice_size> send_region = comm::fwCommLocalSendRegion(
+      p_domain->lattice_size_ghost, p_domain->local_sub_box_lattice_region, dimension, direction);
 
   unsigned long len = 0;
   for (int z = send_region.z_low; z < send_region.z_high; z++) {
@@ -38,13 +31,10 @@ void GhostInitPacker::onSend(buffer_data_type *buffer,
   }
 }
 
-void GhostInitPacker::onReceive(GhostInitPacker::buffer_data_type *buffer,
-                                const unsigned long receive_len,
+void GhostInitPacker::onReceive(GhostInitPacker::buffer_data_type *buffer, const unsigned long receive_len,
                                 const int dimension, const int direction) {
-  const comm::Region<comm::_type_lattice_size> recv_region =
-      comm::fwCommLocalRecvRegion(p_domain->lattice_size_ghost,
-                                  p_domain->local_sub_box_lattice_region,
-                                  dimension, direction);
+  const comm::Region<comm::_type_lattice_size> recv_region = comm::fwCommLocalRecvRegion(
+      p_domain->lattice_size_ghost, p_domain->local_sub_box_lattice_region, dimension, direction);
 
   unsigned long len = 0;
   for (int z = recv_region.z_low; z < recv_region.z_high; z++) {

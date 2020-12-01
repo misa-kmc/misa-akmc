@@ -11,8 +11,7 @@
 
 class PackerInstance {
 public:
-  explicit PackerInstance(LatticesList *lattice_list)
-      : lattice_list(lattice_list) {}
+  explicit PackerInstance(LatticesList *lattice_list) : lattice_list(lattice_list) {}
 
   SimSyncPacker newSimCommPacker() { return SimSyncPacker{lattice_list}; }
 

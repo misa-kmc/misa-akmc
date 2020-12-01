@@ -8,9 +8,7 @@
 
 MPI_Datatype mpi_types::_mpi_type_lattice_data;
 
-void mpi_types::setInterMPIType() {
-  setMPI_DataTypeLattice(&_mpi_type_lattice_data);
-}
+void mpi_types::setInterMPIType() { setMPI_DataTypeLattice(&_mpi_type_lattice_data); }
 
 void mpi_types::unsetInterMPIType() { MPI_Type_free(&_mpi_type_lattice_data); }
 
@@ -34,8 +32,7 @@ void mpi_types::setMPI_DataTypeLattice(MPI_Datatype *mpi_type_lat) {
 
   MPI_Aint array_of_dis[] = {addr_type - addr_base, addr_id - addr_base};
 
-  MPI_Type_create_struct(entries, array_of_block_len, array_of_dis,
-                         array_of_types, mpi_type_lat);
+  MPI_Type_create_struct(entries, array_of_block_len, array_of_dis, array_of_types, mpi_type_lat);
   MPI_Type_commit(mpi_type_lat);
 #else
   static_assert(false, "MPI version not matching (MPI 2 or above is needed)");

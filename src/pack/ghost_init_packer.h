@@ -18,17 +18,15 @@ public:
    * \param p_domain pointer to domain.
    * \param lats_list lattice list.
    */
-  explicit GhostInitPacker(const comm::ColoredDomain *p_domain,
-                           LatticesList *lats_list);
+  explicit GhostInitPacker(const comm::ColoredDomain *p_domain, LatticesList *lats_list);
 
-  const unsigned long sendLength(const int dimension,
-                                 const int direction) override;
+  const unsigned long sendLength(const int dimension, const int direction) override;
 
-  void onSend(buffer_data_type buffer[], const unsigned long send_len,
-              const int dimension, const int direction) override;
+  void onSend(buffer_data_type buffer[], const unsigned long send_len, const int dimension,
+              const int direction) override;
 
-  void onReceive(buffer_data_type buffer[], const unsigned long receive_len,
-                 const int dimension, const int direction) override;
+  void onReceive(buffer_data_type buffer[], const unsigned long receive_len, const int dimension,
+                 const int direction) override;
 
 private:
   const comm::ColoredDomain *p_domain;

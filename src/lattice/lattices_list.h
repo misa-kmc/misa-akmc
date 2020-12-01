@@ -14,9 +14,8 @@
 #include <vector>
 
 // typedef of iteration of all lattices.
-typedef std::function<bool(const _type_lattice_coord x,
-                           const _type_lattice_coord y,
-                           const _type_lattice_coord z, Lattice &lattice)>
+typedef std::function<bool(const _type_lattice_coord x, const _type_lattice_coord y, const _type_lattice_coord z,
+                           Lattice &lattice)>
     func_lattices_callback;
 
 /**
@@ -95,8 +94,7 @@ public:
    * \deprecated only for legacy serial code, because in paralle version,
    * lattice can found all its neighbor lattice
    */
-  virtual _type_neighbour_status get1nnBoundaryStatus(_type_lattice_coord x,
-                                                      _type_lattice_coord y,
+  virtual _type_neighbour_status get1nnBoundaryStatus(_type_lattice_coord x, _type_lattice_coord y,
                                                       _type_lattice_coord z);
 
   /**
@@ -126,8 +124,7 @@ public:
    * \deprecated only for legacy serial code, because in parallel version,
    * lattice can found all its neighbor lattice
    */
-  virtual _type_neighbour_status get2nnBoundaryStatus(_type_lattice_coord x,
-                                                      _type_lattice_coord y,
+  virtual _type_neighbour_status get2nnBoundaryStatus(_type_lattice_coord x, _type_lattice_coord y,
                                                       _type_lattice_coord z);
 
   /**
@@ -154,9 +151,7 @@ public:
    * \deprecated only for legacy serial code, because in parallel version,
    * lattice can found all its neighbor lattice
    */
-  virtual _type_neighbour_status get1nnStatus(_type_lattice_coord x,
-                                              _type_lattice_coord y,
-                                              _type_lattice_coord z) = 0;
+  virtual _type_neighbour_status get1nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) = 0;
 
   /**
    * \brief similar as above one (use x,y,z to specific a lattice), but it
@@ -178,9 +173,7 @@ public:
    * neighbour lattices \deprecated only for legacy serial code, because in
    * parallel version, lattice can found all its neighbor lattice
    */
-  virtual _type_neighbour_status get2nnStatus(_type_lattice_coord x,
-                                              _type_lattice_coord y,
-                                              _type_lattice_coord z) = 0;
+  virtual _type_neighbour_status get2nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) = 0;
 
   /**
    * \brief similar as above one (use x,y,z to specific a lattice), but it
@@ -208,8 +201,7 @@ public:
    * be in the lattice box, or "index out of bounds" may happen. \return the
    * lattice pointers count in 1nn list.
    */
-  virtual int get1nn(_type_lattice_coord x, _type_lattice_coord y,
-                     _type_lattice_coord z,
+  virtual int get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z,
                      Lattice *_1nn_list[LatticesList::MAX_1NN]) = 0;
 
   /**
@@ -231,8 +223,8 @@ public:
    * must be in the lattice box, or "index out of bounds" may happen. \return
    * the lattice pointers count in 2nn list.
    */
-  virtual int get2nn(_type_lattice_coord x, _type_lattice_coord y,
-                     _type_lattice_coord z, Lattice *_2nn_list[MAX_2NN]) = 0;
+  virtual int get2nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z,
+                     Lattice *_2nn_list[MAX_2NN]) = 0;
 
   /**
    * \brief similar as above one (use x,y,z to specific a lattice), but it
@@ -251,8 +243,7 @@ public:
    * ghost boundary \return the local id of the corresponding lattice
    * \deprecated only for compatibility, please use LatListMeta::getLId.
    */
-  inline _type_lattice_id getId(_type_lattice_coord x, _type_lattice_coord y,
-                                _type_lattice_coord z) {
+  inline _type_lattice_id getId(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
     // todo return from Lattice object.
     return meta.getLId(x, y, z);
   }
@@ -267,9 +258,7 @@ public:
    * \param x,y,z lattice coordinate from ghost boundary (not simulation box
    * boundary) \return the reference of the matched lattice.
    */
-  inline Lattice &getLat(const _type_lattice_coord x,
-                         const _type_lattice_coord y,
-                         const _type_lattice_coord z) const {
+  inline Lattice &getLat(const _type_lattice_coord x, const _type_lattice_coord y, const _type_lattice_coord z) const {
     return _lattices[z][y][x]; // read only
   };
 
@@ -300,17 +289,14 @@ public:
    * lattice pointer with offset(x,y,z) to the lattice specified by \param id.
    * \deprecated
    */
-  Lattice *walk(_type_lattice_id id, const _type_lattice_offset offset_x,
-                const _type_lattice_offset offset_y,
+  Lattice *walk(_type_lattice_id id, const _type_lattice_offset offset_x, const _type_lattice_offset offset_y,
                 const _type_lattice_offset offset_z);
 
   /**
    * \brief get the lattices count in current box(with ghost area).
    * \return lattices count
    */
-  inline _type_lattice_count getLatCount() {
-    return meta.size_x * meta.size_y * meta.size_z;
-  }
+  inline _type_lattice_count getLatCount() { return meta.size_x * meta.size_y * meta.size_z; }
 
   /**
    * \brief metadata of lattice list

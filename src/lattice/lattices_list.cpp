@@ -49,9 +49,8 @@ void LatticesList::forAllLattices(const func_lattices_callback callback) {
   }
 }
 
-_type_neighbour_status
-LatticesList::get1nnBoundaryStatus(_type_lattice_coord x, _type_lattice_coord y,
-                                   _type_lattice_coord z) {
+_type_neighbour_status LatticesList::get1nnBoundaryStatus(_type_lattice_coord x, _type_lattice_coord y,
+                                                          _type_lattice_coord z) {
   _type_neighbour_status flag = 0xFF; // binary 1 for keeping, 0 for abandon
   if (x == 0) {
     flag &= 0xF0; // invalid first 4 index.
@@ -77,9 +76,8 @@ LatticesList::get1nnBoundaryStatus(_type_lattice_coord x, _type_lattice_coord y,
   return flag;
 }
 
-_type_neighbour_status
-LatticesList::get2nnBoundaryStatus(_type_lattice_coord x, _type_lattice_coord y,
-                                   _type_lattice_coord z) {
+_type_neighbour_status LatticesList::get2nnBoundaryStatus(_type_lattice_coord x, _type_lattice_coord y,
+                                                          _type_lattice_coord z) {
   _type_neighbour_status status = 0x3F; // 0b00111111
   // the order is from x to z
   // (increase x from lower to higher; if x is the same, increase y from lower
@@ -119,18 +117,14 @@ Lattice &LatticesList::getLatByGid(_type_lattice_id gid) {
   return _lattices[lz][ly][lx];
 }
 
-Lattice *LatticesList::walk(_type_lattice_id id,
-                            const _type_lattice_offset offset_x,
-                            const _type_lattice_offset offset_y,
-                            const _type_lattice_offset offset_z) {
+Lattice *LatticesList::walk(_type_lattice_id id, const _type_lattice_offset offset_x,
+                            const _type_lattice_offset offset_y, const _type_lattice_offset offset_z) {
   // step1: xyz coordinate relative to local ghost boundary
   _type_lattice_coord sx = id % meta.size_x;
   id = id / meta.size_x;
   // use half lattice const coord.
-  _type_lattice_coord sy =
-      sx % 2 == 0 ? 2 * (id % meta.size_y) : 2 * (id % meta.size_y) + 1;
-  _type_lattice_coord sz =
-      sx % 2 == 0 ? 2 * (id / meta.size_y) : 2 * (id / meta.size_y) + 1;
+  _type_lattice_coord sy = sx % 2 == 0 ? 2 * (id % meta.size_y) : 2 * (id % meta.size_y) + 1;
+  _type_lattice_coord sz = sx % 2 == 0 ? 2 * (id / meta.size_y) : 2 * (id / meta.size_y) + 1;
 
   // step 2: add offset
   sx += offset_x;
@@ -138,8 +132,7 @@ Lattice *LatticesList::walk(_type_lattice_id id,
   sz += offset_z;
 
   // if out of index
-  if (sx < 0 || sy < 0 || sz < 0 || sx >= meta.size_x ||
-      sy >= 2 * meta.size_y || sz >= 2 * meta.size_z) {
+  if (sx < 0 || sy < 0 || sz < 0 || sx >= meta.size_x || sy >= 2 * meta.size_y || sz >= 2 * meta.size_z) {
     return nullptr;
   }
   // if sx is even, sy and sz should also be even.

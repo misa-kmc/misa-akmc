@@ -6,8 +6,8 @@
 #define MISA_KMC_RING_HPP
 
 #include "ring_iterator.h"
-#include <vector>
 #include <array>
+#include <vector>
 
 /**
  * \brief  fixed size ring.
@@ -35,11 +35,9 @@ private:
   std::array<T, N> data;
 };
 
-template <typename T, type_ring_size N>
-ring<T, N>::ring(const std::array<T, N> _data) : data(_data) {}
+template <typename T, type_ring_size N> ring<T, N>::ring(const std::array<T, N> _data) : data(_data) {}
 
-template <typename T, type_ring_size N>
-typename ring<T, N>::iterator ring<T, N>::begin() {
+template <typename T, type_ring_size N> typename ring<T, N>::iterator ring<T, N>::begin() {
   return ring::iterator(&data);
 }
 

@@ -20,8 +20,7 @@ public:
    * \param box_z box size/lattice count in z direction.
    * \deprecated this is for serial code.
    */
-  NormalLatticeList(_type_box_size box_x, _type_box_size box_y,
-                    _type_box_size box_z)
+  NormalLatticeList(_type_box_size box_x, _type_box_size box_y, _type_box_size box_z)
       : NormalLatticeList(LatListMeta{box_x, box_y, box_z, 0, 0, 0}) {}
 
   /**
@@ -42,9 +41,7 @@ public:
    * \param x,y,z coordinate of source lattices
    * \return bits for status of 1nn neighbour lattices.
    */
-  _type_neighbour_status get1nnStatus(_type_lattice_coord x,
-                                      _type_lattice_coord y,
-                                      _type_lattice_coord z) override;
+  _type_neighbour_status get1nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) override;
 
   /**
    * \brief get bit status of 2nn neighbour lattice.
@@ -54,9 +51,7 @@ public:
    * \param x,y,z coordinate of source lattices
    * \return  bits for status of 2nn neighbour lattices.
    */
-  _type_neighbour_status get2nnStatus(_type_lattice_coord x,
-                                      _type_lattice_coord y,
-                                      _type_lattice_coord z) override;
+  _type_neighbour_status get2nnStatus(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) override;
 
   /**
    * \brief get 1nn lattices of a lattice specified by \param x,y,z
@@ -65,8 +60,7 @@ public:
    * \param _1nn_list array to save 1nn lattices
    * \return the lattice pointers count of 1nn lattice.
    */
-  int get1nn(_type_lattice_coord x, _type_lattice_coord y,
-             _type_lattice_coord z, Lattice *_1nn_list[MAX_1NN]) override;
+  int get1nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_1nn_list[MAX_1NN]) override;
 
   /**
    * \brief get 2nn lattices of a lattice specified by \param x,y,z
@@ -75,8 +69,7 @@ public:
    * \param _2nn_list array to save 1nn lattices
    * \return the count of 2nn lattice.
    */
-  int get2nn(_type_lattice_coord x, _type_lattice_coord y,
-             _type_lattice_coord z, Lattice *_2nn_list[6]) override;
+  int get2nn(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z, Lattice *_2nn_list[6]) override;
 };
 
 #endif // MISA_KMC_PURE_LATTICE_LIST_H

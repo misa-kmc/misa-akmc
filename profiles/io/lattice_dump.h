@@ -16,8 +16,7 @@ public:
    * \brief dump lattice information at current step
    * \param step  current step
    */
-  void dump(const std::string dump_file_path, LatticesList *lattice_list,
-            unsigned long step);
+  void dump(const std::string dump_file_path, LatticesList *lattice_list, unsigned long step);
 };
 
 #endif // MISA_KMC_LATTICE_DUMP_H

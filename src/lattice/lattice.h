@@ -53,8 +53,8 @@ public:
    * \param yv
    * \param zv
    */
-  void recb_check_ecal(bool isitl, double minE, std::vector<int> list_recb,
-                       int xi, int yi, int zi, int xv, int yv, int zv);
+  void recb_check_ecal(bool isitl, double minE, std::vector<int> list_recb, int xi, int yi, int zi, int xv, int yv,
+                       int zv);
 
   /*!
    * \brief 复合反应函数

@@ -46,8 +46,7 @@ public:
   void onDestroy() override;
 
 private:
-  std::string configFilePath =
-      "config.yaml"; // configure file path default value.
+  std::string configFilePath = "config.yaml"; // configure file path default value.
   simulation *sim;
 };
 

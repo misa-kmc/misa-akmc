@@ -31,13 +31,9 @@ ConfigParsing *ConfigParsing::getInstance() {
 
 bool ConfigParsing::configureCheck() { return false; }
 
-void ConfigParsing::putConfigData(kiwi::Bundle &bundle) {
-  configValues.packData(bundle);
-}
+void ConfigParsing::putConfigData(kiwi::Bundle &bundle) { configValues.packData(bundle); }
 
-void ConfigParsing::getConfigData(kiwi::Bundle &bundle) {
-  configValues.unpackData(bundle);
-}
+void ConfigParsing::getConfigData(kiwi::Bundle &bundle) { configValues.unpackData(bundle); }
 
 void ConfigParsing::parse(const std::string config_file) {
   std::ifstream ifs(config_file);
@@ -100,8 +96,7 @@ void ConfigParsing::parse(const std::string config_file) {
 }
 
 bool ConfigParsing::parseBox(const YAML::Node &yaml_box) {
-  if (!yaml_box["size"].IsSequence() ||
-      yaml_box["size"].size() != comm::DIMENSION_SIZE) {
+  if (!yaml_box["size"].IsSequence() || yaml_box["size"].size() != comm::DIMENSION_SIZE) {
     setError("box size must be 3.");
     return false;
   } else {
@@ -142,15 +137,12 @@ bool ConfigParsing::parseCreate(const YAML::Node &yaml_create) {
     const bool random_enabled = yaml_random["enable"].as<bool>(false);
     if (random_enabled) {
       configValues.create.create_option = conf::CreateOption::Random;
-      configValues.create.va_count =
-          yaml_random["va_count"].as<unsigned long>(0);
+      configValues.create.va_count = yaml_random["va_count"].as<unsigned long>(0);
       YAML::Node alloy = yaml_random["alloy"];
       if (alloy.IsMap()) {
         for (YAML::const_iterator it = alloy.begin(); it != alloy.end(); ++it) {
-          configValues.create.types.emplace_back(
-              lat::LatTypes(it->first.as<std::string>()));
-          configValues.create.types_ratio.emplace_back(
-              it->second.as<unsigned int>(0));
+          configValues.create.types.emplace_back(lat::LatTypes(it->first.as<std::string>()));
+          configValues.create.types_ratio.emplace_back(it->second.as<unsigned int>(0));
         }
       } else {
         setError("alloy must be a map in config.");
@@ -165,8 +157,7 @@ bool ConfigParsing::parseCreate(const YAML::Node &yaml_create) {
     const bool pipe_enabled = yaml_pipe["enable"].as<bool>(false);
     if (pipe_enabled) {
       configValues.create.create_option = conf::CreateOption::Pipe;
-      configValues.create.pipe_input_box =
-          yaml_pipe["input_box"].as<std::string>("");
+      configValues.create.pipe_input_box = yaml_pipe["input_box"].as<std::string>("");
       return true;
     }
   }
@@ -176,8 +167,7 @@ bool ConfigParsing::parseCreate(const YAML::Node &yaml_create) {
     const bool restart_enabled = yaml_restart["enable"].as<bool>(false);
     if (restart_enabled) {
       configValues.create.create_option = conf::CreateOption::Restart;
-      configValues.create.restart_file =
-          yaml_restart["file_path"].as<std::string>("");
+      configValues.create.restart_file = yaml_restart["file_path"].as<std::string>("");
       return true;
     }
   }
@@ -190,14 +180,10 @@ bool ConfigParsing::parseCreate(const YAML::Node &yaml_create) {
 }
 
 bool ConfigParsing::parseSeeds(const YAML::Node &yaml_seeds) {
-  configValues.seeds.create_types =
-      yaml_seeds["create_types"].as<uint32_t>(r::seed_auto);
-  configValues.seeds.create_vacancy =
-      yaml_seeds["create_vacancy"].as<uint32_t>(r::seed_auto);
-  configValues.seeds.event_selection =
-      yaml_seeds["event_selection"].as<uint32_t>(r::seed_auto);
-  configValues.seeds.time_inc =
-      yaml_seeds["time_inc"].as<uint32_t>(r::seed_auto);
+  configValues.seeds.create_types = yaml_seeds["create_types"].as<uint32_t>(r::seed_auto);
+  configValues.seeds.create_vacancy = yaml_seeds["create_vacancy"].as<uint32_t>(r::seed_auto);
+  configValues.seeds.event_selection = yaml_seeds["event_selection"].as<uint32_t>(r::seed_auto);
+  configValues.seeds.time_inc = yaml_seeds["time_inc"].as<uint32_t>(r::seed_auto);
   return true;
 }
 
@@ -205,14 +191,11 @@ bool ConfigParsing::parseOutput(const YAML::Node &output) {
   const YAML::Node yaml_dump = output["dump"];
   const YAML::Node yaml_logs = output["logs"];
   if (yaml_dump) {
-    configValues.output.dump_interval =
-        yaml_dump["interval"].as<unsigned long>(0);
-    configValues.output.dump_file_path =
-        yaml_dump["file_path"].as<std::string>("");
+    configValues.output.dump_interval = yaml_dump["interval"].as<unsigned long>(0);
+    configValues.output.dump_file_path = yaml_dump["file_path"].as<std::string>("");
   }
   if (yaml_logs) {
-    configValues.output.logs_interval =
-        yaml_logs["interval"].as<unsigned long>(0);
+    configValues.output.logs_interval = yaml_logs["interval"].as<unsigned long>(0);
     configValues.output.logs_file = yaml_logs["logs_file"].as<std::string>("");
   }
   // if it is empty, log to /dev/console

@@ -33,8 +33,8 @@ public:
    * @param lattice_const lattice constance
    * @param cutoff_radius cutoff radius factor = cutoff/lattice_const
    */
-  void createDomain(const unsigned long phase_space[comm::DIMENSION_SIZE],
-                    const double lattice_const, const double cutoff_radius);
+  void createDomain(const unsigned long phase_space[comm::DIMENSION_SIZE], const double lattice_const,
+                    const double cutoff_radius);
 
   /**
    * \brief allocate memory for lattice list with ghost regions, and set ids
@@ -56,8 +56,8 @@ public:
    * kmc time increasing. \param time_limit the max simulation time.
    */
   template <typename E>
-  void simulate(ModelAdapter<E> *p_model, EventHooks *p_event_hooks,
-                const double seed_time_inc, const double time_limit);
+  void simulate(ModelAdapter<E> *p_model, EventHooks *p_event_hooks, const double seed_time_inc,
+                const double time_limit);
 
 public:
   Box *box = nullptr;
@@ -65,14 +65,13 @@ public:
 };
 
 template <typename E>
-void simulation::simulate(ModelAdapter<E> *p_model, EventHooks *p_event_hooks,
-                          const double seed_time_inc, const double time_limit) {
+void simulation::simulate(ModelAdapter<E> *p_model, EventHooks *p_event_hooks, const double seed_time_inc,
+                          const double time_limit) {
   SubLattice sl(_p_domain, seed_time_inc, time_limit,
                 3.0e-7); // todo calculate T
 
   PackerInstance pk_ins(box->lattice_list);
-  sl.startTimeLoop<GhostSyncPacker, SimSyncPacker, PackerInstance>(
-      pk_ins, p_model, p_event_hooks);
+  sl.startTimeLoop<GhostSyncPacker, SimSyncPacker, PackerInstance>(pk_ins, p_model, p_event_hooks);
 }
 
 #endif // MISA_KMC_SIMULATION_H
