@@ -7,10 +7,10 @@ args:
 
 replace:
   - |
-    git.gensh.me/HPCer/misa-kmc/xoshinro => github.com/misa-kmc/xoshinro
+    git.gensh.me/HPCer/misa-akmc/xoshinro => github.com/misa-kmc/xoshinro
 
 
-pkg: "https://git.gensh.me/HPCer/misa-kmc/kmc"
+pkg: "https://git.gensh.me/HPCer/misa-akmc/kmc"
 target: "kmc"
 
 dependencies:
@@ -25,5 +25,5 @@ dependencies:
         include_directories({{.PKG_DIR}}/include)
     github.com/google/googletest: {version: release-1.10.0, target: GTest}
     git.hpcer.dev/genshen/kiwi: {version: v0.3.1, target: kiwi}
-    git.hpcer.dev/HPCer/CrystalMD/libcomm: {version: v0.3.3, target: comm}
+    git.hpcer.dev/HPCer/MISA-MD/libcomm: {version: v0.3.3, target: comm}
     github.com/misa-kmc/xoshiro: {version: v0.1.1, target: xoshiro}
