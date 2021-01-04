@@ -25,8 +25,7 @@ typedef double _type_rate;
 /**
  * \brief neighbor types
  */
-typedef unsigned char
-    _type_dirs_status; // todo compatible with _type_neighbour_status
+typedef unsigned char _type_dirs_status; // todo compatible with _type_neighbour_status
 typedef unsigned char _type_dir_id;
 typedef unsigned char _type_dirs_size;
 

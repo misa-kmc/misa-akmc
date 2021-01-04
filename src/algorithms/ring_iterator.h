@@ -52,9 +52,7 @@ public:
    * @param x another iterator
    * @return true: equal, false: not equal.
    */
-  bool operator==(const self &x) const {
-    return cursor == x.cursor && p_ring_data == x.p_ring_data;
-  }
+  bool operator==(const self &x) const { return cursor == x.cursor && p_ring_data == x.p_ring_data; }
 
   bool operator!=(const self &x) const { return !(*this == x); }
 

@@ -16,8 +16,7 @@
  * single forward communication in x,y,z dimensions. \param sector_id sector id
  * \return send directions of each dimension.
  */
-inline std::array<unsigned int, comm::DIMENSION_SIZE>
-ssfdCommSendDirs(const type_sector_id sector_id) {
+inline std::array<unsigned int, comm::DIMENSION_SIZE> ssfdCommSendDirs(const type_sector_id sector_id) {
   return {
       (0x7u - sector_id) & 0x1u,
       ((0x7u - sector_id) >> 1u) & 0x1u,
@@ -30,8 +29,7 @@ ssfdCommSendDirs(const type_sector_id sector_id) {
  * dimensions. \param sector_id sector id \return receive directions of each
  * dimension.
  */
-inline std::array<unsigned int, comm::DIMENSION_SIZE>
-ssfdCommRecvDirs(const type_sector_id sector_id) {
+inline std::array<unsigned int, comm::DIMENSION_SIZE> ssfdCommRecvDirs(const type_sector_id sector_id) {
   return {
       sector_id & 0x1u,
       (sector_id >> 1u) & 0x1u,

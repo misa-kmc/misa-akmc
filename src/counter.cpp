@@ -39,9 +39,7 @@ counter counter::newCounter(LatticesList *p_list) {
     for (_type_lattice_coord y = 0; y < p_list->meta.box_y; y++) {
       // note: x is already doubled.
       for (_type_lattice_coord x = 0; x < p_list->meta.box_x; x++) {
-        Lattice &lat =
-            p_list->getLat(p_list->meta.ghost_x + x, p_list->meta.ghost_y + y,
-                           p_list->meta.ghost_z + z);
+        Lattice &lat = p_list->getLat(p_list->meta.ghost_x + x, p_list->meta.ghost_y + y, p_list->meta.ghost_z + z);
         c.add(lat.type._type);
       }
     }
@@ -52,8 +50,7 @@ counter counter::newCounter(LatticesList *p_list) {
 std::ostream &operator<<(std::ostream &os, const counter &counter) {
   if (counter.func_lat_type_to_str) {
     for (const auto &c : counter.data) {
-      os << "[" << counter.func_lat_type_to_str(c.first) << "]: " << c.second
-         << "\n";
+      os << "[" << counter.func_lat_type_to_str(c.first) << "]: " << c.second << "\n";
     }
   } else {
     for (const auto &c : counter.data) {

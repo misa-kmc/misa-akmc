@@ -22,12 +22,9 @@ public:
    * \param va_count count of vacancy
    * \param p_domain pointer of domain.
    */
-  static void createRandom(uint32_t seed_create_types,
-                           uint32_t seed_create_vacancy, LatticesList *lats,
-                           VacancyList *va_list,
-                           const std::vector<LatticeTypes::lat_type> types,
-                           const std::vector<unsigned int> types_ratio,
-                           const unsigned long va_count,
+  static void createRandom(uint32_t seed_create_types, uint32_t seed_create_vacancy, LatticesList *lats,
+                           VacancyList *va_list, const std::vector<LatticeTypes::lat_type> types,
+                           const std::vector<unsigned int> types_ratio, const unsigned long va_count,
                            const comm::ColoredDomain *p_domain);
 
   /**
@@ -37,11 +34,9 @@ public:
    * \param gbr region of current sub-box in global coordinate system
    * \param phase_space the total lattice size at each dimension
    */
-  static void
-  setGlobalId(LatticesList *lats_list,
-              const comm::Region<comm::_type_lattice_coord> lbr,
-              const comm::Region<comm::_type_lattice_coord> gbr,
-              std::array<uint64_t, comm::DIMENSION_SIZE> phase_space);
+  static void setGlobalId(LatticesList *lats_list, const comm::Region<comm::_type_lattice_coord> lbr,
+                          const comm::Region<comm::_type_lattice_coord> gbr,
+                          std::array<uint64_t, comm::DIMENSION_SIZE> phase_space);
 };
 
 #endif // MISA_KMC_CREATION_H

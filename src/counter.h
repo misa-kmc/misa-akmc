@@ -12,9 +12,7 @@
 #include "lattice/lattices_list.h"
 
 struct EnumClassHash {
-  template <typename T> std::size_t operator()(T t) const {
-    return static_cast<std::size_t>(t);
-  }
+  template <typename T> std::size_t operator()(T t) const { return static_cast<std::size_t>(t); }
 };
 
 /**
@@ -36,9 +34,7 @@ public:
    * \brief set value for type specified by \param tp.
    * \param tp lattice type
    */
-  void set(const LatticeTypes::lat_type tp, const unsigned int count) {
-    data[tp] = count;
-  }
+  void set(const LatticeTypes::lat_type tp, const unsigned int count) { data[tp] = count; }
 
   /**
    * \brief get value for type specified by \param tp.

@@ -10,22 +10,18 @@
 
 class TestPks : public LatticeRegionPacker<int> {
 public:
-  const unsigned long
-  sendLength(const std::vector<comm::Region<int>> send_regions,
-             const int dimension, const int direction) override {
+  const unsigned long sendLength(const std::vector<comm::Region<int>> send_regions, const int dimension,
+                                 const int direction) override {
     return 1;
   }
 
-  void onSend(int buffer[], const std::vector<comm::Region<int>> send_regions,
-              const unsigned long send_len, const int dimension,
-              const int direction) override {
+  void onSend(int buffer[], const std::vector<comm::Region<int>> send_regions, const unsigned long send_len,
+              const int dimension, const int direction) override {
     buffer[0] = 0x100 + dimension;
   }
 
-  void onReceive(int buffer[],
-                 const std::vector<comm::Region<int>> recv_regions,
-                 const unsigned long receive_len, const int dimension,
-                 const int direction) override {
+  void onReceive(int buffer[], const std::vector<comm::Region<int>> recv_regions, const unsigned long receive_len,
+                 const int dimension, const int direction) override {
     data[dimension] = buffer[0];
   }
 
@@ -65,8 +61,7 @@ public:
 
 TEST(sublattice_template_compile_test, sublattice_test) {
   const int grid_size[3] = {2, 2, 2};
-  const int64_t space[3] = {50 * grid_size[0], 60 * grid_size[1],
-                            71 * grid_size[2]};
+  const int64_t space[3] = {50 * grid_size[0], 60 * grid_size[1], 71 * grid_size[2]};
   const double lattice_const = 0.86;
   const double cutoff_radius_factor = 1.1421;
 
@@ -91,7 +86,6 @@ TEST(sublattice_template_compile_test, sublattice_test) {
 
   TestPackerInstance pk_ins;
   TestEventHooks test_event_hook;
-  sl.startTimeLoop<TestPks, TestPks, TestPackerInstance>(pk_ins, &model,
-                                                         &test_event_hook);
+  sl.startTimeLoop<TestPks, TestPks, TestPackerInstance>(pk_ins, &model, &test_event_hook);
   delete p_domain;
 }

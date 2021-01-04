@@ -8,15 +8,15 @@
 #include <mpi.h>
 
 namespace mpi_types {
-extern MPI_Datatype _mpi_type_lattice_data;
+  extern MPI_Datatype _mpi_type_lattice_data;
 
-// called in initialization
-void setInterMPIType();
+  // called in initialization
+  void setInterMPIType();
 
-// called when program finished
-void unsetInterMPIType();
+  // called when program finished
+  void unsetInterMPIType();
 
-void setMPI_DataTypeLattice(MPI_Datatype *mpi_type_lat);
+  void setMPI_DataTypeLattice(MPI_Datatype *mpi_type_lat);
 } // namespace mpi_types
 
 #endif // MISA_KMC_MPI_TYPES_H

@@ -17,23 +17,17 @@ public:
 
   MEventListener(counter &m_counter, LatListMeta meta);
 
-  void onVacancyTrans(const unsigned long time_step,
-                      const comm::_type_lattice_coord source_id,
-                      const comm::_type_lattice_coord target_id,
-                      const LatticeTypes trans_atom) override;
+  void onVacancyTrans(const unsigned long time_step, const comm::_type_lattice_coord source_id,
+                      const comm::_type_lattice_coord target_id, const LatticeTypes trans_atom) override;
 
-  void onDumbbellTrans(const unsigned long time_step,
-                       const comm::_type_lattice_coord source_id,
-                       const comm::_type_lattice_coord target_id,
-                       const LatticeTypes old_type_src,
-                       const LatticeTypes old_type_target,
-                       const LatticeTypes new_type_src,
+  void onDumbbellTrans(const unsigned long time_step, const comm::_type_lattice_coord source_id,
+                       const comm::_type_lattice_coord target_id, const LatticeTypes old_type_src,
+                       const LatticeTypes old_type_target, const LatticeTypes new_type_src,
                        const LatticeTypes new_type_target) override;
 
   void onRecombine(const unsigned long time_step, const rec::Rec rec) override;
 
-  void onDefectGenerate(const unsigned long time_step, LatticeTypes lat_1_type,
-                        LatticeTypes lat_2_type,
+  void onDefectGenerate(const unsigned long time_step, LatticeTypes lat_1_type, LatticeTypes lat_2_type,
                         const LatticeTypes::lat_type combined_type) override;
 
 private:

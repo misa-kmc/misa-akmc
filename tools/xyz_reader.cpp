@@ -24,8 +24,7 @@ XYZReader::XYZReader(std::string file_path) {
   std::getline(infile, comment_line);
 
   std::vector<particle> lats_coords;
-  _type_lattice_coord x_min = 0x0fffffff, y_min = 0x0fffffff,
-                      z_min = 0x0fffffff;
+  _type_lattice_coord x_min = 0x0fffffff, y_min = 0x0fffffff, z_min = 0x0fffffff;
   _type_lattice_coord x_max = 0, y_max = 0, z_max = 0;
 
   // read file line by line, and save each coordinate.
@@ -65,8 +64,7 @@ XYZReader::XYZReader(std::string file_path) {
   const _type_lattice_size box_size_y = y_max - y_min + 1;
   const _type_lattice_size box_size_z = z_max - z_min + 1;
 
-  std::cout << "box size: " << box_size_x << "," << box_size_y << ","
-            << box_size_z << std::endl;
+  std::cout << "box size: " << box_size_x << "," << box_size_y << "," << box_size_z << std::endl;
 
   auto lattice_meta = LatListMeta{box_size_x, box_size_y, box_size_z, 2, 2, 2};
   // todo delete

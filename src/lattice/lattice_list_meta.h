@@ -24,12 +24,10 @@ struct LatListMeta {
    * simulation box at x,y,z dimension (is NOT doubled at x dimension) \param
    * g_base_x,g_base_y,g_base_z
    */
-  LatListMeta(const _type_box_size box_x, const _type_box_size box_y,
-              const _type_box_size box_z, const _type_box_size ghost_x,
-              const _type_box_size ghost_y, const _type_box_size ghost_z,
-              const _type_box_size gbx, const _type_box_size gby,
-              const _type_box_size gbz, const _type_box_size g_base_x,
-              const _type_box_size g_base_y, const _type_box_size g_base_z);
+  LatListMeta(const _type_box_size box_x, const _type_box_size box_y, const _type_box_size box_z,
+              const _type_box_size ghost_x, const _type_box_size ghost_y, const _type_box_size ghost_z,
+              const _type_box_size gbx, const _type_box_size gby, const _type_box_size gbz,
+              const _type_box_size g_base_x, const _type_box_size g_base_y, const _type_box_size g_base_z);
 
   /**
    * \brief initialize the metadata using box size and ghost size, but without
@@ -41,9 +39,8 @@ struct LatListMeta {
    * size/lattice in x,y,z dimension \note \param box_x and \param ghost_x is
    * NOT bcc doubled.
    */
-  LatListMeta(const _type_box_size box_x, const _type_box_size box_y,
-              const _type_box_size box_z, const _type_box_size ghost_x,
-              const _type_box_size ghost_y, const _type_box_size ghost_z);
+  LatListMeta(const _type_box_size box_x, const _type_box_size box_y, const _type_box_size box_z,
+              const _type_box_size ghost_x, const _type_box_size ghost_y, const _type_box_size ghost_z);
 
   /**
    * \brief the lattice size (with ghost area) of lattice lists array in each
@@ -92,12 +89,9 @@ public:
    * global id. Global id usually be used between processes communication.
    * \return The global id of the corresponding lattice in simulation area.
    */
-  inline _type_lattice_id getGId(_type_lattice_coord x, _type_lattice_coord y,
-                                 _type_lattice_coord z) {
+  inline _type_lattice_id getGId(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) {
     // todo return from Lattice object.
-    return (x - ghost_x + g_base_x) +
-           g_box_x *
-               ((y - ghost_y + g_base_y) + (z - ghost_z + g_base_z) * g_box_y);
+    return (x - ghost_x + g_base_x) + g_box_x * ((y - ghost_y + g_base_y) + (z - ghost_z + g_base_z) * g_box_y);
   }
 
   /**
@@ -106,16 +100,14 @@ public:
    * local ghost boundary \return local id of the corresponding lattice in
    * simulation area and ghost area.
    */
-  inline _type_lattice_id getLId(_type_lattice_coord x, _type_lattice_coord y,
-                                 _type_lattice_coord z) const {
+  inline _type_lattice_id getLId(_type_lattice_coord x, _type_lattice_coord y, _type_lattice_coord z) const {
     return x + size_x * (y + z * size_y);
   }
 
   /**
    * \brief convert coordinate by local id.
    */
-  inline void getCoordByLId(_type_lattice_id lid, _type_lattice_coord *x,
-                            _type_lattice_coord *y,
+  inline void getCoordByLId(_type_lattice_id lid, _type_lattice_coord *x, _type_lattice_coord *y,
                             _type_lattice_coord *z) const {
     *x = lid % size_x;
     lid = lid / size_x;
@@ -143,8 +135,7 @@ public:
    * \return the lattice id based on lattice id(specified by \param lat_id)
    * with a offset specified by \param _1nn_offset
    */
-  _type_lattice_id getIdBy1nnOffset(const _type_lattice_id lat_id,
-                                    const _type_dir_id _1nn_offset) const;
+  _type_lattice_id getIdBy1nnOffset(const _type_lattice_id lat_id, const _type_dir_id _1nn_offset) const;
 };
 
 #endif // MISA_KMC_LATTICE_LIST_META_H

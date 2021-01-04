@@ -13,10 +13,8 @@
 int main(int argc, char **argv) {
   args::ArgumentParser parser("Analysis tools for misa-akmc output.", "");
   args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
-  args::ValueFlag<std::string> conf(parser, "input", "The input file path",
-                                    {'i', "input"});
-  args::Flag version(parser, "version", "show version number",
-                     {'v', "version"});
+  args::ValueFlag<std::string> conf(parser, "input", "The input file path", {'i', "input"});
+  args::Flag version(parser, "version", "show version number", {'v', "version"});
   try {
     parser.ParseCLI(argc, (const char *const *)argv);
   } catch (args::Help) {
@@ -47,8 +45,7 @@ int main(int argc, char **argv) {
 
   if (version) {
     std::cout << "MISA KMC version " << KMC_VERSION_STRING << std::endl;
-    std::cout << "Build time: " << __TIME__ << " " << __DATE__ << "."
-              << std::endl;
+    std::cout << "Build time: " << __TIME__ << " " << __DATE__ << "." << std::endl;
     return 0;
   }
   // if no args, print usage.

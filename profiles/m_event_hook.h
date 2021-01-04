@@ -17,8 +17,7 @@ public:
    * \param p_lattice_list lattice list
    * \param p_counter lattices and atoms counter
    */
-  MEventHook(const conf::Output &output_config, LatticesList *p_lattice_list,
-             counter *p_counter);
+  MEventHook(const conf::Output &output_config, LatticesList *p_lattice_list, counter *p_counter);
 
   void onStepFinished(unsigned long step) override;
 

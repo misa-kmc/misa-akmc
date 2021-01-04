@@ -5,5 +5,5 @@
 #include "env.h"
 
 namespace env {
-    struct environment global_env;
+  struct environment global_env;
 }

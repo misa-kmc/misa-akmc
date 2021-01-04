@@ -20,8 +20,7 @@ TEST(itl_availTranDirs_test, itl_test) {
 
   _type_neighbour_status nei_status = 0xFF;
   Lattice data[8];
-  Lattice *_1nn[8] = {&data[0], &data[1], &data[2], &data[3],
-                      &data[4], &data[5], &data[6], &data[7]};
+  Lattice *_1nn[8] = {&data[0], &data[1], &data[2], &data[3], &data[4], &data[5], &data[6], &data[7]};
   data[0].type._type = LatticeTypes::Fe;
   data[1].type._type = LatticeTypes::Fe;
   data[2].type._type = LatticeTypes::Fe;
@@ -66,26 +65,22 @@ TEST(itl_availTranDirs_status_test, itl_test) {
 
   // case 1
   _type_neighbour_status nei_status = 0xFF;
-  Lattice *_1nn_1[8] = {&data[0], &data[1], &data[2], &data[3],
-                        &data[4], &data[5], &data[6], &data[7]};
+  Lattice *_1nn_1[8] = {&data[0], &data[1], &data[2], &data[3], &data[4], &data[5], &data[6], &data[7]};
   EXPECT_EQ(itl.availTranDirs(nei_status, _1nn_1), 0x81);
 
   // case 2
   nei_status = 0xF0; // 4 valid neighbour lattices.
-  Lattice *_1nn_2[8] = {nullptr,  nullptr,  nullptr,  nullptr,
-                        &data[4], &data[5], &data[6], &data[7]};
+  Lattice *_1nn_2[8] = {nullptr, nullptr, nullptr, nullptr, &data[4], &data[5], &data[6], &data[7]};
   EXPECT_EQ(itl.availTranDirs(nei_status, _1nn_2), 0x80); // 0b 1000 0000
 
   // case 3
   nei_status = 0xF3; // 6 valid neighbour lattices.
-  Lattice *_1nn_3[8] = {&data[0], &data[1], nullptr,  nullptr,
-                        &data[4], &data[5], &data[6], &data[7]};
+  Lattice *_1nn_3[8] = {&data[0], &data[1], nullptr, nullptr, &data[4], &data[5], &data[6], &data[7]};
   EXPECT_EQ(itl.availTranDirs(nei_status, _1nn_3), 0x81); // 0b 1000 0001
 
   // case 4
   nei_status = 0xFC; // 6 valid neighbour lattices.
-  Lattice *_1nn_4[8] = {nullptr,  nullptr,  &data[2], &data[3],
-                        &data[4], &data[5], &data[6], &data[7]};
+  Lattice *_1nn_4[8] = {nullptr, nullptr, &data[2], &data[3], &data[4], &data[5], &data[6], &data[7]};
   EXPECT_EQ(itl.availTranDirs(nei_status, _1nn_4), 0x80);
 
   // case 5
@@ -132,8 +127,7 @@ TEST(itl_get1nnIdByRatesIndex_test, itl_test) {
   // given a index of rates array, we can also calculate the 1nn id.
 
   // 0xC3 0b 1100 0011
-  int index = ItlTester::ratesIndex(
-      0, 0xC3, false); // the first parameter is 1nn neighbour id
+  int index = ItlTester::ratesIndex(0, 0xC3, false); // the first parameter is 1nn neighbour id
   EXPECT_EQ(ItlTester::get1nnIdByRatesIndex(index, 0xC3),
             0);                                 // assert 1nn neighbour id
   index = ItlTester::ratesIndex(0, 0xC3, true); // index=1

@@ -44,18 +44,14 @@ struct LatticeTypes {
   explicit LatticeTypes() : _type(V) {}
 
   const static uint16_t c = 4;
-  const static uint16_t dumbbell_critical_point =
-      1 << (c - 1); // 0x0008 (max single atom enum)
-  const static uint16_t high_endian_shift =
-      8; // 8 bits of left shift for one atom type in inter lattices.
+  const static uint16_t dumbbell_critical_point = 1 << (c - 1); // 0x0008 (max single atom enum)
+  const static uint16_t high_endian_shift = 8; // 8 bits of left shift for one atom type in inter lattices.
 
   inline bool isDumbbell() const { return _type > dumbbell_critical_point; }
 
   inline bool isVacancy() const { return _type == V; }
 
-  inline bool isAtom() const {
-    return (_type <= dumbbell_critical_point) && (_type != V);
-  }
+  inline bool isAtom() const { return (_type <= dumbbell_critical_point) && (_type != V); }
 
   /**
    * \brief it returns the difference set C of atoms (with lat_type format)
@@ -79,9 +75,7 @@ struct LatticeTypes {
    * _type is Cu, the method will return V;
    * \return the high 8 bits of types
    */
-  inline lat_type getHighEnd() const {
-    return static_cast<lat_type>(_type >> high_endian_shift);
-  }
+  inline lat_type getHighEnd() const { return static_cast<lat_type>(_type >> high_endian_shift); }
 
   /**
    * \brief get the low 8 bits of types.
@@ -153,9 +147,7 @@ struct LatticeTypes {
    * \param hit a random number between [1, sum{\param ratio}].
    * \return the created lattice type.
    */
-  static lat_type randomAtomsType(const lat_type source_type[],
-                                  const unsigned int ratio[],
-                                  const unsigned int len,
+  static lat_type randomAtomsType(const lat_type source_type[], const unsigned int ratio[], const unsigned int len,
                                   const unsigned int hit);
 
   /**
@@ -163,9 +155,7 @@ struct LatticeTypes {
    * \param another_atom another atom.
    * \return the combined lattice type.
    */
-  inline lat_type combineToInter(lat_type another_atom) const {
-    return combineToInter(_type, another_atom);
-  }
+  inline lat_type combineToInter(lat_type another_atom) const { return combineToInter(_type, another_atom); }
 
   /**
    * \brief the combined two atom types into inter type.

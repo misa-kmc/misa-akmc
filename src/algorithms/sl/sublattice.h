@@ -39,8 +39,7 @@ public:
    * increasing. \param time_limit the max evolution time. \param T threshold
    * time for communication.
    */
-  explicit SubLattice(const comm::ColoredDomain *p_domain,
-                      const uint32_t seed_time_inc, const double time_limit,
+  explicit SubLattice(const comm::ColoredDomain *p_domain, const uint32_t seed_time_inc, const double time_limit,
                       const double T);
 
   /**
@@ -56,8 +55,7 @@ public:
    * class at compiling time.
    */
   template <class PKg, class PKs, class Ins, typename E>
-  void startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model,
-                     EventHooks *p_event_hooks);
+  void startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model, EventHooks *p_event_hooks);
 
   /**
    * \brief calculate rates in a region
@@ -65,9 +63,7 @@ public:
    * \param sector_id sector id
    * \return the total rates
    */
-  template <typename E>
-  _type_rate calcRatesWrapper(ModelAdapter<E> *p_model,
-                              const type_sector_id sector_id);
+  template <typename E> _type_rate calcRatesWrapper(ModelAdapter<E> *p_model, const type_sector_id sector_id);
 
   /**
    * \brief wrapper function of event selection and performing
@@ -77,9 +73,7 @@ public:
    * \param sector_id sector id
    */
   template <typename E>
-  void selectPerformWrapper(ModelAdapter<E> *p_model,
-                            const _type_rate total_rates,
-                            const type_sector_id sector_id);
+  void selectPerformWrapper(ModelAdapter<E> *p_model, const _type_rate total_rates, const type_sector_id sector_id);
 
 private:
   /**
@@ -105,9 +99,7 @@ private:
 
 public:
   // todo move this type to other file
-  typedef std::array<std::vector<comm::Region<comm::_type_lattice_coord>>,
-                     comm::DIMENSION_SIZE>
-      type_comm_lat_regions;
+  typedef std::array<std::vector<comm::Region<comm::_type_lattice_coord>>, comm::DIMENSION_SIZE> type_comm_lat_regions;
 
 private:
   /**
