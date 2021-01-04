@@ -28,7 +28,7 @@ public:
   static MPI_Datatype getMPI_DataType() { return MPI_INT; }
 
 private:
-  std::array<int, comm::DIMENSION_SIZE> data = {0, 0, 0};
+  std::array<int, comm::DIMENSION_SIZE> data = {{0, 0, 0}};
 };
 
 class TestPackerInstance {

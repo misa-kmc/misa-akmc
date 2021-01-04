@@ -82,45 +82,48 @@ void conf::ConfigValues::unpackData(kiwi::Bundle &bundle) {
   bundle.get(cursor, output.logs_to_file);
 }
 
-std::ostream &conf::operator<<(std::ostream &os, const conf::ConfigValues &cv) {
-  os << "===========config of simulation=============" << std::endl;
-  os << "size: " << cv.box_size[0] << " " << cv.box_size[1] << " " << cv.box_size[2] << std::endl;
-  os << "lattice const: " << cv.lattice_const << std::endl;
-  os << "cutoff radius: " << cv.cutoff_radius << std::endl;
-  os << "simulation: T,\t time,\t steps,\t is gen,\t dpa,\t attempt_freq\n"
-        "\t"
-     << cv.temperature << "\t" << cv.physics_time << "\t" << cv.steps_limit << "\t"
-     << (cv.is_def_gen ? "true" : "false") << "\t" << cv.dpa_ps << "\t" << cv.attempt_freq << std::endl;
+namespace conf {
+  std::ostream &operator<<(std::ostream &os, const conf::ConfigValues &cv) {
+    os << "===========config of simulation=============" << std::endl;
+    os << "size: " << cv.box_size[0] << " " << cv.box_size[1] << " " << cv.box_size[2] << std::endl;
+    os << "lattice const: " << cv.lattice_const << std::endl;
+    os << "cutoff radius: " << cv.cutoff_radius << std::endl;
+    os << "simulation: T,\t time,\t steps,\t is gen,\t dpa,\t attempt_freq\n"
+          "\t"
+       << cv.temperature << "\t" << cv.physics_time << "\t" << cv.steps_limit << "\t"
+       << (cv.is_def_gen ? "true" : "false") << "\t" << cv.dpa_ps << "\t" << cv.attempt_freq << std::endl;
 
-  if (cv.create.create_option == conf::CreateOption::Random) {
-    os << "create by: random" << std::endl;
-    os << "va:" << cv.create.va_count << std::endl;
-    assert(cv.create.types.size() == cv.create.types_ratio.size());
-    for (unsigned long i = 0; i < cv.create.types.size(); i++) {
-      os << lat::LatTypesString(cv.create.types[i]) << ": " << cv.create.types_ratio[i] << "%  ";
+    if (cv.create.create_option == conf::CreateOption::Random) {
+      os << "create by: random" << std::endl;
+      os << "va:" << cv.create.va_count << std::endl;
+      assert(cv.create.types.size() == cv.create.types_ratio.size());
+      for (unsigned long i = 0; i < cv.create.types.size(); i++) {
+        os << lat::LatTypesString(cv.create.types[i]) << ": " << cv.create.types_ratio[i] << "%  ";
+      }
+      os << std::endl;
     }
-    os << std::endl;
+
+    if (cv.create.create_option == conf::CreateOption::Pipe) {
+      os << "create by: pipe" << std::endl;
+      os << "pipe input box:" << cv.create.pipe_input_box << std::endl;
+    }
+
+    if (cv.create.create_option == conf::CreateOption::Restart) {
+      os << "create by: restart" << std::endl;
+      os << "restart file:" << cv.create.restart_file << std::endl;
+    }
+    os << "seeds: create_types,\t create_vacancy,\t event_selection,\t time_inc" << std::endl;
+    os << cv.seeds.create_types << "\t" << cv.seeds.create_vacancy << "\t" << cv.seeds.event_selection << "\t"
+       << cv.seeds.time_inc << std::endl;
+
+    os << "output.dump:"
+       << " interval: " << cv.output.dump_interval << ", file_path: " << cv.output.dump_file_path << std::endl;
+    os << "output.logs:"
+       << " logs_interval: " << cv.output.logs_interval
+       << ", logs_file: " << (cv.output.logs_to_file ? cv.output.logs_file : "/dev/console") << std::endl;
+
+    os << "============================================" << std::endl << std::endl;
+    return os;
   }
 
-  if (cv.create.create_option == conf::CreateOption::Pipe) {
-    os << "create by: pipe" << std::endl;
-    os << "pipe input box:" << cv.create.pipe_input_box << std::endl;
-  }
-
-  if (cv.create.create_option == conf::CreateOption::Restart) {
-    os << "create by: restart" << std::endl;
-    os << "restart file:" << cv.create.restart_file << std::endl;
-  }
-  os << "seeds: create_types,\t create_vacancy,\t event_selection,\t time_inc" << std::endl;
-  os << cv.seeds.create_types << "\t" << cv.seeds.create_vacancy << "\t" << cv.seeds.event_selection << "\t"
-     << cv.seeds.time_inc << std::endl;
-
-  os << "output.dump:"
-     << " interval: " << cv.output.dump_interval << ", file_path: " << cv.output.dump_file_path << std::endl;
-  os << "output.logs:"
-     << " logs_interval: " << cv.output.logs_interval
-     << ", logs_file: " << (cv.output.logs_to_file ? cv.output.logs_file : "/dev/console") << std::endl;
-
-  os << "============================================" << std::endl << std::endl;
-  return os;
-}
+} // namespace conf
