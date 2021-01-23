@@ -113,6 +113,9 @@ bool PKMC::prepare() {
                            config_v.create.va_count, sim->_p_domain);
     break;
   case conf::Pipe:
+    creation::createFromPile(config_v.create.pipe_input_box, config_v.seeds.create_types, sim->box->lattice_list,
+                             sim->box->va_list, config_v.create.types, config_v.create.types_ratio, sim->_p_domain);
+    kiwi::logs::i("create", "placed {} defects from pipe file.\n", sim->box->va_list->mp.size());
     break;
   case conf::Restart:
     break;

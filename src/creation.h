@@ -28,6 +28,20 @@ public:
                            const comm::ColoredDomain *p_domain);
 
   /**
+   * \brief read vacancies and interval position from file.
+   * \param pipe_file pile file location.
+   * \param seed_create_types random seed for creating lattice types
+   * \param lats pointer of lattice list
+   * \param va_list the vacancy defects list.
+   * \param types lattice types list to be created
+   * \param types_ratio ratio of each lattice types.
+   * \param p_domain pointer of domain.
+   */
+  static void createFromPile(const std::string pipe_file, uint32_t seed_create_types, LatticesList *lats, VacancyList *va_list,
+                             const std::vector<LatticeTypes::lat_type> types,
+                             const std::vector<unsigned int> types_ratio, const comm::ColoredDomain *p_domain);
+
+  /**
    * \brief set global id for lattices in simulation box on current process.
    * \param lats_list lattice list
    * \param lbr region of current sub-box in local coordinate system
@@ -37,6 +51,19 @@ public:
   static void setGlobalId(LatticesList *lats_list, const comm::Region<comm::_type_lattice_coord> lbr,
                           const comm::Region<comm::_type_lattice_coord> gbr,
                           std::array<uint64_t, comm::DIMENSION_SIZE> phase_space);
+
+private:
+  /**
+   * \brief create lattice types randomly.
+   * \param seed_create_types random seed for creating lattice types
+   * \param lats pointer of lattice list
+   * \param types lattice types list to be created
+   * \param types_ratio ratio of each lattice types.
+   * \param p_domain pointer of domain.
+   */
+  static void createAtomsRandom(uint32_t seed_create_types, LatticesList *lats,
+                                const std::vector<LatticeTypes::lat_type> types,
+                                const std::vector<unsigned int> types_ratio, const comm::ColoredDomain *p_domain);
 };
 
 #endif // MISA_KMC_CREATION_H
