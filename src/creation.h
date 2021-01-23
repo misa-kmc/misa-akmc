@@ -8,6 +8,7 @@
 #include "abvi/defect/vacancy_list.h"
 #include "lattice/lattices_list.h"
 #include <comm/domain/colored_domain.h>
+#include <string>
 
 class creation {
 public:

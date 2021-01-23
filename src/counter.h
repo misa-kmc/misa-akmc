@@ -6,6 +6,7 @@
 #define MISA_KMC_COUNTER_H
 
 #include <cassert>
+#include <string>
 #include <unordered_map>
 
 #include "lattice/lattice_types.h"
