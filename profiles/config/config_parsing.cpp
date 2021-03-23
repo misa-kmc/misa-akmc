@@ -158,6 +158,16 @@ bool ConfigParsing::parseCreate(const YAML::Node &yaml_create) {
     if (pipe_enabled) {
       configValues.create.create_option = conf::CreateOption::Pipe;
       configValues.create.pipe_input_box = yaml_pipe["input_box"].as<std::string>("");
+      YAML::Node alloy = yaml_random["alloy"];
+      if (alloy.IsMap()) {
+        for (YAML::const_iterator it = alloy.begin(); it != alloy.end(); ++it) {
+          configValues.create.types.emplace_back(lat::LatTypes(it->first.as<std::string>()));
+          configValues.create.types_ratio.emplace_back(it->second.as<unsigned int>(0));
+        }
+      } else {
+        setError("alloy must be a map in config.");
+        return false;
+      }
       return true;
     }
   }
