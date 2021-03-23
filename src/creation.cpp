@@ -5,22 +5,23 @@
 #include "creation.h"
 #include "type_define.h"
 #include "utils/macros.h"
+#include "utils/random/random.h"
+#include "utils/random/rng_type.h"
 #include "utils/simulation_domain.h"
 #include <cassert>
-#include <utils/random/random.h>
-#include <utils/random/rng_type.h>
+#include <fstream>
+#include <utils/bundle.h>
+#include <utils/mpi_utils.h>
 
-void creation::createRandom(uint32_t seed_create_types, uint32_t seed_create_vacancy, LatticesList *lats,
-                            VacancyList *va_list, const std::vector<LatticeTypes::lat_type> types,
-                            const std::vector<unsigned int> types_ratio, const unsigned long va_count,
-                            const comm::ColoredDomain *p_domain) {
-  // create lattice types
+void creation::createAtomsRandom(uint32_t seed_create_types, LatticesList *lats,
+                                 const std::vector<LatticeTypes::lat_type> types,
+                                 const std::vector<unsigned int> types_ratio, const comm::ColoredDomain *p_domain) {
   unsigned int ratio_total = 0;
   for (int i = 0; i < types.size(); i++) {
     ratio_total += types_ratio[i];
   }
   std::uniform_int_distribution<> types_dis(1, ratio_total);
-  r::type_rng types_rng(seed_create_vacancy);
+  r::type_rng types_rng(seed_create_types);
   // todo skip ghost lattices.
   lats->forAllLattices(
       [&](const _type_lattice_coord x, const _type_lattice_coord y, const _type_lattice_coord z, Lattice &lattice) {
@@ -29,6 +30,14 @@ void creation::createRandom(uint32_t seed_create_types, uint32_t seed_create_vac
         lattice.type._type = LatticeTypes::randomAtomsType(types.data(), types_ratio.data(), types.size(), rand_hit);
         return true;
       });
+}
+
+void creation::createRandom(uint32_t seed_create_types, uint32_t seed_create_vacancy, LatticesList *lats,
+                            VacancyList *va_list, const std::vector<LatticeTypes::lat_type> types,
+                            const std::vector<unsigned int> types_ratio, const unsigned long va_count,
+                            const comm::ColoredDomain *p_domain) {
+  // create lattice types
+  createAtomsRandom(seed_create_types, lats, types, types_ratio, p_domain);
 
   // create vacancy
   // to use SimulationDomain, make sure this function is called after
@@ -75,4 +84,52 @@ void creation::setGlobalId(LatticesList *lats_list, const comm::Region<comm::_ty
       }
     }
   }
+}
+
+void creation::createFromPile(const std::string pipe_file, uint32_t seed_create_types, LatticesList *lats,
+                              VacancyList *va_list, const std::vector<LatticeTypes::lat_type> types,
+                              const std::vector<unsigned int> types_ratio, const comm::ColoredDomain *p_domain) {
+  createAtomsRandom(seed_create_types, lats, types, types_ratio, p_domain);
+
+  // open vacancies file
+  std::vector<std::array<_type_lattice_coord, 3>> vac_positions{};
+  if (kiwi::mpiUtils::global_process.own_rank == MASTER_PROCESSOR) {
+    std::ifstream vac_file;
+    vac_file.open(pipe_file);
+    _type_lattice_coord x, y, z;
+    while (vac_file >> x >> y >> z) {
+      vac_positions.push_back({x, y, z});
+    }
+  }
+
+  kiwi::Bundle bundle = kiwi::Bundle();
+  bundle.newPackBuffer(1024 * 1024); // make sure it is large enough
+
+  if (kiwi::mpiUtils::global_process.own_rank == MASTER_PROCESSOR) {
+    bundle.put(vac_positions);
+  }
+  MPI_Bcast(bundle.getPackedData(), bundle.getPackedDataCap(), MPI_BYTE, MASTER_PROCESSOR,
+            MPI_COMM_WORLD); // synchronize data
+
+  if (kiwi::mpiUtils::global_process.own_rank != MASTER_PROCESSOR) { // unpack
+    int cursor = 0;
+    bundle.get(cursor, vac_positions);
+  }
+  bundle.freePackBuffer();
+
+  // place vacancies
+  for (auto vac : vac_positions) {
+    _type_lattice_coord x = vac[0]; // vac[0] is doubled.
+    _type_lattice_coord y = vac[1];
+    _type_lattice_coord z = vac[2];
+    if (p_domain->local_sub_box_lattice_region.isIn(x / 2, y, z)) {
+      Lattice &lat = lats->getLat(x + lats->meta.ghost_x, y + lats->meta.ghost_y, z + lats->meta.ghost_z);
+      if (!lat.type.isVacancy()) {
+        lat.type._type = LatticeTypes::V;
+      }
+    }
+  }
+
+  // update vacancies list
+  va_list->reindex(lats, p_domain->local_sub_box_lattice_region);
 }
