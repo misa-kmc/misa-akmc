@@ -20,7 +20,7 @@ _type_rate ABVIModel::calcRates(const comm::Region<comm::_type_lattice_size> reg
 
   for (int z = region.z_low; z < region.z_high; z++) {
     for (int y = region.y_low; y < region.y_high; y++) {
-      for (int x = 2 * region.x_low; x < 2 * region.x_high; x++) {
+      for (int x = BCC_DBX * region.x_low; x < BCC_DBX * region.x_high; x++) {
         Lattice &lattice = box->lattice_list->getLat(x, y, z);
         if (lattice.type.isDumbbell()) { // dumbbell
           Itl &itl_ref = box->itl_list->mp.at(lattice.getId());
@@ -76,7 +76,7 @@ event::SelectedEvent ABVIModel::select(const lat_region region, const _type_rate
   event::SelectedEvent selected_event{event::DefectGen, 0, 0}; // default event is defect generation.
   for (int z = region.z_low; z < region.z_high; z++) {
     for (int y = region.y_low; y < region.y_high; y++) {
-      for (int x = 2 * region.x_low; x < 2 * region.x_high; x++) {
+      for (int x = BCC_DBX * region.x_low; x < BCC_DBX * region.x_high; x++) {
         Lattice &lattice = box->lattice_list->getLat(x, y, z);
         // filter defect type
         if (lattice.type.isDumbbell()) { // dumbbell

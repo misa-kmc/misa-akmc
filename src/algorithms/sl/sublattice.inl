@@ -113,7 +113,6 @@ template <class PKg, class Ins> void SubLattice::syncNextSectorGhostRegions(Ins 
   for (int d = 0; d < comm::DIMENSION_SIZE; d++) {
     send_regions[d] = comm::fwCommSectorSendRegion(next_sector.id, dims[d], p_domain->lattice_size_ghost,
                                                    p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
-    ;
     recv_regions[d] = comm::fwCommSectorRecvRegion(next_sector.id, dims[d], p_domain->lattice_size_ghost,
                                                    p_domain->local_split_coord, p_domain->local_sub_box_lattice_region);
   }
