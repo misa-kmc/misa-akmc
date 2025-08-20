@@ -16,14 +16,14 @@ target: "kmc"
 dependencies:
   packages:
     github.com/Taywee/args@6.2.2@args: {build: ["CP args.hxx {{.INCLUDE}}/args.hpp"]}
-    github.com/jbeder/yaml-cpp@yaml-cpp-0.6.2@yaml-cpp:
+    github.com/jbeder/yaml-cpp@yaml-cpp-0.7.0@yaml-cpp:
       features: ["YAML_CPP_BUILD_TESTS=OFF"]
       build:
         - CMAKE
       cmake_lib: |
-        find_package(yaml-cpp PATHS {{.PKG_DIR}})
+        find_package(yaml-cpp PATHS {{.PKG_DIR}} NO_DEFAULT_PATH REQUIRED)
         include_directories({{.PKG_DIR}}/include)
-    github.com/google/googletest: {version: release-1.10.0, target: GTest}
-    git.hpcer.dev/genshen/kiwi: {version: v0.3.1, target: kiwi}
+    github.com/google/googletest: {version: release-1.12.0, target: GTest}
+    git.hpcer.dev/genshen/kiwi: {version: v0.5.1, target: kiwi}
     git.hpcer.dev/HPCer/MISA-MD/libcomm: {version: v0.3.3, target: comm}
     github.com/misa-kmc/xoshiro: {version: v0.1.1, target: xoshiro}
