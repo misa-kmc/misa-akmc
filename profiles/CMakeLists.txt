@@ -27,6 +27,7 @@ add_library(${P_KMP_PROFILE_LIB_NAME} STATIC
         m_event_hook.h
         pkmc.h
         pkmc.cpp
+        real_time.hpp
         seed_relocate.h
         )
 
