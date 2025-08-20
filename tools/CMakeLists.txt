@@ -1,6 +1,4 @@
 set(TOOLS_SOURCE_FILES
-        ans.h
-        ans.cpp
         particle.h
         xyz_reader.h
         xyz_reader.cpp
@@ -16,4 +14,4 @@ target_include_directories(${KMC_TOOLS_LIB_NAME}
         )
 
 add_executable(${KMC_TOOLS_BIN_NAME} main.cpp)
-target_link_libraries(${KMC_TOOLS_BIN_NAME} ${KMC_TOOLS_LIB_NAME})
+target_link_libraries(${KMC_TOOLS_BIN_NAME} ${KMC_TOOLS_LIB_NAME} profile)

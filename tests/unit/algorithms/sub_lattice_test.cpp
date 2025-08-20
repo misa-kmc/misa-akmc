@@ -54,7 +54,7 @@ class TestSLModel : public ModelAdapter<int> {
 
 class TestEventHooks : public EventHooks {
 public:
-  void onStepFinished(unsigned long step) override{};
+  void onStepFinished(const unsigned long step, const double delta_mc_time) override{};
 
   void onAllDone() override{};
 };

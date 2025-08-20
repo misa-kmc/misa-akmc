@@ -49,7 +49,7 @@ void SubLattice::startTimeLoop(Ins pk_inst, ModelAdapter<E> *p_model, EventHooks
       ++sec_meta.sector_itl;                    // update sector id.
       nextSector();                             // some post operations after moved to next sector.
     }
-    p_event_hooks->onStepFinished(step);
+    p_event_hooks->onStepFinished(step, T); // todo: mc time on each sector is different.
   }
   p_event_hooks->onAllDone();
 }
