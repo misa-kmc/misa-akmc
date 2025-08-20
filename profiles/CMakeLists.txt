@@ -37,7 +37,7 @@ target_include_directories(${P_KMP_PROFILE_LIB_NAME} PUBLIC
 
 target_link_libraries(${P_KMP_PROFILE_LIB_NAME} PUBLIC
         kiwi::kiwi
-        yaml-cpp
+        yaml-cpp::yaml-cpp
         ${PKMC_LIB_NAME}
         ${KMC_EXTRA_LIBS}
         )
