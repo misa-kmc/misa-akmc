@@ -5,6 +5,7 @@
 #ifndef MISA_KMC_LATTICE_DUMP_H
 #define MISA_KMC_LATTICE_DUMP_H
 
+#include <string>
 #include "lattice/lattices_list.h"
 #include <string>
 #include <utils/mpi_utils.h>

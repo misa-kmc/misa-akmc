@@ -14,7 +14,7 @@ namespace conf {
   enum CreateOption { None, Random, Pipe, Restart };
   struct Create {
     CreateOption create_option = CreateOption::None;
-    ;
+
     // random
     unsigned long va_count = 0;
     std::vector<LatticeTypes::lat_type> types;

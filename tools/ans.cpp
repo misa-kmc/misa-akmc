@@ -22,7 +22,7 @@ void ans::analysis(LatticesList *lats_list) {
           lats_list->get1nn(x, y, z, _1nn_list);
           const _type_neighbour_status nei_status = lats_list->get1nnBoundaryStatus(x, y, z);
           bool has_neighbor_cu = false;
-          // travel its 1nn  neighbor
+          // ro travel its 1nn  neighbor
           for (int b = 0; b < LatticesList::MAX_NEI_BITS; b++) {
             // the neighbour lattice is available.
             // and the neighbour lattice is also Cu

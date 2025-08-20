@@ -6,6 +6,7 @@
 #define MISA_KMC_EVENT_H
 
 #include "type_define.h"
+#include <simulation.h>
 
 namespace event {
   enum EventType {

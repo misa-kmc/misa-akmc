@@ -3,6 +3,7 @@
 //
 
 #include "orientation.h"
+#include <stdexcept>
 
 const char orientation::JumpAtomHashTable[orientation::orientation_count][LatticesList::MAX_1NN]{
     {_, Y, _, Y, X, _, X, _}, // -6: -<10-1>
