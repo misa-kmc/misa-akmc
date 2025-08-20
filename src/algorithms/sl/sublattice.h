@@ -6,6 +6,7 @@
 #define MISA_KMC_SUBLATTICE_H
 
 #include "../selector.h"
+#include "algorithms/selector.h"
 #include "hook/event_hooks.hpp"
 #include "models/model_adapter.h"
 #include "utils/random/rng_type.h"

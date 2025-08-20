@@ -7,6 +7,7 @@
 
 #include <cassert>
 #include <string>
+#include <ostream>
 #include <unordered_map>
 
 #include "lattice/lattice_types.h"

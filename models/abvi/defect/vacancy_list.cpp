@@ -3,6 +3,7 @@
 //
 
 #include <cassert>
+#include <logs/logs.h>
 
 #include "utils/macros.h"
 #include "vacancy_list.h"
