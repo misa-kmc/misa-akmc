@@ -10,8 +10,9 @@ public:
   /**
    * \brief be called after a kmc step finished.
    * \param step current kmc step
+   * \param delta_MC_time the Monte Carlo time increment in current time step.
    */
-  virtual void onStepFinished(unsigned long step) = 0;
+  virtual void onStepFinished(const unsigned long step, const double delta_MC_time) = 0;
 
   /**
    * \brief be called if all kmc steps are finished.

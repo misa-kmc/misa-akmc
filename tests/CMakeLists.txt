@@ -5,4 +5,5 @@ MESSAGE(STATUS "MPI in test: ${KMC_TEST_MPI_ENABLE_FLAG}")
 
 add_subdirectory(unit)
 add_subdirectory(unit-abvi)
+add_subdirectory(unit-profile)
 add_subdirectory(unit-tools)

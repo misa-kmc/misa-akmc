@@ -136,8 +136,12 @@ void PKMC::onStart() {
   MEventListener m_listener(m_counter, sim->box->lattice_list->meta);
   model.setEventListener(&m_listener);
   // run simulation
-  MEventHook m_event_hook(config_v.output, sim->box->lattice_list, &m_counter);
+  MEventHook m_event_hook(config_v.output, config_v.temperature, sim->box->lattice_list, &m_counter);
+
+  double start_time = MPI_Wtime();
   sim->simulate(&model, &m_event_hook, config_v.seeds.time_inc, config_v.physics_time);
+  double end_time = MPI_Wtime();
+  kiwi::logs::v(0, "time", "simulation time: {}\n", end_time - start_time);
 }
 
 void PKMC::onFinish() { mpi_types::unsetInterMPIType(); }

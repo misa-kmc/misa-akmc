@@ -7,7 +7,7 @@
 #include <args.hpp>
 #include <iostream>
 
-#include "ans.h"
+#include "analysis/ans.h"
 #include "xyz_reader.h"
 
 int main(int argc, char **argv) {
@@ -37,8 +37,8 @@ int main(int argc, char **argv) {
     if (lat_list == nullptr) {
       std::cerr << "error reading file " << xyz_file_path << std::endl;
     } else {
-      // todo ans.
-      ans::analysis(lat_list);
+      auto result = ans::analysis(lat_list);
+      std::cout << "isolated solutes:" << result.isolated_solutes << std::endl;
     }
     return 0;
   }

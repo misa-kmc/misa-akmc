@@ -5,6 +5,8 @@
 #ifndef MISA_KMC_LATTICE_LIST_META_H
 #define MISA_KMC_LATTICE_LIST_META_H
 
+#include "utils/macros.h"
+
 #include <type_define.h>
 
 /**
@@ -127,6 +129,13 @@ public:
     z -= ghost_z;
     return x < 0 || y < 0 || z < 0 || x >= box_x || y >= box_y || z >= box_z;
   }
+
+  /**
+   * get the lattice number in current MPI process.
+   * You should use MPI reduce to get the total lattice number.
+   * @return the number lattices in local MPI process.
+   */
+  inline _type_lattice_coord getLocalLatticeNum() const { return box_x * box_y * box_z; }
 
   /**
    * \brief calculate a lattice id by a base lattice id and a 1nn offset.

@@ -12,6 +12,8 @@ set(P_KMC_EXECUTE_BIN_NAME pmisa-kmc)
 set(P_KMP_PROFILE_LIB_NAME profile)
 
 add_library(${P_KMP_PROFILE_LIB_NAME} STATIC
+        analysis/ans.cpp
+        analysis/ans.h
         config/config_parsing.cpp
         config/config_parsing.h
         config/config_values.cpp
@@ -27,6 +29,7 @@ add_library(${P_KMP_PROFILE_LIB_NAME} STATIC
         m_event_hook.h
         pkmc.h
         pkmc.cpp
+        real_time.hpp
         seed_relocate.h
         )
 
