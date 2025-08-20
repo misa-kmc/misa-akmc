@@ -67,8 +67,9 @@ public:
 template <typename E>
 void simulation::simulate(ModelAdapter<E> *p_model, EventHooks *p_event_hooks, const double seed_time_inc,
                           const double time_limit) {
-  SubLattice sl(_p_domain, seed_time_inc, time_limit,
-                3.0e-7); // todo calculate T
+  constexpr double T = 3.0e-7;
+  SubLattice sl(_p_domain, seed_time_inc, time_limit, T); // todo calculate T
+  kiwi::logs::v(0, "steps", "steps: {}\n", time_limit / T);
 
   PackerInstance pk_ins(box->lattice_list);
   sl.startTimeLoop<GhostSyncPacker, SimSyncPacker, PackerInstance>(pk_ins, p_model, p_event_hooks);
